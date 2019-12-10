@@ -1,0 +1,1193 @@
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 1
+
+
+   1               		.file	"lab2.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	__vector_10
+  10               		.type	__vector_10, @function
+  11               	__vector_10:
+  12 0000 1F92      		push __zero_reg__
+  13 0002 0F92      		push r0
+  14 0004 0FB6      		in r0,__SREG__
+  15 0006 0F92      		push r0
+  16 0008 0BB6      		in r0,91-32
+  17 000a 0F92      		push r0
+  18 000c 1124      		clr __zero_reg__
+  19 000e 8F93      		push r24
+  20 0010 9F93      		push r25
+  21 0012 EF93      		push r30
+  22 0014 FF93      		push r31
+  23               	/* prologue: Signal */
+  24               	/* frame size = 0 */
+  25 0016 8091 0000 		lds r24,state
+  26 001a 9091 0000 		lds r25,(state)+1
+  27 001e 0197      		sbiw r24,1
+  28 0020 01F0      		breq .L8
+  29 0022 8091 0000 		lds r24,soundMode
+  30 0026 9091 0000 		lds r25,(soundMode)+1
+  31 002a 97FD      		sbrc r25,7
+  32 002c 00C0      		rjmp .L9
+  33 002e 80E1      		ldi r24,lo8(16)
+  34 0030 88BB      		out 56-32,r24
+  35               	.L5:
+  36 0032 81E0      		ldi r24,lo8(1)
+  37 0034 90E0      		ldi r25,hi8(1)
+  38 0036 9093 0000 		sts (state)+1,r25
+  39 003a 8093 0000 		sts state,r24
+  40               	.L3:
+  41 003e E091 0000 		lds r30,soundMode
+  42 0042 F091 0000 		lds r31,(soundMode)+1
+  43 0046 EE0F      		lsl r30
+  44 0048 FF1F      		rol r31
+  45 004a E050      		subi r30,lo8(-(Sound))
+  46 004c F040      		sbci r31,hi8(-(Sound))
+  47 004e 8081      		ld r24,Z
+  48 0050 84BD      		out 68-32,r24
+  49               	/* epilogue start */
+  50 0052 FF91      		pop r31
+  51 0054 EF91      		pop r30
+  52 0056 9F91      		pop r25
+  53 0058 8F91      		pop r24
+  54 005a 0F90      		pop r0
+  55 005c 0BBE      		out 91-32,r0
+  56 005e 0F90      		pop r0
+  57 0060 0FBE      		out __SREG__,r0
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 2
+
+
+  58 0062 0F90      		pop r0
+  59 0064 1F90      		pop __zero_reg__
+  60 0066 1895      		reti
+  61               	.L8:
+  62 0068 18BA      		out 56-32,__zero_reg__
+  63 006a 1092 0000 		sts (state)+1,__zero_reg__
+  64 006e 1092 0000 		sts state,__zero_reg__
+  65 0072 00C0      		rjmp .L3
+  66               	.L9:
+  67 0074 18BA      		out 56-32,__zero_reg__
+  68 0076 00C0      		rjmp .L5
+  69               		.size	__vector_10, .-__vector_10
+  70               	.global	init_adc
+  71               		.type	init_adc, @function
+  72               	init_adc:
+  73               	/* prologue: function */
+  74               	/* frame size = 0 */
+  75 0078 17B8      		out 39-32,__zero_reg__
+  76 007a 87E8      		ldi r24,lo8(-121)
+  77 007c 86B9      		out 38-32,r24
+  78               	/* epilogue start */
+  79 007e 0895      		ret
+  80               		.size	init_adc, .-init_adc
+  81               	.global	read_adc
+  82               		.type	read_adc, @function
+  83               	read_adc:
+  84               	/* prologue: function */
+  85               	/* frame size = 0 */
+  86 0080 369A      		sbi 38-32,6
+  87               	.L13:
+  88 0082 349B      		sbis 38-32,4
+  89 0084 00C0      		rjmp .L13
+  90 0086 24B1      		in r18,36-32
+  91 0088 45B1      		in r20,37-32
+  92 008a 942F      		mov r25,r20
+  93 008c 80E0      		ldi r24,lo8(0)
+  94 008e 30E0      		ldi r19,lo8(0)
+  95 0090 282B      		or r18,r24
+  96 0092 392B      		or r19,r25
+  97 0094 C901      		movw r24,r18
+  98               	/* epilogue start */
+  99 0096 0895      		ret
+ 100               		.size	read_adc, .-read_adc
+ 101               	.global	Reset
+ 102               		.type	Reset, @function
+ 103               	Reset:
+ 104               	/* prologue: function */
+ 105               	/* frame size = 0 */
+ 106 0098 81E0      		ldi r24,lo8(1)
+ 107 009a 90E0      		ldi r25,hi8(1)
+ 108 009c 9093 0000 		sts (time)+1,r25
+ 109 00a0 8093 0000 		sts time,r24
+ 110 00a4 1092 0000 		sts (plant_cnt)+1,__zero_reg__
+ 111 00a8 1092 0000 		sts plant_cnt,__zero_reg__
+ 112 00ac 9FEF      		ldi r25,lo8(-1)
+ 113 00ae 9ABB      		out 58-32,r25
+ 114 00b0 8FE0      		ldi r24,lo8(15)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 3
+
+
+ 115 00b2 8BBB      		out 59-32,r24
+ 116 00b4 94BB      		out 52-32,r25
+ 117 00b6 8093 6400 		sts 100,r24
+ 118               	/* epilogue start */
+ 119 00ba 0895      		ret
+ 120               		.size	Reset, .-Reset
+ 121               	.global	ShowFndTask
+ 122               		.type	ShowFndTask, @function
+ 123               	ShowFndTask:
+ 124 00bc AF92      		push r10
+ 125 00be BF92      		push r11
+ 126 00c0 CF92      		push r12
+ 127 00c2 DF92      		push r13
+ 128 00c4 EF92      		push r14
+ 129 00c6 FF92      		push r15
+ 130 00c8 0F93      		push r16
+ 131 00ca 1F93      		push r17
+ 132 00cc DF93      		push r29
+ 133 00ce CF93      		push r28
+ 134 00d0 00D0      		rcall .
+ 135 00d2 CDB7      		in r28,__SP_L__
+ 136 00d4 DEB7      		in r29,__SP_H__
+ 137               	/* prologue: function */
+ 138               	/* frame size = 2 */
+ 139 00d6 6E01      		movw r12,r28
+ 140 00d8 0894      		sec
+ 141 00da C11C      		adc r12,__zero_reg__
+ 142 00dc D11C      		adc r13,__zero_reg__
+ 143 00de 94E0      		ldi r25,lo8(4)
+ 144 00e0 A92E      		mov r10,r25
+ 145 00e2 B12C      		mov r11,__zero_reg__
+ 146               	.L30:
+ 147 00e4 8091 0000 		lds r24,sem_plant
+ 148 00e8 9091 0000 		lds r25,(sem_plant)+1
+ 149 00ec 60E0      		ldi r22,lo8(0)
+ 150 00ee 70E0      		ldi r23,hi8(0)
+ 151 00f0 A601      		movw r20,r12
+ 152 00f2 0E94 0000 		call OSSemPend
+ 153 00f6 8091 0000 		lds r24,plant_cnt
+ 154 00fa 9091 0000 		lds r25,(plant_cnt)+1
+ 155 00fe 7501      		movw r14,r10
+ 156 0100 E81A      		sub r14,r24
+ 157 0102 F90A      		sbc r15,r25
+ 158 0104 8091 0000 		lds r24,sem_plant
+ 159 0108 9091 0000 		lds r25,(sem_plant)+1
+ 160 010c 0E94 0000 		call OSSemPost
+ 161 0110 8091 0000 		lds r24,flag
+ 162 0114 9091 0000 		lds r25,(flag)+1
+ 163 0118 60E1      		ldi r22,lo8(16)
+ 164 011a 43E0      		ldi r20,lo8(3)
+ 165 011c 9601      		movw r18,r12
+ 166 011e 0E94 0000 		call OSFlagAccept
+ 167 0122 8823      		tst r24
+ 168 0124 01F0      		breq .L19
+ 169 0126 E114      		cp r14,__zero_reg__
+ 170 0128 F104      		cpc r15,__zero_reg__
+ 171 012a 01F0      		breq .+2
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 4
+
+
+ 172 012c 00C0      		rjmp .L20
+ 173 012e 8091 0000 		lds r24,WIN
+ 174 0132 85BB      		out 53-32,r24
+ 175 0134 8091 0000 		lds r24,SEL
+ 176 0138 8093 6500 		sts 101,r24
+ 177 013c 80E0      		ldi r24,lo8(0)
+ 178 013e 60E0      		ldi r22,lo8(0)
+ 179 0140 40E0      		ldi r20,lo8(0)
+ 180 0142 23E0      		ldi r18,lo8(3)
+ 181 0144 30E0      		ldi r19,hi8(3)
+ 182 0146 0E94 0000 		call OSTimeDlyHMSM
+ 183 014a 8091 0000 		lds r24,WIN+1
+ 184 014e 85BB      		out 53-32,r24
+ 185 0150 8091 0000 		lds r24,SEL+1
+ 186 0154 8093 6500 		sts 101,r24
+ 187 0158 80E0      		ldi r24,lo8(0)
+ 188 015a 60E0      		ldi r22,lo8(0)
+ 189 015c 40E0      		ldi r20,lo8(0)
+ 190 015e 23E0      		ldi r18,lo8(3)
+ 191 0160 30E0      		ldi r19,hi8(3)
+ 192 0162 0E94 0000 		call OSTimeDlyHMSM
+ 193 0166 8091 0000 		lds r24,WIN+2
+ 194 016a 85BB      		out 53-32,r24
+ 195 016c 8091 0000 		lds r24,SEL+2
+ 196 0170 8093 6500 		sts 101,r24
+ 197 0174 80E0      		ldi r24,lo8(0)
+ 198 0176 60E0      		ldi r22,lo8(0)
+ 199 0178 40E0      		ldi r20,lo8(0)
+ 200 017a 23E0      		ldi r18,lo8(3)
+ 201 017c 30E0      		ldi r19,hi8(3)
+ 202 017e 0E94 0000 		call OSTimeDlyHMSM
+ 203 0182 8091 0000 		lds r24,WIN+3
+ 204               	.L31:
+ 205 0186 85BB      		out 53-32,r24
+ 206 0188 8091 0000 		lds r24,SEL+3
+ 207 018c 8093 6500 		sts 101,r24
+ 208 0190 80E0      		ldi r24,lo8(0)
+ 209 0192 60E0      		ldi r22,lo8(0)
+ 210 0194 40E0      		ldi r20,lo8(0)
+ 211 0196 23E0      		ldi r18,lo8(3)
+ 212 0198 30E0      		ldi r19,hi8(3)
+ 213 019a 0E94 0000 		call OSTimeDlyHMSM
+ 214 019e 00C0      		rjmp .L30
+ 215               	.L19:
+ 216 01a0 00E0      		ldi r16,lo8(0)
+ 217 01a2 10E0      		ldi r17,hi8(0)
+ 218 01a4 1E14      		cp __zero_reg__,r14
+ 219 01a6 1F04      		cpc __zero_reg__,r15
+ 220 01a8 04F4      		brge .L22
+ 221               	.L32:
+ 222 01aa 15BA      		out 53-32,__zero_reg__
+ 223               	.L23:
+ 224 01ac F801      		movw r30,r16
+ 225 01ae E050      		subi r30,lo8(-(SEL))
+ 226 01b0 F040      		sbci r31,hi8(-(SEL))
+ 227 01b2 8081      		ld r24,Z
+ 228 01b4 8093 6500 		sts 101,r24
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 5
+
+
+ 229 01b8 0E94 0000 		call read_adc
+ 230 01bc 8756      		subi r24,lo8(871)
+ 231 01be 9340      		sbci r25,hi8(871)
+ 232 01c0 00F4      		brsh .L24
+ 233 01c2 80E0      		ldi r24,lo8(0)
+ 234 01c4 60E0      		ldi r22,lo8(0)
+ 235 01c6 40E0      		ldi r20,lo8(0)
+ 236 01c8 28EC      		ldi r18,lo8(200)
+ 237 01ca 30E0      		ldi r19,hi8(200)
+ 238 01cc 0E94 0000 		call OSTimeDlyHMSM
+ 239               	.L25:
+ 240 01d0 0F5F      		subi r16,lo8(-(1))
+ 241 01d2 1F4F      		sbci r17,hi8(-(1))
+ 242 01d4 0430      		cpi r16,4
+ 243 01d6 1105      		cpc r17,__zero_reg__
+ 244 01d8 01F4      		brne .+2
+ 245 01da 00C0      		rjmp .L30
+ 246 01dc 0894      		sec
+ 247 01de E108      		sbc r14,__zero_reg__
+ 248 01e0 F108      		sbc r15,__zero_reg__
+ 249 01e2 1E14      		cp __zero_reg__,r14
+ 250 01e4 1F04      		cpc __zero_reg__,r15
+ 251 01e6 04F0      		brlt .L32
+ 252               	.L22:
+ 253 01e8 F801      		movw r30,r16
+ 254 01ea E050      		subi r30,lo8(-(Plant))
+ 255 01ec F040      		sbci r31,hi8(-(Plant))
+ 256 01ee 8081      		ld r24,Z
+ 257 01f0 85BB      		out 53-32,r24
+ 258 01f2 00C0      		rjmp .L23
+ 259               	.L24:
+ 260 01f4 80E0      		ldi r24,lo8(0)
+ 261 01f6 60E0      		ldi r22,lo8(0)
+ 262 01f8 40E0      		ldi r20,lo8(0)
+ 263 01fa 23E0      		ldi r18,lo8(3)
+ 264 01fc 30E0      		ldi r19,hi8(3)
+ 265 01fe 0E94 0000 		call OSTimeDlyHMSM
+ 266 0202 00C0      		rjmp .L25
+ 267               	.L20:
+ 268 0204 24E0      		ldi r18,lo8(4)
+ 269 0206 E216      		cp r14,r18
+ 270 0208 F104      		cpc r15,__zero_reg__
+ 271 020a 01F0      		breq .+2
+ 272 020c 00C0      		rjmp .L30
+ 273 020e 8091 0000 		lds r24,LOSE
+ 274 0212 85BB      		out 53-32,r24
+ 275 0214 8091 0000 		lds r24,SEL
+ 276 0218 8093 6500 		sts 101,r24
+ 277 021c 80E0      		ldi r24,lo8(0)
+ 278 021e 60E0      		ldi r22,lo8(0)
+ 279 0220 40E0      		ldi r20,lo8(0)
+ 280 0222 23E0      		ldi r18,lo8(3)
+ 281 0224 30E0      		ldi r19,hi8(3)
+ 282 0226 0E94 0000 		call OSTimeDlyHMSM
+ 283 022a 8091 0000 		lds r24,LOSE+1
+ 284 022e 85BB      		out 53-32,r24
+ 285 0230 8091 0000 		lds r24,SEL+1
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 6
+
+
+ 286 0234 8093 6500 		sts 101,r24
+ 287 0238 80E0      		ldi r24,lo8(0)
+ 288 023a 60E0      		ldi r22,lo8(0)
+ 289 023c 40E0      		ldi r20,lo8(0)
+ 290 023e 23E0      		ldi r18,lo8(3)
+ 291 0240 30E0      		ldi r19,hi8(3)
+ 292 0242 0E94 0000 		call OSTimeDlyHMSM
+ 293 0246 8091 0000 		lds r24,LOSE+2
+ 294 024a 85BB      		out 53-32,r24
+ 295 024c 8091 0000 		lds r24,SEL+2
+ 296 0250 8093 6500 		sts 101,r24
+ 297 0254 80E0      		ldi r24,lo8(0)
+ 298 0256 60E0      		ldi r22,lo8(0)
+ 299 0258 40E0      		ldi r20,lo8(0)
+ 300 025a 23E0      		ldi r18,lo8(3)
+ 301 025c 30E0      		ldi r19,hi8(3)
+ 302 025e 0E94 0000 		call OSTimeDlyHMSM
+ 303 0262 8091 0000 		lds r24,LOSE+3
+ 304 0266 00C0      		rjmp .L31
+ 305               		.size	ShowFndTask, .-ShowFndTask
+ 306               	.global	FndMinusTask
+ 307               		.type	FndMinusTask, @function
+ 308               	FndMinusTask:
+ 309 0268 CF92      		push r12
+ 310 026a DF92      		push r13
+ 311 026c EF92      		push r14
+ 312 026e FF92      		push r15
+ 313 0270 0F93      		push r16
+ 314 0272 1F93      		push r17
+ 315 0274 DF93      		push r29
+ 316 0276 CF93      		push r28
+ 317 0278 00D0      		rcall .
+ 318 027a CDB7      		in r28,__SP_L__
+ 319 027c DEB7      		in r29,__SP_H__
+ 320               	/* prologue: function */
+ 321               	/* frame size = 2 */
+ 322 027e 7E01      		movw r14,r28
+ 323 0280 0894      		sec
+ 324 0282 E11C      		adc r14,__zero_reg__
+ 325 0284 F11C      		adc r15,__zero_reg__
+ 326 0286 CC24      		clr r12
+ 327 0288 CA94      		dec r12
+ 328 028a DC2C      		mov r13,r12
+ 329               	.L35:
+ 330 028c 8091 0000 		lds r24,flag
+ 331 0290 9091 0000 		lds r25,(flag)+1
+ 332 0294 64E0      		ldi r22,lo8(4)
+ 333 0296 43E8      		ldi r20,lo8(-125)
+ 334 0298 20E0      		ldi r18,lo8(0)
+ 335 029a 30E0      		ldi r19,hi8(0)
+ 336 029c 8701      		movw r16,r14
+ 337 029e 0E94 0000 		call OSFlagPend
+ 338 02a2 8091 0000 		lds r24,sem_plant
+ 339 02a6 9091 0000 		lds r25,(sem_plant)+1
+ 340 02aa 60E0      		ldi r22,lo8(0)
+ 341 02ac 70E0      		ldi r23,hi8(0)
+ 342 02ae A701      		movw r20,r14
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 7
+
+
+ 343 02b0 0E94 0000 		call OSSemPend
+ 344 02b4 8091 0000 		lds r24,plant_cnt
+ 345 02b8 9091 0000 		lds r25,(plant_cnt)+1
+ 346 02bc 1816      		cp __zero_reg__,r24
+ 347 02be 1906      		cpc __zero_reg__,r25
+ 348 02c0 04F4      		brge .L34
+ 349 02c2 8091 0000 		lds r24,plant_cnt
+ 350 02c6 9091 0000 		lds r25,(plant_cnt)+1
+ 351 02ca 0197      		sbiw r24,1
+ 352 02cc 9093 0000 		sts (plant_cnt)+1,r25
+ 353 02d0 8093 0000 		sts plant_cnt,r24
+ 354               	.L34:
+ 355 02d4 8091 0000 		lds r24,sem_plant
+ 356 02d8 9091 0000 		lds r25,(sem_plant)+1
+ 357 02dc 0E94 0000 		call OSSemPost
+ 358 02e0 8091 0000 		lds r24,sem_buz
+ 359 02e4 9091 0000 		lds r25,(sem_buz)+1
+ 360 02e8 60E0      		ldi r22,lo8(0)
+ 361 02ea 70E0      		ldi r23,hi8(0)
+ 362 02ec A701      		movw r20,r14
+ 363 02ee 0E94 0000 		call OSSemPend
+ 364 02f2 1092 0000 		sts (soundMode)+1,__zero_reg__
+ 365 02f6 1092 0000 		sts soundMode,__zero_reg__
+ 366 02fa 80E0      		ldi r24,lo8(0)
+ 367 02fc 60E0      		ldi r22,lo8(0)
+ 368 02fe 40E0      		ldi r20,lo8(0)
+ 369 0300 24E6      		ldi r18,lo8(100)
+ 370 0302 30E0      		ldi r19,hi8(100)
+ 371 0304 0E94 0000 		call OSTimeDlyHMSM
+ 372 0308 D092 0000 		sts (soundMode)+1,r13
+ 373 030c C092 0000 		sts soundMode,r12
+ 374 0310 8091 0000 		lds r24,sem_buz
+ 375 0314 9091 0000 		lds r25,(sem_buz)+1
+ 376 0318 0E94 0000 		call OSSemPost
+ 377 031c 00C0      		rjmp .L35
+ 378               		.size	FndMinusTask, .-FndMinusTask
+ 379               	.global	FndPlusTask
+ 380               		.type	FndPlusTask, @function
+ 381               	FndPlusTask:
+ 382 031e AF92      		push r10
+ 383 0320 BF92      		push r11
+ 384 0322 CF92      		push r12
+ 385 0324 DF92      		push r13
+ 386 0326 EF92      		push r14
+ 387 0328 FF92      		push r15
+ 388 032a 0F93      		push r16
+ 389 032c 1F93      		push r17
+ 390 032e DF93      		push r29
+ 391 0330 CF93      		push r28
+ 392 0332 00D0      		rcall .
+ 393 0334 CDB7      		in r28,__SP_L__
+ 394 0336 DEB7      		in r29,__SP_H__
+ 395               	/* prologue: function */
+ 396               	/* frame size = 2 */
+ 397 0338 7E01      		movw r14,r28
+ 398 033a 0894      		sec
+ 399 033c E11C      		adc r14,__zero_reg__
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 8
+
+
+ 400 033e F11C      		adc r15,__zero_reg__
+ 401 0340 21E0      		ldi r18,lo8(1)
+ 402 0342 A22E      		mov r10,r18
+ 403 0344 B12C      		mov r11,__zero_reg__
+ 404 0346 CC24      		clr r12
+ 405 0348 CA94      		dec r12
+ 406 034a DC2C      		mov r13,r12
+ 407               	.L39:
+ 408 034c 8091 0000 		lds r24,flag
+ 409 0350 9091 0000 		lds r25,(flag)+1
+ 410 0354 61E0      		ldi r22,lo8(1)
+ 411 0356 43E8      		ldi r20,lo8(-125)
+ 412 0358 20E0      		ldi r18,lo8(0)
+ 413 035a 30E0      		ldi r19,hi8(0)
+ 414 035c 8701      		movw r16,r14
+ 415 035e 0E94 0000 		call OSFlagPend
+ 416 0362 8091 0000 		lds r24,sem_plant
+ 417 0366 9091 0000 		lds r25,(sem_plant)+1
+ 418 036a 60E0      		ldi r22,lo8(0)
+ 419 036c 70E0      		ldi r23,hi8(0)
+ 420 036e A701      		movw r20,r14
+ 421 0370 0E94 0000 		call OSSemPend
+ 422 0374 8091 0000 		lds r24,plant_cnt
+ 423 0378 9091 0000 		lds r25,(plant_cnt)+1
+ 424 037c 0497      		sbiw r24,4
+ 425 037e 04F4      		brge .L38
+ 426 0380 8091 0000 		lds r24,plant_cnt
+ 427 0384 9091 0000 		lds r25,(plant_cnt)+1
+ 428 0388 0196      		adiw r24,1
+ 429 038a 9093 0000 		sts (plant_cnt)+1,r25
+ 430 038e 8093 0000 		sts plant_cnt,r24
+ 431               	.L38:
+ 432 0392 8091 0000 		lds r24,sem_plant
+ 433 0396 9091 0000 		lds r25,(sem_plant)+1
+ 434 039a 0E94 0000 		call OSSemPost
+ 435 039e 8091 0000 		lds r24,sem_buz
+ 436 03a2 9091 0000 		lds r25,(sem_buz)+1
+ 437 03a6 60E0      		ldi r22,lo8(0)
+ 438 03a8 70E0      		ldi r23,hi8(0)
+ 439 03aa A701      		movw r20,r14
+ 440 03ac 0E94 0000 		call OSSemPend
+ 441 03b0 B092 0000 		sts (soundMode)+1,r11
+ 442 03b4 A092 0000 		sts soundMode,r10
+ 443 03b8 80E0      		ldi r24,lo8(0)
+ 444 03ba 60E0      		ldi r22,lo8(0)
+ 445 03bc 40E0      		ldi r20,lo8(0)
+ 446 03be 24E6      		ldi r18,lo8(100)
+ 447 03c0 30E0      		ldi r19,hi8(100)
+ 448 03c2 0E94 0000 		call OSTimeDlyHMSM
+ 449 03c6 D092 0000 		sts (soundMode)+1,r13
+ 450 03ca C092 0000 		sts soundMode,r12
+ 451 03ce 8091 0000 		lds r24,sem_buz
+ 452 03d2 9091 0000 		lds r25,(sem_buz)+1
+ 453 03d6 0E94 0000 		call OSSemPost
+ 454 03da 00C0      		rjmp .L39
+ 455               		.size	FndPlusTask, .-FndPlusTask
+ 456               	.global	LedMinusTask
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 9
+
+
+ 457               		.type	LedMinusTask, @function
+ 458               	LedMinusTask:
+ 459 03dc EF92      		push r14
+ 460 03de FF92      		push r15
+ 461 03e0 0F93      		push r16
+ 462 03e2 1F93      		push r17
+ 463 03e4 DF93      		push r29
+ 464 03e6 CF93      		push r28
+ 465 03e8 00D0      		rcall .
+ 466 03ea CDB7      		in r28,__SP_L__
+ 467 03ec DEB7      		in r29,__SP_H__
+ 468               	/* prologue: function */
+ 469               	/* frame size = 2 */
+ 470 03ee 7E01      		movw r14,r28
+ 471 03f0 0894      		sec
+ 472 03f2 E11C      		adc r14,__zero_reg__
+ 473 03f4 F11C      		adc r15,__zero_reg__
+ 474               	.L42:
+ 475 03f6 8091 0000 		lds r24,flag
+ 476 03fa 9091 0000 		lds r25,(flag)+1
+ 477 03fe 62E0      		ldi r22,lo8(2)
+ 478 0400 43E8      		ldi r20,lo8(-125)
+ 479 0402 20E0      		ldi r18,lo8(0)
+ 480 0404 30E0      		ldi r19,hi8(0)
+ 481 0406 8701      		movw r16,r14
+ 482 0408 0E94 0000 		call OSFlagPend
+ 483 040c 8BB3      		in r24,59-32
+ 484 040e 8695      		lsr r24
+ 485 0410 8BBB      		out 59-32,r24
+ 486 0412 00C0      		rjmp .L42
+ 487               		.size	LedMinusTask, .-LedMinusTask
+ 488               	.global	LedPlusTask
+ 489               		.type	LedPlusTask, @function
+ 490               	LedPlusTask:
+ 491 0414 EF92      		push r14
+ 492 0416 FF92      		push r15
+ 493 0418 0F93      		push r16
+ 494 041a 1F93      		push r17
+ 495 041c DF93      		push r29
+ 496 041e CF93      		push r28
+ 497 0420 00D0      		rcall .
+ 498 0422 CDB7      		in r28,__SP_L__
+ 499 0424 DEB7      		in r29,__SP_H__
+ 500               	/* prologue: function */
+ 501               	/* frame size = 2 */
+ 502 0426 7E01      		movw r14,r28
+ 503 0428 0894      		sec
+ 504 042a E11C      		adc r14,__zero_reg__
+ 505 042c F11C      		adc r15,__zero_reg__
+ 506               	.L57:
+ 507 042e 8091 0000 		lds r24,flag
+ 508 0432 9091 0000 		lds r25,(flag)+1
+ 509 0436 68E0      		ldi r22,lo8(8)
+ 510 0438 43E8      		ldi r20,lo8(-125)
+ 511 043a 20E0      		ldi r18,lo8(0)
+ 512 043c 30E0      		ldi r19,hi8(0)
+ 513 043e 8701      		movw r16,r14
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 10
+
+
+ 514 0440 0E94 0000 		call OSFlagPend
+ 515 0444 0E94 0000 		call rand
+ 516 0448 8C01      		movw r16,r24
+ 517 044a 0E94 0000 		call read_adc
+ 518 044e 8756      		subi r24,lo8(871)
+ 519 0450 9340      		sbci r25,hi8(871)
+ 520 0452 00F0      		brlo .L45
+ 521 0454 C801      		movw r24,r16
+ 522 0456 65E0      		ldi r22,lo8(5)
+ 523 0458 70E0      		ldi r23,hi8(5)
+ 524 045a 0E94 0000 		call __divmodhi4
+ 525 045e AC01      		movw r20,r24
+ 526 0460 97FD      		sbrc r25,7
+ 527 0462 00C0      		rjmp .L57
+ 528 0464 20E0      		ldi r18,lo8(0)
+ 529 0466 30E0      		ldi r19,hi8(0)
+ 530               	.L51:
+ 531 0468 8BB3      		in r24,59-32
+ 532 046a 8F3F      		cpi r24,lo8(-1)
+ 533 046c 01F0      		breq .L50
+ 534 046e 8BB3      		in r24,59-32
+ 535 0470 880F      		lsl r24
+ 536 0472 8F5F      		subi r24,lo8(-(1))
+ 537 0474 8BBB      		out 59-32,r24
+ 538               	.L50:
+ 539 0476 2F5F      		subi r18,lo8(-(1))
+ 540 0478 3F4F      		sbci r19,hi8(-(1))
+ 541 047a 4217      		cp r20,r18
+ 542 047c 5307      		cpc r21,r19
+ 543 047e 04F4      		brge .L51
+ 544 0480 00C0      		rjmp .L57
+ 545               	.L45:
+ 546 0482 C801      		movw r24,r16
+ 547 0484 67E0      		ldi r22,lo8(7)
+ 548 0486 70E0      		ldi r23,hi8(7)
+ 549 0488 0E94 0000 		call __divmodhi4
+ 550 048c AC01      		movw r20,r24
+ 551 048e 97FD      		sbrc r25,7
+ 552 0490 00C0      		rjmp .L57
+ 553 0492 20E0      		ldi r18,lo8(0)
+ 554 0494 30E0      		ldi r19,hi8(0)
+ 555               	.L49:
+ 556 0496 8BB3      		in r24,59-32
+ 557 0498 8F3F      		cpi r24,lo8(-1)
+ 558 049a 01F0      		breq .L48
+ 559 049c 8BB3      		in r24,59-32
+ 560 049e 880F      		lsl r24
+ 561 04a0 8F5F      		subi r24,lo8(-(1))
+ 562 04a2 8BBB      		out 59-32,r24
+ 563               	.L48:
+ 564 04a4 2F5F      		subi r18,lo8(-(1))
+ 565 04a6 3F4F      		sbci r19,hi8(-(1))
+ 566 04a8 4217      		cp r20,r18
+ 567 04aa 5307      		cpc r21,r19
+ 568 04ac 04F4      		brge .L49
+ 569 04ae 00C0      		rjmp .L57
+ 570               		.size	LedPlusTask, .-LedPlusTask
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 11
+
+
+ 571               	.global	ControlTask
+ 572               		.type	ControlTask, @function
+ 573               	ControlTask:
+ 574 04b0 CF92      		push r12
+ 575 04b2 DF92      		push r13
+ 576 04b4 EF92      		push r14
+ 577 04b6 FF92      		push r15
+ 578 04b8 0F93      		push r16
+ 579 04ba 1F93      		push r17
+ 580 04bc DF93      		push r29
+ 581 04be CF93      		push r28
+ 582 04c0 00D0      		rcall .
+ 583 04c2 CDB7      		in r28,__SP_L__
+ 584 04c4 DEB7      		in r29,__SP_H__
+ 585               	/* prologue: function */
+ 586               	/* frame size = 2 */
+ 587 04c6 7E01      		movw r14,r28
+ 588 04c8 0894      		sec
+ 589 04ca E11C      		adc r14,__zero_reg__
+ 590 04cc F11C      		adc r15,__zero_reg__
+ 591 04ce CC24      		clr r12
+ 592 04d0 CA94      		dec r12
+ 593 04d2 DC2C      		mov r13,r12
+ 594 04d4 00C0      		rjmp .L73
+ 595               	.L80:
+ 596 04d6 65E0      		ldi r22,lo8(5)
+ 597 04d8 70E0      		ldi r23,hi8(5)
+ 598               	.L60:
+ 599 04da 8091 0000 		lds r24,time
+ 600 04de 9091 0000 		lds r25,(time)+1
+ 601 04e2 0E94 0000 		call __divmodhi4
+ 602 04e6 892B      		or r24,r25
+ 603 04e8 01F4      		brne .L61
+ 604 04ea 8BB3      		in r24,59-32
+ 605 04ec 8823      		tst r24
+ 606 04ee 01F4      		brne .L62
+ 607 04f0 8BB3      		in r24,59-32
+ 608 04f2 8F3F      		cpi r24,lo8(-1)
+ 609 04f4 01F0      		breq .L61
+ 610               	.L62:
+ 611 04f6 8091 0000 		lds r24,flag
+ 612 04fa 9091 0000 		lds r25,(flag)+1
+ 613 04fe 61E0      		ldi r22,lo8(1)
+ 614 0500 41E0      		ldi r20,lo8(1)
+ 615 0502 9701      		movw r18,r14
+ 616 0504 0E94 0000 		call OSFlagPost
+ 617               	.L61:
+ 618 0508 8091 0000 		lds r24,sem_plant
+ 619 050c 9091 0000 		lds r25,(sem_plant)+1
+ 620 0510 60E0      		ldi r22,lo8(0)
+ 621 0512 70E0      		ldi r23,hi8(0)
+ 622 0514 A701      		movw r20,r14
+ 623 0516 0E94 0000 		call OSSemPend
+ 624 051a 0091 0000 		lds r16,plant_cnt
+ 625 051e 1091 0000 		lds r17,(plant_cnt)+1
+ 626 0522 8091 0000 		lds r24,sem_plant
+ 627 0526 9091 0000 		lds r25,(sem_plant)+1
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 12
+
+
+ 628 052a 0E94 0000 		call OSSemPost
+ 629 052e 8091 0000 		lds r24,time
+ 630 0532 9091 0000 		lds r25,(time)+1
+ 631 0536 80FD      		sbrc r24,0
+ 632 0538 00C0      		rjmp .L63
+ 633 053a 8BB3      		in r24,59-32
+ 634 053c 8823      		tst r24
+ 635 053e 01F4      		brne .L64
+ 636 0540 1016      		cp __zero_reg__,r16
+ 637 0542 1106      		cpc __zero_reg__,r17
+ 638 0544 04F4      		brge .L64
+ 639 0546 8091 0000 		lds r24,flag
+ 640 054a 9091 0000 		lds r25,(flag)+1
+ 641 054e 64E0      		ldi r22,lo8(4)
+ 642 0550 41E0      		ldi r20,lo8(1)
+ 643 0552 9701      		movw r18,r14
+ 644 0554 0E94 0000 		call OSFlagPost
+ 645               	.L63:
+ 646 0558 0430      		cpi r16,4
+ 647 055a 1105      		cpc r17,__zero_reg__
+ 648 055c 04F4      		brge .L66
+ 649               	.L81:
+ 650 055e 1016      		cp __zero_reg__,r16
+ 651 0560 1106      		cpc __zero_reg__,r17
+ 652 0562 04F0      		brlt .+2
+ 653 0564 00C0      		rjmp .L79
+ 654               	.L67:
+ 655 0566 8091 0000 		lds r24,time
+ 656 056a 9091 0000 		lds r25,(time)+1
+ 657 056e 0196      		adiw r24,1
+ 658 0570 9093 0000 		sts (time)+1,r25
+ 659 0574 8093 0000 		sts time,r24
+ 660               	.L73:
+ 661 0578 80E0      		ldi r24,lo8(0)
+ 662 057a 60E0      		ldi r22,lo8(0)
+ 663 057c 41E0      		ldi r20,lo8(1)
+ 664 057e 20E0      		ldi r18,lo8(0)
+ 665 0580 30E0      		ldi r19,hi8(0)
+ 666 0582 0E94 0000 		call OSTimeDlyHMSM
+ 667 0586 0E94 0000 		call read_adc
+ 668 058a 8756      		subi r24,lo8(871)
+ 669 058c 9340      		sbci r25,hi8(871)
+ 670 058e 00F0      		brlo .+2
+ 671 0590 00C0      		rjmp .L80
+ 672 0592 6AE0      		ldi r22,lo8(10)
+ 673 0594 70E0      		ldi r23,hi8(10)
+ 674 0596 00C0      		rjmp .L60
+ 675               	.L64:
+ 676 0598 8BB3      		in r24,59-32
+ 677 059a 8F3F      		cpi r24,lo8(-1)
+ 678 059c 01F4      		brne .L65
+ 679 059e 1016      		cp __zero_reg__,r16
+ 680 05a0 1106      		cpc __zero_reg__,r17
+ 681 05a2 04F4      		brge .L65
+ 682 05a4 8091 0000 		lds r24,flag
+ 683 05a8 9091 0000 		lds r25,(flag)+1
+ 684 05ac 64E0      		ldi r22,lo8(4)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 13
+
+
+ 685 05ae 41E0      		ldi r20,lo8(1)
+ 686 05b0 9701      		movw r18,r14
+ 687 05b2 0E94 0000 		call OSFlagPost
+ 688               	.L65:
+ 689 05b6 8091 0000 		lds r24,flag
+ 690 05ba 9091 0000 		lds r25,(flag)+1
+ 691 05be 62E0      		ldi r22,lo8(2)
+ 692 05c0 41E0      		ldi r20,lo8(1)
+ 693 05c2 9701      		movw r18,r14
+ 694 05c4 0E94 0000 		call OSFlagPost
+ 695 05c8 0430      		cpi r16,4
+ 696 05ca 1105      		cpc r17,__zero_reg__
+ 697 05cc 04F0      		brlt .L81
+ 698               	.L66:
+ 699 05ce 8091 0000 		lds r24,flag
+ 700 05d2 9091 0000 		lds r25,(flag)+1
+ 701 05d6 60E1      		ldi r22,lo8(16)
+ 702 05d8 41E0      		ldi r20,lo8(1)
+ 703 05da 9701      		movw r18,r14
+ 704 05dc 0E94 0000 		call OSFlagPost
+ 705 05e0 02E0      		ldi r16,lo8(2)
+ 706 05e2 10E0      		ldi r17,hi8(2)
+ 707               	.L72:
+ 708 05e4 8091 0000 		lds r24,sem_buz
+ 709 05e8 9091 0000 		lds r25,(sem_buz)+1
+ 710 05ec 60E0      		ldi r22,lo8(0)
+ 711 05ee 70E0      		ldi r23,hi8(0)
+ 712 05f0 A701      		movw r20,r14
+ 713 05f2 0E94 0000 		call OSSemPend
+ 714 05f6 1093 0000 		sts (soundMode)+1,r17
+ 715 05fa 0093 0000 		sts soundMode,r16
+ 716 05fe 8091 0000 		lds r24,sem_buz
+ 717 0602 9091 0000 		lds r25,(sem_buz)+1
+ 718 0606 0E94 0000 		call OSSemPost
+ 719 060a 80E0      		ldi r24,lo8(0)
+ 720 060c 60E0      		ldi r22,lo8(0)
+ 721 060e 40E0      		ldi r20,lo8(0)
+ 722 0610 28EC      		ldi r18,lo8(200)
+ 723 0612 30E0      		ldi r19,hi8(200)
+ 724 0614 0E94 0000 		call OSTimeDlyHMSM
+ 725 0618 0F5F      		subi r16,lo8(-(1))
+ 726 061a 1F4F      		sbci r17,hi8(-(1))
+ 727 061c 0630      		cpi r16,6
+ 728 061e 1105      		cpc r17,__zero_reg__
+ 729 0620 01F4      		brne .L72
+ 730               	.L78:
+ 731 0622 8091 0000 		lds r24,sem_buz
+ 732 0626 9091 0000 		lds r25,(sem_buz)+1
+ 733 062a 60E0      		ldi r22,lo8(0)
+ 734 062c 70E0      		ldi r23,hi8(0)
+ 735 062e A701      		movw r20,r14
+ 736 0630 0E94 0000 		call OSSemPend
+ 737 0634 D092 0000 		sts (soundMode)+1,r13
+ 738 0638 C092 0000 		sts soundMode,r12
+ 739 063c 8091 0000 		lds r24,sem_buz
+ 740 0640 9091 0000 		lds r25,(sem_buz)+1
+ 741 0644 0E94 0000 		call OSSemPost
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 14
+
+
+ 742 0648 80E0      		ldi r24,lo8(0)
+ 743 064a 60E0      		ldi r22,lo8(0)
+ 744 064c 43E0      		ldi r20,lo8(3)
+ 745 064e 20E0      		ldi r18,lo8(0)
+ 746 0650 30E0      		ldi r19,hi8(0)
+ 747 0652 0E94 0000 		call OSTimeDlyHMSM
+ 748 0656 8091 0000 		lds r24,flag
+ 749 065a 9091 0000 		lds r25,(flag)+1
+ 750 065e 6FEF      		ldi r22,lo8(-1)
+ 751 0660 40E0      		ldi r20,lo8(0)
+ 752 0662 9701      		movw r18,r14
+ 753 0664 0E94 0000 		call OSFlagPost
+ 754 0668 0E94 0000 		call Reset
+ 755 066c 00C0      		rjmp .L67
+ 756               	.L79:
+ 757 066e 8BB3      		in r24,59-32
+ 758 0670 8823      		tst r24
+ 759 0672 01F4      		brne .L82
+ 760               	.L68:
+ 761 0674 8091 0000 		lds r24,flag
+ 762 0678 9091 0000 		lds r25,(flag)+1
+ 763 067c 60E1      		ldi r22,lo8(16)
+ 764 067e 41E0      		ldi r20,lo8(1)
+ 765 0680 9701      		movw r18,r14
+ 766 0682 0E94 0000 		call OSFlagPost
+ 767 0686 06E0      		ldi r16,lo8(6)
+ 768 0688 10E0      		ldi r17,hi8(6)
+ 769               	.L70:
+ 770 068a 8091 0000 		lds r24,sem_buz
+ 771 068e 9091 0000 		lds r25,(sem_buz)+1
+ 772 0692 60E0      		ldi r22,lo8(0)
+ 773 0694 70E0      		ldi r23,hi8(0)
+ 774 0696 A701      		movw r20,r14
+ 775 0698 0E94 0000 		call OSSemPend
+ 776 069c 1093 0000 		sts (soundMode)+1,r17
+ 777 06a0 0093 0000 		sts soundMode,r16
+ 778 06a4 8091 0000 		lds r24,sem_buz
+ 779 06a8 9091 0000 		lds r25,(sem_buz)+1
+ 780 06ac 0E94 0000 		call OSSemPost
+ 781 06b0 80E0      		ldi r24,lo8(0)
+ 782 06b2 60E0      		ldi r22,lo8(0)
+ 783 06b4 40E0      		ldi r20,lo8(0)
+ 784 06b6 28EC      		ldi r18,lo8(200)
+ 785 06b8 30E0      		ldi r19,hi8(200)
+ 786 06ba 0E94 0000 		call OSTimeDlyHMSM
+ 787 06be 0F5F      		subi r16,lo8(-(1))
+ 788 06c0 1F4F      		sbci r17,hi8(-(1))
+ 789 06c2 0A30      		cpi r16,10
+ 790 06c4 1105      		cpc r17,__zero_reg__
+ 791 06c6 01F4      		brne .L70
+ 792 06c8 00C0      		rjmp .L78
+ 793               	.L82:
+ 794 06ca 8BB3      		in r24,59-32
+ 795 06cc 8F3F      		cpi r24,lo8(-1)
+ 796 06ce 01F0      		breq .+2
+ 797 06d0 00C0      		rjmp .L67
+ 798 06d2 00C0      		rjmp .L68
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 15
+
+
+ 799               		.size	ControlTask, .-ControlTask
+ 800               	.global	__vector_5
+ 801               		.type	__vector_5, @function
+ 802               	__vector_5:
+ 803 06d4 1F92      		push __zero_reg__
+ 804 06d6 0F92      		push r0
+ 805 06d8 0FB6      		in r0,__SREG__
+ 806 06da 0F92      		push r0
+ 807 06dc 0BB6      		in r0,91-32
+ 808 06de 0F92      		push r0
+ 809 06e0 1124      		clr __zero_reg__
+ 810 06e2 2F93      		push r18
+ 811 06e4 3F93      		push r19
+ 812 06e6 4F93      		push r20
+ 813 06e8 5F93      		push r21
+ 814 06ea 6F93      		push r22
+ 815 06ec 7F93      		push r23
+ 816 06ee 8F93      		push r24
+ 817 06f0 9F93      		push r25
+ 818 06f2 AF93      		push r26
+ 819 06f4 BF93      		push r27
+ 820 06f6 EF93      		push r30
+ 821 06f8 FF93      		push r31
+ 822 06fa DF93      		push r29
+ 823 06fc CF93      		push r28
+ 824 06fe 00D0      		rcall .
+ 825 0700 CDB7      		in r28,__SP_L__
+ 826 0702 DEB7      		in r29,__SP_H__
+ 827               	/* prologue: Signal */
+ 828               	/* frame size = 2 */
+ 829 0704 8091 0000 		lds r24,flag
+ 830 0708 9091 0000 		lds r25,(flag)+1
+ 831 070c 68E0      		ldi r22,lo8(8)
+ 832 070e 41E0      		ldi r20,lo8(1)
+ 833 0710 9E01      		movw r18,r28
+ 834 0712 2F5F      		subi r18,lo8(-(1))
+ 835 0714 3F4F      		sbci r19,hi8(-(1))
+ 836 0716 0E94 0000 		call OSFlagPost
+ 837               	/* epilogue start */
+ 838 071a 0F90      		pop __tmp_reg__
+ 839 071c 0F90      		pop __tmp_reg__
+ 840 071e CF91      		pop r28
+ 841 0720 DF91      		pop r29
+ 842 0722 FF91      		pop r31
+ 843 0724 EF91      		pop r30
+ 844 0726 BF91      		pop r27
+ 845 0728 AF91      		pop r26
+ 846 072a 9F91      		pop r25
+ 847 072c 8F91      		pop r24
+ 848 072e 7F91      		pop r23
+ 849 0730 6F91      		pop r22
+ 850 0732 5F91      		pop r21
+ 851 0734 4F91      		pop r20
+ 852 0736 3F91      		pop r19
+ 853 0738 2F91      		pop r18
+ 854 073a 0F90      		pop r0
+ 855 073c 0BBE      		out 91-32,r0
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 16
+
+
+ 856 073e 0F90      		pop r0
+ 857 0740 0FBE      		out __SREG__,r0
+ 858 0742 0F90      		pop r0
+ 859 0744 1F90      		pop __zero_reg__
+ 860 0746 1895      		reti
+ 861               		.size	__vector_5, .-__vector_5
+ 862               	.global	main
+ 863               		.type	main, @function
+ 864               	main:
+ 865 0748 DF93      		push r29
+ 866 074a CF93      		push r28
+ 867 074c 00D0      		rcall .
+ 868 074e CDB7      		in r28,__SP_L__
+ 869 0750 DEB7      		in r29,__SP_H__
+ 870               	/* prologue: function */
+ 871               	/* frame size = 2 */
+ 872 0752 0E94 0000 		call OSInit
+ 873               	/* #APP */
+ 874               	 ;  114 "lab2.c" 1
+ 875 0756 F894      		cli
+ 876               	 ;  0 "" 2
+ 877               	/* #NOAPP */
+ 878 0758 87E0      		ldi r24,lo8(7)
+ 879 075a 83BF      		out 83-32,r24
+ 880 075c 81E4      		ldi r24,lo8(65)
+ 881 075e 87BF      		out 87-32,r24
+ 882 0760 84E6      		ldi r24,lo8(100)
+ 883 0762 82BF      		out 82-32,r24
+ 884 0764 0E94 0000 		call Reset
+ 885 0768 90E1      		ldi r25,lo8(16)
+ 886 076a 97BB      		out 55-32,r25
+ 887 076c 83E0      		ldi r24,lo8(3)
+ 888 076e 85BD      		out 69-32,r24
+ 889 0770 81E1      		ldi r24,lo8(17)
+ 890 0772 84BD      		out 68-32,r24
+ 891 0774 8FEE      		ldi r24,lo8(-17)
+ 892 0776 82B9      		out 34-32,r24
+ 893 0778 82E0      		ldi r24,lo8(2)
+ 894 077a 8ABF      		out 90-32,r24
+ 895 077c 99BF      		out 89-32,r25
+ 896 077e 8FB7      		in r24,__SREG__
+ 897 0780 8068      		ori r24,lo8(-128)
+ 898 0782 8FBF      		out __SREG__,r24
+ 899 0784 17B8      		out 39-32,__zero_reg__
+ 900 0786 87E8      		ldi r24,lo8(-121)
+ 901 0788 86B9      		out 38-32,r24
+ 902               	/* #APP */
+ 903               	 ;  136 "lab2.c" 1
+ 904 078a 7894      		sei
+ 905               	 ;  0 "" 2
+ 906               	/* #NOAPP */
+ 907 078c 81E0      		ldi r24,lo8(1)
+ 908 078e 90E0      		ldi r25,hi8(1)
+ 909 0790 0E94 0000 		call OSSemCreate
+ 910 0794 9093 0000 		sts (sem_buz)+1,r25
+ 911 0798 8093 0000 		sts sem_buz,r24
+ 912 079c 81E0      		ldi r24,lo8(1)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 17
+
+
+ 913 079e 90E0      		ldi r25,hi8(1)
+ 914 07a0 0E94 0000 		call OSSemCreate
+ 915 07a4 9093 0000 		sts (sem_plant)+1,r25
+ 916 07a8 8093 0000 		sts sem_plant,r24
+ 917 07ac 81E0      		ldi r24,lo8(1)
+ 918 07ae 90E0      		ldi r25,hi8(1)
+ 919 07b0 0E94 0000 		call OSSemCreate
+ 920 07b4 9093 0000 		sts (sem_random)+1,r25
+ 921 07b8 8093 0000 		sts sem_random,r24
+ 922 07bc 80E0      		ldi r24,lo8(0)
+ 923 07be 90E0      		ldi r25,hi8(0)
+ 924 07c0 0E94 0000 		call srand
+ 925 07c4 80E0      		ldi r24,lo8(gs(LedPlusTask))
+ 926 07c6 90E0      		ldi r25,hi8(gs(LedPlusTask))
+ 927 07c8 60E0      		ldi r22,lo8(0)
+ 928 07ca 70E0      		ldi r23,hi8(0)
+ 929 07cc 40E0      		ldi r20,lo8(LedPlusTaskStk+127)
+ 930 07ce 50E0      		ldi r21,hi8(LedPlusTaskStk+127)
+ 931 07d0 20E0      		ldi r18,lo8(0)
+ 932 07d2 0E94 0000 		call OSTaskCreate
+ 933 07d6 80E0      		ldi r24,lo8(gs(LedMinusTask))
+ 934 07d8 90E0      		ldi r25,hi8(gs(LedMinusTask))
+ 935 07da 60E0      		ldi r22,lo8(0)
+ 936 07dc 70E0      		ldi r23,hi8(0)
+ 937 07de 40E0      		ldi r20,lo8(LedMinusTaskStk+127)
+ 938 07e0 50E0      		ldi r21,hi8(LedMinusTaskStk+127)
+ 939 07e2 21E0      		ldi r18,lo8(1)
+ 940 07e4 0E94 0000 		call OSTaskCreate
+ 941 07e8 80E0      		ldi r24,lo8(gs(FndPlusTask))
+ 942 07ea 90E0      		ldi r25,hi8(gs(FndPlusTask))
+ 943 07ec 60E0      		ldi r22,lo8(0)
+ 944 07ee 70E0      		ldi r23,hi8(0)
+ 945 07f0 40E0      		ldi r20,lo8(FndPlusTaskStk+127)
+ 946 07f2 50E0      		ldi r21,hi8(FndPlusTaskStk+127)
+ 947 07f4 22E0      		ldi r18,lo8(2)
+ 948 07f6 0E94 0000 		call OSTaskCreate
+ 949 07fa 80E0      		ldi r24,lo8(gs(FndMinusTask))
+ 950 07fc 90E0      		ldi r25,hi8(gs(FndMinusTask))
+ 951 07fe 60E0      		ldi r22,lo8(0)
+ 952 0800 70E0      		ldi r23,hi8(0)
+ 953 0802 40E0      		ldi r20,lo8(FndMinusTaskStk+127)
+ 954 0804 50E0      		ldi r21,hi8(FndMinusTaskStk+127)
+ 955 0806 23E0      		ldi r18,lo8(3)
+ 956 0808 0E94 0000 		call OSTaskCreate
+ 957 080c 80E0      		ldi r24,lo8(gs(ControlTask))
+ 958 080e 90E0      		ldi r25,hi8(gs(ControlTask))
+ 959 0810 60E0      		ldi r22,lo8(0)
+ 960 0812 70E0      		ldi r23,hi8(0)
+ 961 0814 40E0      		ldi r20,lo8(ControlTaskStk+127)
+ 962 0816 50E0      		ldi r21,hi8(ControlTaskStk+127)
+ 963 0818 24E0      		ldi r18,lo8(4)
+ 964 081a 0E94 0000 		call OSTaskCreate
+ 965 081e 80E0      		ldi r24,lo8(gs(ShowFndTask))
+ 966 0820 90E0      		ldi r25,hi8(gs(ShowFndTask))
+ 967 0822 60E0      		ldi r22,lo8(0)
+ 968 0824 70E0      		ldi r23,hi8(0)
+ 969 0826 40E0      		ldi r20,lo8(ShowFndTaskStk+127)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 18
+
+
+ 970 0828 50E0      		ldi r21,hi8(ShowFndTaskStk+127)
+ 971 082a 26E0      		ldi r18,lo8(6)
+ 972 082c 0E94 0000 		call OSTaskCreate
+ 973 0830 80E0      		ldi r24,lo8(0)
+ 974 0832 BE01      		movw r22,r28
+ 975 0834 6F5F      		subi r22,lo8(-(1))
+ 976 0836 7F4F      		sbci r23,hi8(-(1))
+ 977 0838 0E94 0000 		call OSFlagCreate
+ 978 083c 9093 0000 		sts (flag)+1,r25
+ 979 0840 8093 0000 		sts flag,r24
+ 980 0844 0E94 0000 		call OSStart
+ 981 0848 80E0      		ldi r24,lo8(0)
+ 982 084a 90E0      		ldi r25,hi8(0)
+ 983               	/* epilogue start */
+ 984 084c 0F90      		pop __tmp_reg__
+ 985 084e 0F90      		pop __tmp_reg__
+ 986 0850 CF91      		pop r28
+ 987 0852 DF91      		pop r29
+ 988 0854 0895      		ret
+ 989               		.size	main, .-main
+ 990               	.global	SEL
+ 991               		.data
+ 992               		.type	SEL, @object
+ 993               		.size	SEL, 4
+ 994               	SEL:
+ 995 0000 08        		.byte	8
+ 996 0001 04        		.byte	4
+ 997 0002 02        		.byte	2
+ 998 0003 01        		.byte	1
+ 999               	.global	Plant
+ 1000               		.type	Plant, @object
+ 1001               		.size	Plant, 4
+ 1002               	Plant:
+ 1003 0004 4F        		.byte	79
+ 1004 0005 63        		.byte	99
+ 1005 0006 5C        		.byte	92
+ 1006 0007 46        		.byte	70
+ 1007               	.global	WIN
+ 1008               		.type	WIN, @object
+ 1009               		.size	WIN, 4
+ 1010               	WIN:
+ 1011 0008 3E        		.byte	62
+ 1012 0009 3E        		.byte	62
+ 1013 000a 06        		.byte	6
+ 1014 000b 37        		.byte	55
+ 1015               	.global	LOSE
+ 1016               		.type	LOSE, @object
+ 1017               		.size	LOSE, 4
+ 1018               	LOSE:
+ 1019 000c 38        		.byte	56
+ 1020 000d 3F        		.byte	63
+ 1021 000e 6D        		.byte	109
+ 1022 000f 79        		.byte	121
+ 1023               	.global	Sound
+ 1024               		.type	Sound, @object
+ 1025               		.size	Sound, 20
+ 1026               	Sound:
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 19
+
+
+ 1027 0010 1100      		.word	17
+ 1028 0012 6100      		.word	97
+ 1029 0014 1100      		.word	17
+ 1030 0016 4200      		.word	66
+ 1031 0018 6100      		.word	97
+ 1032 001a 8900      		.word	137
+ 1033 001c 7200      		.word	114
+ 1034 001e 6900      		.word	105
+ 1035 0020 6100      		.word	97
+ 1036 0022 5700      		.word	87
+ 1037               	.global	time
+ 1038               		.type	time, @object
+ 1039               		.size	time, 2
+ 1040               	time:
+ 1041 0024 0100      		.word	1
+ 1042               	.global	state
+ 1043               	.global	state
+ 1044               		.section .bss
+ 1045               		.type	state, @object
+ 1046               		.size	state, 2
+ 1047               	state:
+ 1048 0000 0000      		.skip 2,0
+ 1049               	.global	soundMode
+ 1050               		.data
+ 1051               		.type	soundMode, @object
+ 1052               		.size	soundMode, 2
+ 1053               	soundMode:
+ 1054 0026 FFFF      		.word	-1
+ 1055               	.global	plant_cnt
+ 1056               	.global	plant_cnt
+ 1057               		.section .bss
+ 1058               		.type	plant_cnt, @object
+ 1059               		.size	plant_cnt, 2
+ 1060               	plant_cnt:
+ 1061 0002 0000      		.skip 2,0
+ 1062               		.comm ControlTaskStk,128,1
+ 1063               		.comm LedPlusTaskStk,128,1
+ 1064               		.comm LedMinusTaskStk,128,1
+ 1065               		.comm FndPlusTaskStk,128,1
+ 1066               		.comm FndMinusTaskStk,128,1
+ 1067               		.comm ShowFndTaskStk,128,1
+ 1068               		.comm flag,2,1
+ 1069               		.comm sem_buz,2,1
+ 1070               		.comm sem_plant,2,1
+ 1071               		.comm sem_random,2,1
+ 1072               	.global __do_copy_data
+ 1073               	.global __do_clear_bss
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 20
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 lab2.c
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:2      *ABS*:0000003f __SREG__
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:3      *ABS*:0000003e __SP_H__
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:4      *ABS*:0000003d __SP_L__
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:5      *ABS*:00000034 __CCP__
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:11     .text:00000000 __vector_10
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:1047   .bss:00000000 state
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:1053   .data:00000026 soundMode
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:1026   .data:00000010 Sound
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:72     .text:00000078 init_adc
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:83     .text:00000080 read_adc
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:103    .text:00000098 Reset
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:1040   .data:00000024 time
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:1060   .bss:00000002 plant_cnt
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:123    .text:000000bc ShowFndTask
+                            *COM*:00000002 sem_plant
+                            *COM*:00000002 flag
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:1010   .data:00000008 WIN
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:994    .data:00000000 SEL
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:1002   .data:00000004 Plant
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:1018   .data:0000000c LOSE
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:308    .text:00000268 FndMinusTask
+                            *COM*:00000002 sem_buz
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:381    .text:0000031e FndPlusTask
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:458    .text:000003dc LedMinusTask
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:490    .text:00000414 LedPlusTask
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:573    .text:000004b0 ControlTask
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:802    .text:000006d4 __vector_5
+C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s:864    .text:00000748 main
+                            *COM*:00000002 sem_random
+                            *COM*:00000080 LedPlusTaskStk
+                            *COM*:00000080 LedMinusTaskStk
+                            *COM*:00000080 FndPlusTaskStk
+                            *COM*:00000080 FndMinusTaskStk
+                            *COM*:00000080 ControlTaskStk
+                            *COM*:00000080 ShowFndTaskStk
+
+UNDEFINED SYMBOLS
+OSSemPend
+OSSemPost
+OSFlagAccept
+OSTimeDlyHMSM
+OSFlagPend
+rand
+__divmodhi4
+OSFlagPost
+OSInit
+OSSemCreate
+srand
+OSTaskCreate
+OSFlagCreate
+OSStart
+__do_copy_data
+__do_clear_bss
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/ccVuaWDK.s 			page 21
+
+

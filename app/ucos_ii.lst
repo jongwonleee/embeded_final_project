@@ -1,0 +1,3419 @@
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 1
+
+
+   1               		.file	"ucos_ii.c"
+   2               	__SREG__ = 0x3f
+   3               	__SP_H__ = 0x3e
+   4               	__SP_L__ = 0x3d
+   5               	__CCP__  = 0x34
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.global	OSIntEnter
+  10               		.type	OSIntEnter, @function
+  11               	OSIntEnter:
+  12               	/* prologue: function */
+  13               	/* frame size = 0 */
+  14 0000 8091 0000 		lds r24,OSRunning
+  15 0004 8130      		cpi r24,lo8(1)
+  16 0006 01F0      		breq .L5
+  17               	.L3:
+  18 0008 0895      		ret
+  19               	.L5:
+  20 000a 8091 0000 		lds r24,OSIntNesting
+  21 000e 8F3F      		cpi r24,lo8(-1)
+  22 0010 01F0      		breq .L3
+  23 0012 8F5F      		subi r24,lo8(-(1))
+  24 0014 8093 0000 		sts OSIntNesting,r24
+  25 0018 0895      		ret
+  26               		.size	OSIntEnter, .-OSIntEnter
+  27               	.global	OSSchedLock
+  28               		.type	OSSchedLock, @function
+  29               	OSSchedLock:
+  30               	/* prologue: function */
+  31               	/* frame size = 0 */
+  32 001a 8091 0000 		lds r24,OSRunning
+  33 001e 8130      		cpi r24,lo8(1)
+  34 0020 01F0      		breq .L10
+  35 0022 0895      		ret
+  36               	.L10:
+  37               	/* #APP */
+  38               	 ;  222 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+  39 0024 F894      		cli
+  40               	 ;  0 "" 2
+  41               	/* #NOAPP */
+  42 0026 8091 0000 		lds r24,OSLockNesting
+  43 002a 8F3F      		cpi r24,lo8(-1)
+  44 002c 01F0      		breq .L8
+  45 002e 8F5F      		subi r24,lo8(-(1))
+  46 0030 8093 0000 		sts OSLockNesting,r24
+  47               	.L8:
+  48               	/* #APP */
+  49               	 ;  226 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+  50 0034 7894      		sei
+  51               	 ;  0 "" 2
+  52               	/* #NOAPP */
+  53 0036 0895      		ret
+  54               		.size	OSSchedLock, .-OSSchedLock
+  55               	.global	OSVersion
+  56               		.type	OSVersion, @function
+  57               	OSVersion:
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 2
+
+
+  58               	/* prologue: function */
+  59               	/* frame size = 0 */
+  60 0038 8CEF      		ldi r24,lo8(252)
+  61 003a 90E0      		ldi r25,hi8(252)
+  62               	/* epilogue start */
+  63 003c 0895      		ret
+  64               		.size	OSVersion, .-OSVersion
+  65               	.global	OS_EventTaskRdy
+  66               		.type	OS_EventTaskRdy, @function
+  67               	OS_EventTaskRdy:
+  68 003e FF92      		push r15
+  69 0040 0F93      		push r16
+  70 0042 1F93      		push r17
+  71 0044 CF93      		push r28
+  72 0046 DF93      		push r29
+  73               	/* prologue: function */
+  74               	/* frame size = 0 */
+  75 0048 EC01      		movw r28,r24
+  76 004a 8B01      		movw r16,r22
+  77 004c F42E      		mov r15,r20
+  78 004e 3981      		ldd r19,Y+1
+  79 0050 E32F      		mov r30,r19
+  80 0052 F0E0      		ldi r31,lo8(0)
+  81 0054 E050      		subi r30,lo8(-(OSUnMapTbl))
+  82 0056 F040      		sbci r31,hi8(-(OSUnMapTbl))
+  83 0058 2081      		ld r18,Z
+  84 005a 422F      		mov r20,r18
+  85 005c 50E0      		ldi r21,lo8(0)
+  86 005e FA01      		movw r30,r20
+  87 0060 E050      		subi r30,lo8(-(OSMapTbl))
+  88 0062 F040      		sbci r31,hi8(-(OSMapTbl))
+  89 0064 7081      		ld r23,Z
+  90 0066 DC01      		movw r26,r24
+  91 0068 A40F      		add r26,r20
+  92 006a B51F      		adc r27,r21
+  93 006c 1696      		adiw r26,6
+  94 006e 9C91      		ld r25,X
+  95 0070 1697      		sbiw r26,6
+  96 0072 E92F      		mov r30,r25
+  97 0074 F0E0      		ldi r31,lo8(0)
+  98 0076 E050      		subi r30,lo8(-(OSUnMapTbl))
+  99 0078 F040      		sbci r31,hi8(-(OSUnMapTbl))
+ 100 007a 8081      		ld r24,Z
+ 101 007c E82F      		mov r30,r24
+ 102 007e F0E0      		ldi r31,lo8(0)
+ 103 0080 E050      		subi r30,lo8(-(OSMapTbl))
+ 104 0082 F040      		sbci r31,hi8(-(OSMapTbl))
+ 105 0084 6081      		ld r22,Z
+ 106 0086 220F      		lsl r18
+ 107 0088 220F      		lsl r18
+ 108 008a 220F      		lsl r18
+ 109 008c 280F      		add r18,r24
+ 110 008e 862F      		mov r24,r22
+ 111 0090 8095      		com r24
+ 112 0092 8923      		and r24,r25
+ 113 0094 1696      		adiw r26,6
+ 114 0096 8C93      		st X,r24
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 3
+
+
+ 115 0098 8823      		tst r24
+ 116 009a 01F4      		brne .L14
+ 117 009c 872F      		mov r24,r23
+ 118 009e 8095      		com r24
+ 119 00a0 3823      		and r19,r24
+ 120 00a2 3983      		std Y+1,r19
+ 121               	.L14:
+ 122 00a4 E22F      		mov r30,r18
+ 123 00a6 F0E0      		ldi r31,lo8(0)
+ 124 00a8 EE0F      		lsl r30
+ 125 00aa FF1F      		rol r31
+ 126 00ac E050      		subi r30,lo8(-(OSTCBPrioTbl))
+ 127 00ae F040      		sbci r31,hi8(-(OSTCBPrioTbl))
+ 128 00b0 0190      		ld __tmp_reg__,Z+
+ 129 00b2 F081      		ld r31,Z
+ 130 00b4 E02D      		mov r30,__tmp_reg__
+ 131 00b6 1486      		std Z+12,__zero_reg__
+ 132 00b8 1386      		std Z+11,__zero_reg__
+ 133 00ba 1782      		std Z+7,__zero_reg__
+ 134 00bc 1682      		std Z+6,__zero_reg__
+ 135 00be 1187      		std Z+9,r17
+ 136 00c0 0087      		std Z+8,r16
+ 137 00c2 8F2D      		mov r24,r15
+ 138 00c4 8095      		com r24
+ 139 00c6 9585      		ldd r25,Z+13
+ 140 00c8 8923      		and r24,r25
+ 141 00ca 8587      		std Z+13,r24
+ 142 00cc 8823      		tst r24
+ 143 00ce 01F4      		brne .L15
+ 144 00d0 8091 0000 		lds r24,OSRdyGrp
+ 145 00d4 872B      		or r24,r23
+ 146 00d6 8093 0000 		sts OSRdyGrp,r24
+ 147 00da FA01      		movw r30,r20
+ 148 00dc E050      		subi r30,lo8(-(OSRdyTbl))
+ 149 00de F040      		sbci r31,hi8(-(OSRdyTbl))
+ 150 00e0 8081      		ld r24,Z
+ 151 00e2 682B      		or r22,r24
+ 152 00e4 6083      		st Z,r22
+ 153               	.L15:
+ 154 00e6 822F      		mov r24,r18
+ 155               	/* epilogue start */
+ 156 00e8 DF91      		pop r29
+ 157 00ea CF91      		pop r28
+ 158 00ec 1F91      		pop r17
+ 159 00ee 0F91      		pop r16
+ 160 00f0 FF90      		pop r15
+ 161 00f2 0895      		ret
+ 162               		.size	OS_EventTaskRdy, .-OS_EventTaskRdy
+ 163               	.global	OS_EventTaskWait
+ 164               		.type	OS_EventTaskWait, @function
+ 165               	OS_EventTaskWait:
+ 166 00f4 CF93      		push r28
+ 167 00f6 DF93      		push r29
+ 168               	/* prologue: function */
+ 169               	/* frame size = 0 */
+ 170 00f8 EC01      		movw r28,r24
+ 171 00fa A091 0000 		lds r26,OSTCBCur
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 4
+
+
+ 172 00fe B091 0000 		lds r27,(OSTCBCur)+1
+ 173 0102 1796      		adiw r26,6+1
+ 174 0104 9C93      		st X,r25
+ 175 0106 8E93      		st -X,r24
+ 176 0108 1697      		sbiw r26,6
+ 177 010a 5096      		adiw r26,16
+ 178 010c 8C91      		ld r24,X
+ 179 010e 5097      		sbiw r26,16
+ 180 0110 482F      		mov r20,r24
+ 181 0112 50E0      		ldi r21,lo8(0)
+ 182 0114 5196      		adiw r26,17
+ 183 0116 3C91      		ld r19,X
+ 184 0118 5197      		sbiw r26,17
+ 185 011a FA01      		movw r30,r20
+ 186 011c E050      		subi r30,lo8(-(OSRdyTbl))
+ 187 011e F040      		sbci r31,hi8(-(OSRdyTbl))
+ 188 0120 832F      		mov r24,r19
+ 189 0122 8095      		com r24
+ 190 0124 9081      		ld r25,Z
+ 191 0126 8923      		and r24,r25
+ 192 0128 8083      		st Z,r24
+ 193 012a 8823      		tst r24
+ 194 012c 01F4      		brne .L21
+ 195 012e 5296      		adiw r26,18
+ 196 0130 2C91      		ld r18,X
+ 197 0132 922F      		mov r25,r18
+ 198 0134 9095      		com r25
+ 199 0136 8091 0000 		lds r24,OSRdyGrp
+ 200 013a 8923      		and r24,r25
+ 201 013c 8093 0000 		sts OSRdyGrp,r24
+ 202               	.L19:
+ 203 0140 FE01      		movw r30,r28
+ 204 0142 E40F      		add r30,r20
+ 205 0144 F51F      		adc r31,r21
+ 206 0146 8681      		ldd r24,Z+6
+ 207 0148 832B      		or r24,r19
+ 208 014a 8683      		std Z+6,r24
+ 209 014c 8981      		ldd r24,Y+1
+ 210 014e 822B      		or r24,r18
+ 211 0150 8983      		std Y+1,r24
+ 212               	/* epilogue start */
+ 213 0152 DF91      		pop r29
+ 214 0154 CF91      		pop r28
+ 215 0156 0895      		ret
+ 216               	.L21:
+ 217 0158 5296      		adiw r26,18
+ 218 015a 2C91      		ld r18,X
+ 219 015c 00C0      		rjmp .L19
+ 220               		.size	OS_EventTaskWait, .-OS_EventTaskWait
+ 221               	.global	OS_EventTO
+ 222               		.type	OS_EventTO, @function
+ 223               	OS_EventTO:
+ 224 015e CF93      		push r28
+ 225 0160 DF93      		push r29
+ 226               	/* prologue: function */
+ 227               	/* frame size = 0 */
+ 228 0162 EC01      		movw r28,r24
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 5
+
+
+ 229 0164 A091 0000 		lds r26,OSTCBCur
+ 230 0168 B091 0000 		lds r27,(OSTCBCur)+1
+ 231 016c 5096      		adiw r26,16
+ 232 016e 8C91      		ld r24,X
+ 233 0170 5097      		sbiw r26,16
+ 234 0172 FE01      		movw r30,r28
+ 235 0174 E80F      		add r30,r24
+ 236 0176 F11D      		adc r31,__zero_reg__
+ 237 0178 5196      		adiw r26,17
+ 238 017a 8C91      		ld r24,X
+ 239 017c 5197      		sbiw r26,17
+ 240 017e 8095      		com r24
+ 241 0180 9681      		ldd r25,Z+6
+ 242 0182 8923      		and r24,r25
+ 243 0184 8683      		std Z+6,r24
+ 244 0186 8823      		tst r24
+ 245 0188 01F4      		brne .L23
+ 246 018a 5296      		adiw r26,18
+ 247 018c 9C91      		ld r25,X
+ 248 018e 5297      		sbiw r26,18
+ 249 0190 9095      		com r25
+ 250 0192 8981      		ldd r24,Y+1
+ 251 0194 8923      		and r24,r25
+ 252 0196 8983      		std Y+1,r24
+ 253               	.L23:
+ 254 0198 1D96      		adiw r26,13
+ 255 019a 1C92      		st X,__zero_reg__
+ 256 019c 1D97      		sbiw r26,13
+ 257 019e 1796      		adiw r26,6+1
+ 258 01a0 1C92      		st X,__zero_reg__
+ 259 01a2 1E92      		st -X,__zero_reg__
+ 260 01a4 1697      		sbiw r26,6
+ 261               	/* epilogue start */
+ 262 01a6 DF91      		pop r29
+ 263 01a8 CF91      		pop r28
+ 264 01aa 0895      		ret
+ 265               		.size	OS_EventTO, .-OS_EventTO
+ 266               	.global	OS_EventWaitListInit
+ 267               		.type	OS_EventWaitListInit, @function
+ 268               	OS_EventWaitListInit:
+ 269               	/* prologue: function */
+ 270               	/* frame size = 0 */
+ 271 01ac FC01      		movw r30,r24
+ 272 01ae 1182      		std Z+1,__zero_reg__
+ 273 01b0 1682      		std Z+6,__zero_reg__
+ 274 01b2 1782      		std Z+7,__zero_reg__
+ 275               	/* epilogue start */
+ 276 01b4 0895      		ret
+ 277               		.size	OS_EventWaitListInit, .-OS_EventWaitListInit
+ 278               	.global	OSFlagAccept
+ 279               		.type	OSFlagAccept, @function
+ 280               	OSFlagAccept:
+ 281               	/* prologue: function */
+ 282               	/* frame size = 0 */
+ 283 01b6 DC01      		movw r26,r24
+ 284 01b8 962F      		mov r25,r22
+ 285 01ba F901      		movw r30,r18
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 6
+
+
+ 286 01bc 47FD      		sbrc r20,7
+ 287 01be 00C0      		rjmp .L28
+ 288 01c0 20E0      		ldi r18,lo8(0)
+ 289 01c2 1082      		st Z,__zero_reg__
+ 290               	/* #APP */
+ 291               	 ;  106 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 292 01c4 F894      		cli
+ 293               	 ;  0 "" 2
+ 294               	/* #NOAPP */
+ 295 01c6 4130      		cpi r20,lo8(1)
+ 296 01c8 01F0      		breq .L32
+ 297               	.L49:
+ 298 01ca 4130      		cpi r20,lo8(1)
+ 299 01cc 00F0      		brlo .L31
+ 300 01ce 4230      		cpi r20,lo8(2)
+ 301 01d0 01F4      		brne .+2
+ 302 01d2 00C0      		rjmp .L33
+ 303 01d4 4330      		cpi r20,lo8(3)
+ 304 01d6 01F0      		breq .L46
+ 305               	/* #APP */
+ 306               	 ;  163 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 307 01d8 7894      		sei
+ 308               	 ;  0 "" 2
+ 309               	/* #NOAPP */
+ 310 01da 87E9      		ldi r24,lo8(-105)
+ 311 01dc 8083      		st Z,r24
+ 312 01de 80E0      		ldi r24,lo8(0)
+ 313 01e0 0895      		ret
+ 314               	.L31:
+ 315 01e2 1396      		adiw r26,3
+ 316 01e4 6C91      		ld r22,X
+ 317 01e6 1397      		sbiw r26,3
+ 318 01e8 862F      		mov r24,r22
+ 319 01ea 8095      		com r24
+ 320 01ec 8923      		and r24,r25
+ 321 01ee 8917      		cp r24,r25
+ 322 01f0 01F4      		brne .+2
+ 323 01f2 00C0      		rjmp .L47
+ 324 01f4 88E9      		ldi r24,lo8(-104)
+ 325 01f6 8083      		st Z,r24
+ 326 01f8 1396      		adiw r26,3
+ 327 01fa 6C91      		ld r22,X
+ 328               	.L41:
+ 329 01fc 862F      		mov r24,r22
+ 330               	/* #APP */
+ 331               	 ;  145 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 332 01fe 7894      		sei
+ 333               	 ;  0 "" 2
+ 334               	/* #NOAPP */
+ 335 0200 0895      		ret
+ 336               	.L46:
+ 337 0202 1396      		adiw r26,3
+ 338 0204 6C91      		ld r22,X
+ 339 0206 1397      		sbiw r26,3
+ 340 0208 892F      		mov r24,r25
+ 341 020a 8623      		and r24,r22
+ 342 020c 01F4      		brne .L48
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 7
+
+
+ 343 020e 88E9      		ldi r24,lo8(-104)
+ 344 0210 8083      		st Z,r24
+ 345 0212 1396      		adiw r26,3
+ 346 0214 6C91      		ld r22,X
+ 347               	.L39:
+ 348 0216 862F      		mov r24,r22
+ 349               	/* #APP */
+ 350               	 ;  131 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 351 0218 7894      		sei
+ 352               	 ;  0 "" 2
+ 353               	/* #NOAPP */
+ 354 021a 0895      		ret
+ 355               	.L28:
+ 356 021c 4F77      		andi r20,lo8(127)
+ 357 021e 21E0      		ldi r18,lo8(1)
+ 358 0220 1082      		st Z,__zero_reg__
+ 359               	/* #APP */
+ 360               	 ;  106 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 361 0222 F894      		cli
+ 362               	 ;  0 "" 2
+ 363               	/* #NOAPP */
+ 364 0224 4130      		cpi r20,lo8(1)
+ 365 0226 01F4      		brne .L49
+ 366               	.L32:
+ 367 0228 1396      		adiw r26,3
+ 368 022a 6C91      		ld r22,X
+ 369 022c 1397      		sbiw r26,3
+ 370 022e 862F      		mov r24,r22
+ 371 0230 8095      		com r24
+ 372 0232 8923      		and r24,r25
+ 373 0234 01F4      		brne .L50
+ 374 0236 88E9      		ldi r24,lo8(-104)
+ 375 0238 8083      		st Z,r24
+ 376 023a 1396      		adiw r26,3
+ 377 023c 6C91      		ld r22,X
+ 378               	.L43:
+ 379 023e 862F      		mov r24,r22
+ 380               	/* #APP */
+ 381               	 ;  158 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 382 0240 7894      		sei
+ 383               	 ;  0 "" 2
+ 384               	/* #NOAPP */
+ 385 0242 0895      		ret
+ 386               	.L33:
+ 387 0244 1396      		adiw r26,3
+ 388 0246 6C91      		ld r22,X
+ 389 0248 1397      		sbiw r26,3
+ 390 024a 892F      		mov r24,r25
+ 391 024c 8623      		and r24,r22
+ 392 024e 8917      		cp r24,r25
+ 393 0250 01F0      		breq .L51
+ 394 0252 88E9      		ldi r24,lo8(-104)
+ 395 0254 8083      		st Z,r24
+ 396 0256 1396      		adiw r26,3
+ 397 0258 6C91      		ld r22,X
+ 398               	.L36:
+ 399 025a 862F      		mov r24,r22
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 8
+
+
+ 400               	/* #APP */
+ 401               	 ;  118 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 402 025c 7894      		sei
+ 403               	 ;  0 "" 2
+ 404               	/* #NOAPP */
+ 405 025e 0895      		ret
+ 406               	.L48:
+ 407 0260 2130      		cpi r18,lo8(1)
+ 408 0262 01F4      		brne .L39
+ 409 0264 8095      		com r24
+ 410 0266 8623      		and r24,r22
+ 411 0268 1396      		adiw r26,3
+ 412 026a 8C93      		st X,r24
+ 413 026c 682F      		mov r22,r24
+ 414 026e 00C0      		rjmp .L39
+ 415               	.L50:
+ 416 0270 2130      		cpi r18,lo8(1)
+ 417 0272 01F4      		brne .L43
+ 418 0274 862B      		or r24,r22
+ 419 0276 1396      		adiw r26,3
+ 420 0278 8C93      		st X,r24
+ 421 027a 682F      		mov r22,r24
+ 422 027c 00C0      		rjmp .L43
+ 423               	.L51:
+ 424 027e 2130      		cpi r18,lo8(1)
+ 425 0280 01F4      		brne .L36
+ 426 0282 892F      		mov r24,r25
+ 427 0284 8095      		com r24
+ 428 0286 8623      		and r24,r22
+ 429 0288 1396      		adiw r26,3
+ 430 028a 8C93      		st X,r24
+ 431 028c 682F      		mov r22,r24
+ 432 028e 00C0      		rjmp .L36
+ 433               	.L47:
+ 434 0290 2130      		cpi r18,lo8(1)
+ 435 0292 01F0      		breq .+2
+ 436 0294 00C0      		rjmp .L41
+ 437 0296 862F      		mov r24,r22
+ 438 0298 892B      		or r24,r25
+ 439 029a 1396      		adiw r26,3
+ 440 029c 8C93      		st X,r24
+ 441 029e 682F      		mov r22,r24
+ 442 02a0 00C0      		rjmp .L41
+ 443               		.size	OSFlagAccept, .-OSFlagAccept
+ 444               	.global	OSFlagCreate
+ 445               		.type	OSFlagCreate, @function
+ 446               	OSFlagCreate:
+ 447               	/* prologue: function */
+ 448               	/* frame size = 0 */
+ 449 02a2 282F      		mov r18,r24
+ 450 02a4 DB01      		movw r26,r22
+ 451 02a6 8091 0000 		lds r24,OSIntNesting
+ 452 02aa 8823      		tst r24
+ 453 02ac 01F4      		brne .L57
+ 454               	/* #APP */
+ 455               	 ;  205 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 456 02ae F894      		cli
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 9
+
+
+ 457               	 ;  0 "" 2
+ 458               	/* #NOAPP */
+ 459 02b0 E091 0000 		lds r30,OSFlagFreeList
+ 460 02b4 F091 0000 		lds r31,(OSFlagFreeList)+1
+ 461 02b8 3097      		sbiw r30,0
+ 462 02ba 01F0      		breq .L55
+ 463 02bc 8181      		ldd r24,Z+1
+ 464 02be 9281      		ldd r25,Z+2
+ 465 02c0 9093 0000 		sts (OSFlagFreeList)+1,r25
+ 466 02c4 8093 0000 		sts OSFlagFreeList,r24
+ 467 02c8 85E0      		ldi r24,lo8(5)
+ 468 02ca 8083      		st Z,r24
+ 469 02cc 2383      		std Z+3,r18
+ 470 02ce 1282      		std Z+2,__zero_reg__
+ 471 02d0 1182      		std Z+1,__zero_reg__
+ 472               	/* #APP */
+ 473               	 ;  213 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 474 02d2 7894      		sei
+ 475               	 ;  0 "" 2
+ 476               	/* #NOAPP */
+ 477 02d4 1C92      		st X,__zero_reg__
+ 478               	.L54:
+ 479 02d6 CF01      		movw r24,r30
+ 480               	/* epilogue start */
+ 481 02d8 0895      		ret
+ 482               	.L55:
+ 483               	/* #APP */
+ 484               	 ;  216 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 485 02da 7894      		sei
+ 486               	 ;  0 "" 2
+ 487               	/* #NOAPP */
+ 488 02dc 8AE9      		ldi r24,lo8(-102)
+ 489 02de 8C93      		st X,r24
+ 490 02e0 CF01      		movw r24,r30
+ 491 02e2 0895      		ret
+ 492               	.L57:
+ 493 02e4 8DE8      		ldi r24,lo8(-115)
+ 494 02e6 8C93      		st X,r24
+ 495 02e8 E0E0      		ldi r30,lo8(0)
+ 496 02ea F0E0      		ldi r31,hi8(0)
+ 497 02ec 00C0      		rjmp .L54
+ 498               		.size	OSFlagCreate, .-OSFlagCreate
+ 499               	.global	OSFlagQuery
+ 500               		.type	OSFlagQuery, @function
+ 501               	OSFlagQuery:
+ 502               	/* prologue: function */
+ 503               	/* frame size = 0 */
+ 504 02ee FC01      		movw r30,r24
+ 505 02f0 DB01      		movw r26,r22
+ 506               	/* #APP */
+ 507               	 ;  685 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 508 02f2 F894      		cli
+ 509               	 ;  0 "" 2
+ 510               	/* #NOAPP */
+ 511 02f4 8381      		ldd r24,Z+3
+ 512               	/* #APP */
+ 513               	 ;  687 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 10
+
+
+ 514 02f6 7894      		sei
+ 515               	 ;  0 "" 2
+ 516               	/* #NOAPP */
+ 517 02f8 1C92      		st X,__zero_reg__
+ 518               	/* epilogue start */
+ 519 02fa 0895      		ret
+ 520               		.size	OSFlagQuery, .-OSFlagQuery
+ 521               		.type	OS_FlagBlock, @function
+ 522               	OS_FlagBlock:
+ 523 02fc EF92      		push r14
+ 524 02fe FF92      		push r15
+ 525 0300 0F93      		push r16
+ 526 0302 1F93      		push r17
+ 527 0304 CF93      		push r28
+ 528 0306 DF93      		push r29
+ 529               	/* prologue: function */
+ 530               	/* frame size = 0 */
+ 531 0308 7C01      		movw r14,r24
+ 532 030a FB01      		movw r30,r22
+ 533 030c A091 0000 		lds r26,OSTCBCur
+ 534 0310 B091 0000 		lds r27,(OSTCBCur)+1
+ 535 0314 1D96      		adiw r26,13
+ 536 0316 8C91      		ld r24,X
+ 537 0318 1D97      		sbiw r26,13
+ 538 031a 8062      		ori r24,lo8(32)
+ 539 031c 1D96      		adiw r26,13
+ 540 031e 8C93      		st X,r24
+ 541 0320 1D97      		sbiw r26,13
+ 542 0322 1C96      		adiw r26,11+1
+ 543 0324 1C93      		st X,r17
+ 544 0326 0E93      		st -X,r16
+ 545 0328 1B97      		sbiw r26,11
+ 546 032a 4087      		std Z+8,r20
+ 547 032c 2187      		std Z+9,r18
+ 548 032e B583      		std Z+5,r27
+ 549 0330 A483      		std Z+4,r26
+ 550 0332 E701      		movw r28,r14
+ 551 0334 8981      		ldd r24,Y+1
+ 552 0336 9A81      		ldd r25,Y+2
+ 553 0338 9183      		std Z+1,r25
+ 554 033a 8083      		st Z,r24
+ 555 033c 1382      		std Z+3,__zero_reg__
+ 556 033e 1282      		std Z+2,__zero_reg__
+ 557 0340 F782      		std Z+7,r15
+ 558 0342 E682      		std Z+6,r14
+ 559 0344 8981      		ldd r24,Y+1
+ 560 0346 9A81      		ldd r25,Y+2
+ 561 0348 0097      		sbiw r24,0
+ 562 034a 01F0      		breq .L61
+ 563 034c EC01      		movw r28,r24
+ 564 034e 7B83      		std Y+3,r23
+ 565 0350 6A83      		std Y+2,r22
+ 566               	.L61:
+ 567 0352 E701      		movw r28,r14
+ 568 0354 FA83      		std Y+2,r31
+ 569 0356 E983      		std Y+1,r30
+ 570 0358 5096      		adiw r26,16
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 11
+
+
+ 571 035a EC91      		ld r30,X
+ 572 035c 5097      		sbiw r26,16
+ 573 035e F0E0      		ldi r31,lo8(0)
+ 574 0360 E050      		subi r30,lo8(-(OSRdyTbl))
+ 575 0362 F040      		sbci r31,hi8(-(OSRdyTbl))
+ 576 0364 5196      		adiw r26,17
+ 577 0366 8C91      		ld r24,X
+ 578 0368 5197      		sbiw r26,17
+ 579 036a 8095      		com r24
+ 580 036c 9081      		ld r25,Z
+ 581 036e 8923      		and r24,r25
+ 582 0370 8083      		st Z,r24
+ 583 0372 8823      		tst r24
+ 584 0374 01F4      		brne .L63
+ 585 0376 5296      		adiw r26,18
+ 586 0378 9C91      		ld r25,X
+ 587 037a 9095      		com r25
+ 588 037c 8091 0000 		lds r24,OSRdyGrp
+ 589 0380 8923      		and r24,r25
+ 590 0382 8093 0000 		sts OSRdyGrp,r24
+ 591               	.L63:
+ 592               	/* epilogue start */
+ 593 0386 DF91      		pop r29
+ 594 0388 CF91      		pop r28
+ 595 038a 1F91      		pop r17
+ 596 038c 0F91      		pop r16
+ 597 038e FF90      		pop r15
+ 598 0390 EF90      		pop r14
+ 599 0392 0895      		ret
+ 600               		.size	OS_FlagBlock, .-OS_FlagBlock
+ 601               	.global	OS_FlagInit
+ 602               		.type	OS_FlagInit, @function
+ 603               	OS_FlagInit:
+ 604               	/* prologue: function */
+ 605               	/* frame size = 0 */
+ 606 0394 80E0      		ldi r24,lo8(OSFlagTbl)
+ 607 0396 90E0      		ldi r25,hi8(OSFlagTbl)
+ 608 0398 9093 0000 		sts (OSFlagFreeList)+1,r25
+ 609 039c 8093 0000 		sts OSFlagFreeList,r24
+ 610 03a0 1092 0000 		sts OSFlagTbl,__zero_reg__
+ 611 03a4 1092 0000 		sts (OSFlagTbl+1)+1,__zero_reg__
+ 612 03a8 1092 0000 		sts OSFlagTbl+1,__zero_reg__
+ 613               	/* epilogue start */
+ 614 03ac 0895      		ret
+ 615               		.size	OS_FlagInit, .-OS_FlagInit
+ 616               	.global	OS_FlagUnlink
+ 617               		.type	OS_FlagUnlink, @function
+ 618               	OS_FlagUnlink:
+ 619 03ae CF93      		push r28
+ 620 03b0 DF93      		push r29
+ 621               	/* prologue: function */
+ 622               	/* frame size = 0 */
+ 623 03b2 FC01      		movw r30,r24
+ 624 03b4 A281      		ldd r26,Z+2
+ 625 03b6 B381      		ldd r27,Z+3
+ 626 03b8 C081      		ld r28,Z
+ 627 03ba D181      		ldd r29,Z+1
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 12
+
+
+ 628 03bc 1097      		sbiw r26,0
+ 629 03be 01F0      		breq .L70
+ 630 03c0 1196      		adiw r26,1
+ 631 03c2 DC93      		st X,r29
+ 632 03c4 CE93      		st -X,r28
+ 633 03c6 2097      		sbiw r28,0
+ 634 03c8 01F0      		breq .L69
+ 635 03ca BB83      		std Y+3,r27
+ 636 03cc AA83      		std Y+2,r26
+ 637               	.L69:
+ 638               	/* epilogue start */
+ 639 03ce DF91      		pop r29
+ 640 03d0 CF91      		pop r28
+ 641 03d2 0895      		ret
+ 642               	.L70:
+ 643 03d4 0680      		ldd __tmp_reg__,Z+6
+ 644 03d6 F781      		ldd r31,Z+7
+ 645 03d8 E02D      		mov r30,__tmp_reg__
+ 646 03da D283      		std Z+2,r29
+ 647 03dc C183      		std Z+1,r28
+ 648 03de 2097      		sbiw r28,0
+ 649 03e0 01F0      		breq .L69
+ 650 03e2 1B82      		std Y+3,__zero_reg__
+ 651 03e4 1A82      		std Y+2,__zero_reg__
+ 652 03e6 DF91      		pop r29
+ 653 03e8 CF91      		pop r28
+ 654 03ea 0895      		ret
+ 655               		.size	OS_FlagUnlink, .-OS_FlagUnlink
+ 656               		.type	OS_FlagTaskRdy, @function
+ 657               	OS_FlagTaskRdy:
+ 658 03ec 1F93      		push r17
+ 659 03ee CF93      		push r28
+ 660 03f0 DF93      		push r29
+ 661               	/* prologue: function */
+ 662               	/* frame size = 0 */
+ 663 03f2 EC01      		movw r28,r24
+ 664 03f4 AC81      		ldd r26,Y+4
+ 665 03f6 BD81      		ldd r27,Y+5
+ 666 03f8 1C96      		adiw r26,11+1
+ 667 03fa 1C92      		st X,__zero_reg__
+ 668 03fc 1E92      		st -X,__zero_reg__
+ 669 03fe 1B97      		sbiw r26,11
+ 670 0400 1A96      		adiw r26,10
+ 671 0402 6C93      		st X,r22
+ 672 0404 1A97      		sbiw r26,10
+ 673 0406 1D96      		adiw r26,13
+ 674 0408 8C91      		ld r24,X
+ 675 040a 1D97      		sbiw r26,13
+ 676 040c 8F7D      		andi r24,lo8(-33)
+ 677 040e 1D96      		adiw r26,13
+ 678 0410 8C93      		st X,r24
+ 679 0412 1D97      		sbiw r26,13
+ 680 0414 8823      		tst r24
+ 681 0416 01F4      		brne .L75
+ 682 0418 8091 0000 		lds r24,OSRdyGrp
+ 683 041c 5296      		adiw r26,18
+ 684 041e 9C91      		ld r25,X
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 13
+
+
+ 685 0420 5297      		sbiw r26,18
+ 686 0422 892B      		or r24,r25
+ 687 0424 8093 0000 		sts OSRdyGrp,r24
+ 688 0428 5096      		adiw r26,16
+ 689 042a EC91      		ld r30,X
+ 690 042c 5097      		sbiw r26,16
+ 691 042e F0E0      		ldi r31,lo8(0)
+ 692 0430 E050      		subi r30,lo8(-(OSRdyTbl))
+ 693 0432 F040      		sbci r31,hi8(-(OSRdyTbl))
+ 694 0434 8081      		ld r24,Z
+ 695 0436 5196      		adiw r26,17
+ 696 0438 9C91      		ld r25,X
+ 697 043a 892B      		or r24,r25
+ 698 043c 8083      		st Z,r24
+ 699 043e 11E0      		ldi r17,lo8(1)
+ 700 0440 CE01      		movw r24,r28
+ 701 0442 0E94 0000 		call OS_FlagUnlink
+ 702 0446 812F      		mov r24,r17
+ 703               	/* epilogue start */
+ 704 0448 DF91      		pop r29
+ 705 044a CF91      		pop r28
+ 706 044c 1F91      		pop r17
+ 707 044e 0895      		ret
+ 708               	.L75:
+ 709 0450 10E0      		ldi r17,lo8(0)
+ 710 0452 CE01      		movw r24,r28
+ 711 0454 0E94 0000 		call OS_FlagUnlink
+ 712 0458 812F      		mov r24,r17
+ 713 045a DF91      		pop r29
+ 714 045c CF91      		pop r28
+ 715 045e 1F91      		pop r17
+ 716 0460 0895      		ret
+ 717               		.size	OS_FlagTaskRdy, .-OS_FlagTaskRdy
+ 718               	.global	OSMboxCreate
+ 719               		.type	OSMboxCreate, @function
+ 720               	OSMboxCreate:
+ 721               	/* prologue: function */
+ 722               	/* frame size = 0 */
+ 723 0462 9C01      		movw r18,r24
+ 724 0464 8091 0000 		lds r24,OSIntNesting
+ 725 0468 8823      		tst r24
+ 726 046a 01F4      		brne .L81
+ 727               	/* #APP */
+ 728               	 ;  89 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 729 046c F894      		cli
+ 730               	 ;  0 "" 2
+ 731               	/* #NOAPP */
+ 732 046e E091 0000 		lds r30,OSEventFreeList
+ 733 0472 F091 0000 		lds r31,(OSEventFreeList)+1
+ 734 0476 3097      		sbiw r30,0
+ 735 0478 01F0      		breq .L79
+ 736 047a 8481      		ldd r24,Z+4
+ 737 047c 9581      		ldd r25,Z+5
+ 738 047e 9093 0000 		sts (OSEventFreeList)+1,r25
+ 739 0482 8093 0000 		sts OSEventFreeList,r24
+ 740               	.L79:
+ 741               	/* #APP */
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 14
+
+
+ 742               	 ;  94 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 743 0486 7894      		sei
+ 744               	 ;  0 "" 2
+ 745               	/* #NOAPP */
+ 746 0488 3097      		sbiw r30,0
+ 747 048a 01F0      		breq .L78
+ 748 048c 81E0      		ldi r24,lo8(1)
+ 749 048e 8083      		st Z,r24
+ 750 0490 1382      		std Z+3,__zero_reg__
+ 751 0492 1282      		std Z+2,__zero_reg__
+ 752 0494 3583      		std Z+5,r19
+ 753 0496 2483      		std Z+4,r18
+ 754 0498 1182      		std Z+1,__zero_reg__
+ 755 049a 1682      		std Z+6,__zero_reg__
+ 756 049c 1782      		std Z+7,__zero_reg__
+ 757               	.L78:
+ 758 049e CF01      		movw r24,r30
+ 759               	/* epilogue start */
+ 760 04a0 0895      		ret
+ 761               	.L81:
+ 762 04a2 E0E0      		ldi r30,lo8(0)
+ 763 04a4 F0E0      		ldi r31,hi8(0)
+ 764 04a6 CF01      		movw r24,r30
+ 765 04a8 0895      		ret
+ 766               		.size	OSMboxCreate, .-OSMboxCreate
+ 767               	.global	OSSemCreate
+ 768               		.type	OSSemCreate, @function
+ 769               	OSSemCreate:
+ 770               	/* prologue: function */
+ 771               	/* frame size = 0 */
+ 772 04aa 9C01      		movw r18,r24
+ 773 04ac 8091 0000 		lds r24,OSIntNesting
+ 774 04b0 8823      		tst r24
+ 775 04b2 01F4      		brne .L87
+ 776               	/* #APP */
+ 777               	 ;  94 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 778 04b4 F894      		cli
+ 779               	 ;  0 "" 2
+ 780               	/* #NOAPP */
+ 781 04b6 E091 0000 		lds r30,OSEventFreeList
+ 782 04ba F091 0000 		lds r31,(OSEventFreeList)+1
+ 783 04be 3097      		sbiw r30,0
+ 784 04c0 01F0      		breq .L85
+ 785 04c2 8481      		ldd r24,Z+4
+ 786 04c4 9581      		ldd r25,Z+5
+ 787 04c6 9093 0000 		sts (OSEventFreeList)+1,r25
+ 788 04ca 8093 0000 		sts OSEventFreeList,r24
+ 789               	.L85:
+ 790               	/* #APP */
+ 791               	 ;  99 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 792 04ce 7894      		sei
+ 793               	 ;  0 "" 2
+ 794               	/* #NOAPP */
+ 795 04d0 3097      		sbiw r30,0
+ 796 04d2 01F0      		breq .L84
+ 797 04d4 83E0      		ldi r24,lo8(3)
+ 798 04d6 8083      		st Z,r24
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 15
+
+
+ 799 04d8 3383      		std Z+3,r19
+ 800 04da 2283      		std Z+2,r18
+ 801 04dc 1582      		std Z+5,__zero_reg__
+ 802 04de 1482      		std Z+4,__zero_reg__
+ 803 04e0 1182      		std Z+1,__zero_reg__
+ 804 04e2 1682      		std Z+6,__zero_reg__
+ 805 04e4 1782      		std Z+7,__zero_reg__
+ 806               	.L84:
+ 807 04e6 CF01      		movw r24,r30
+ 808               	/* epilogue start */
+ 809 04e8 0895      		ret
+ 810               	.L87:
+ 811 04ea E0E0      		ldi r30,lo8(0)
+ 812 04ec F0E0      		ldi r31,hi8(0)
+ 813 04ee CF01      		movw r24,r30
+ 814 04f0 0895      		ret
+ 815               		.size	OSSemCreate, .-OSSemCreate
+ 816               	.global	OS_TCBInit
+ 817               		.type	OS_TCBInit, @function
+ 818               	OS_TCBInit:
+ 819 04f2 1F93      		push r17
+ 820 04f4 CF93      		push r28
+ 821 04f6 DF93      		push r29
+ 822               	/* prologue: function */
+ 823               	/* frame size = 0 */
+ 824 04f8 182F      		mov r17,r24
+ 825               	/* #APP */
+ 826               	 ;  1043 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 827 04fa F894      		cli
+ 828               	 ;  0 "" 2
+ 829               	/* #NOAPP */
+ 830 04fc C091 0000 		lds r28,OSTCBFreeList
+ 831 0500 D091 0000 		lds r29,(OSTCBFreeList)+1
+ 832 0504 2097      		sbiw r28,0
+ 833 0506 01F4      		brne .+2
+ 834 0508 00C0      		rjmp .L89
+ 835 050a 8A81      		ldd r24,Y+2
+ 836 050c 9B81      		ldd r25,Y+3
+ 837 050e 9093 0000 		sts (OSTCBFreeList)+1,r25
+ 838 0512 8093 0000 		sts OSTCBFreeList,r24
+ 839               	/* #APP */
+ 840               	 ;  1047 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 841 0516 7894      		sei
+ 842               	 ;  0 "" 2
+ 843               	/* #NOAPP */
+ 844 0518 7983      		std Y+1,r23
+ 845 051a 6883      		st Y,r22
+ 846 051c 1E87      		std Y+14,r17
+ 847 051e 1D86      		std Y+13,__zero_reg__
+ 848 0520 1C86      		std Y+12,__zero_reg__
+ 849 0522 1B86      		std Y+11,__zero_reg__
+ 850 0524 E12F      		mov r30,r17
+ 851 0526 E695      		lsr r30
+ 852 0528 E695      		lsr r30
+ 853 052a E695      		lsr r30
+ 854 052c E88B      		std Y+16,r30
+ 855 052e F0E0      		ldi r31,lo8(0)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 16
+
+
+ 856 0530 E050      		subi r30,lo8(-(OSMapTbl))
+ 857 0532 F040      		sbci r31,hi8(-(OSMapTbl))
+ 858 0534 8081      		ld r24,Z
+ 859 0536 8A8B      		std Y+18,r24
+ 860 0538 E12F      		mov r30,r17
+ 861 053a E770      		andi r30,lo8(7)
+ 862 053c EF87      		std Y+15,r30
+ 863 053e F0E0      		ldi r31,lo8(0)
+ 864 0540 E050      		subi r30,lo8(-(OSMapTbl))
+ 865 0542 F040      		sbci r31,hi8(-(OSMapTbl))
+ 866 0544 8081      		ld r24,Z
+ 867 0546 898B      		std Y+17,r24
+ 868 0548 1F82      		std Y+7,__zero_reg__
+ 869 054a 1E82      		std Y+6,__zero_reg__
+ 870 054c 1986      		std Y+9,__zero_reg__
+ 871 054e 1886      		std Y+8,__zero_reg__
+ 872 0550 CE01      		movw r24,r28
+ 873 0552 0E94 0000 		call OSTCBInitHook
+ 874 0556 CE01      		movw r24,r28
+ 875 0558 0E94 0000 		call OSTaskCreateHook
+ 876               	/* #APP */
+ 877               	 ;  1094 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 878 055c F894      		cli
+ 879               	 ;  0 "" 2
+ 880               	/* #NOAPP */
+ 881 055e E12F      		mov r30,r17
+ 882 0560 F0E0      		ldi r31,lo8(0)
+ 883 0562 EE0F      		lsl r30
+ 884 0564 FF1F      		rol r31
+ 885 0566 E050      		subi r30,lo8(-(OSTCBPrioTbl))
+ 886 0568 F040      		sbci r31,hi8(-(OSTCBPrioTbl))
+ 887 056a D183      		std Z+1,r29
+ 888 056c C083      		st Z,r28
+ 889 056e E091 0000 		lds r30,OSTCBList
+ 890 0572 F091 0000 		lds r31,(OSTCBList)+1
+ 891 0576 FB83      		std Y+3,r31
+ 892 0578 EA83      		std Y+2,r30
+ 893 057a 1D82      		std Y+5,__zero_reg__
+ 894 057c 1C82      		std Y+4,__zero_reg__
+ 895 057e 3097      		sbiw r30,0
+ 896 0580 01F0      		breq .L90
+ 897 0582 D583      		std Z+5,r29
+ 898 0584 C483      		std Z+4,r28
+ 899               	.L90:
+ 900 0586 D093 0000 		sts (OSTCBList)+1,r29
+ 901 058a C093 0000 		sts OSTCBList,r28
+ 902 058e 8091 0000 		lds r24,OSRdyGrp
+ 903 0592 9A89      		ldd r25,Y+18
+ 904 0594 892B      		or r24,r25
+ 905 0596 8093 0000 		sts OSRdyGrp,r24
+ 906 059a E889      		ldd r30,Y+16
+ 907 059c F0E0      		ldi r31,lo8(0)
+ 908 059e E050      		subi r30,lo8(-(OSRdyTbl))
+ 909 05a0 F040      		sbci r31,hi8(-(OSRdyTbl))
+ 910 05a2 8081      		ld r24,Z
+ 911 05a4 9989      		ldd r25,Y+17
+ 912 05a6 892B      		or r24,r25
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 17
+
+
+ 913 05a8 8083      		st Z,r24
+ 914               	/* #APP */
+ 915               	 ;  1104 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 916 05aa 7894      		sei
+ 917               	 ;  0 "" 2
+ 918               	/* #NOAPP */
+ 919 05ac 80E0      		ldi r24,lo8(0)
+ 920               	/* epilogue start */
+ 921 05ae DF91      		pop r29
+ 922 05b0 CF91      		pop r28
+ 923 05b2 1F91      		pop r17
+ 924 05b4 0895      		ret
+ 925               	.L89:
+ 926               	/* #APP */
+ 927               	 ;  1107 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 928 05b6 7894      		sei
+ 929               	 ;  0 "" 2
+ 930               	/* #NOAPP */
+ 931 05b8 86E4      		ldi r24,lo8(70)
+ 932 05ba DF91      		pop r29
+ 933 05bc CF91      		pop r28
+ 934 05be 1F91      		pop r17
+ 935 05c0 0895      		ret
+ 936               		.size	OS_TCBInit, .-OS_TCBInit
+ 937               	.global	OS_TaskIdle
+ 938               		.type	OS_TaskIdle, @function
+ 939               	OS_TaskIdle:
+ 940               	/* prologue: function */
+ 941               	/* frame size = 0 */
+ 942               	.L94:
+ 943               	/* #APP */
+ 944               	 ;  920 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 945 05c2 F894      		cli
+ 946               	 ;  0 "" 2
+ 947               	/* #NOAPP */
+ 948 05c4 8091 0000 		lds r24,OSIdleCtr
+ 949 05c8 9091 0000 		lds r25,(OSIdleCtr)+1
+ 950 05cc A091 0000 		lds r26,(OSIdleCtr)+2
+ 951 05d0 B091 0000 		lds r27,(OSIdleCtr)+3
+ 952 05d4 0196      		adiw r24,1
+ 953 05d6 A11D      		adc r26,__zero_reg__
+ 954 05d8 B11D      		adc r27,__zero_reg__
+ 955 05da 8093 0000 		sts OSIdleCtr,r24
+ 956 05de 9093 0000 		sts (OSIdleCtr)+1,r25
+ 957 05e2 A093 0000 		sts (OSIdleCtr)+2,r26
+ 958 05e6 B093 0000 		sts (OSIdleCtr)+3,r27
+ 959               	/* #APP */
+ 960               	 ;  922 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 961 05ea 7894      		sei
+ 962               	 ;  0 "" 2
+ 963               	/* #NOAPP */
+ 964 05ec 0E94 0000 		call OSTaskIdleHook
+ 965 05f0 00C0      		rjmp .L94
+ 966               		.size	OS_TaskIdle, .-OS_TaskIdle
+ 967               	.global	OS_Sched
+ 968               		.type	OS_Sched, @function
+ 969               	OS_Sched:
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 18
+
+
+ 970               	/* prologue: function */
+ 971               	/* frame size = 0 */
+ 972               	/* #APP */
+ 973               	 ;  877 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 974 05f2 F894      		cli
+ 975               	 ;  0 "" 2
+ 976               	/* #NOAPP */
+ 977 05f4 8091 0000 		lds r24,OSIntNesting
+ 978 05f8 8823      		tst r24
+ 979 05fa 01F0      		breq .+2
+ 980 05fc 00C0      		rjmp .L97
+ 981 05fe 8091 0000 		lds r24,OSLockNesting
+ 982 0602 8823      		tst r24
+ 983 0604 01F4      		brne .L97
+ 984 0606 E091 0000 		lds r30,OSRdyGrp
+ 985 060a F0E0      		ldi r31,lo8(0)
+ 986 060c E050      		subi r30,lo8(-(OSUnMapTbl))
+ 987 060e F040      		sbci r31,hi8(-(OSUnMapTbl))
+ 988 0610 8081      		ld r24,Z
+ 989 0612 E82F      		mov r30,r24
+ 990 0614 F0E0      		ldi r31,lo8(0)
+ 991 0616 E050      		subi r30,lo8(-(OSRdyTbl))
+ 992 0618 F040      		sbci r31,hi8(-(OSRdyTbl))
+ 993 061a E081      		ld r30,Z
+ 994 061c F0E0      		ldi r31,lo8(0)
+ 995 061e E050      		subi r30,lo8(-(OSUnMapTbl))
+ 996 0620 F040      		sbci r31,hi8(-(OSUnMapTbl))
+ 997 0622 982F      		mov r25,r24
+ 998 0624 990F      		lsl r25
+ 999 0626 990F      		lsl r25
+ 1000 0628 990F      		lsl r25
+ 1001 062a 8081      		ld r24,Z
+ 1002 062c 980F      		add r25,r24
+ 1003 062e 9093 0000 		sts OSPrioHighRdy,r25
+ 1004 0632 8091 0000 		lds r24,OSPrioCur
+ 1005 0636 9817      		cp r25,r24
+ 1006 0638 01F0      		breq .L97
+ 1007 063a E92F      		mov r30,r25
+ 1008 063c F0E0      		ldi r31,lo8(0)
+ 1009 063e EE0F      		lsl r30
+ 1010 0640 FF1F      		rol r31
+ 1011 0642 E050      		subi r30,lo8(-(OSTCBPrioTbl))
+ 1012 0644 F040      		sbci r31,hi8(-(OSTCBPrioTbl))
+ 1013 0646 8081      		ld r24,Z
+ 1014 0648 9181      		ldd r25,Z+1
+ 1015 064a 9093 0000 		sts (OSTCBHighRdy)+1,r25
+ 1016 064e 8093 0000 		sts OSTCBHighRdy,r24
+ 1017 0652 8091 0000 		lds r24,OSCtxSwCtr
+ 1018 0656 9091 0000 		lds r25,(OSCtxSwCtr)+1
+ 1019 065a A091 0000 		lds r26,(OSCtxSwCtr)+2
+ 1020 065e B091 0000 		lds r27,(OSCtxSwCtr)+3
+ 1021 0662 0196      		adiw r24,1
+ 1022 0664 A11D      		adc r26,__zero_reg__
+ 1023 0666 B11D      		adc r27,__zero_reg__
+ 1024 0668 8093 0000 		sts OSCtxSwCtr,r24
+ 1025 066c 9093 0000 		sts (OSCtxSwCtr)+1,r25
+ 1026 0670 A093 0000 		sts (OSCtxSwCtr)+2,r26
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 19
+
+
+ 1027 0674 B093 0000 		sts (OSCtxSwCtr)+3,r27
+ 1028 0678 0E94 0000 		call OSCtxSw
+ 1029               	.L97:
+ 1030               	/* #APP */
+ 1031               	 ;  887 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 1032 067c 7894      		sei
+ 1033               	 ;  0 "" 2
+ 1034               	/* epilogue start */
+ 1035               	/* #NOAPP */
+ 1036 067e 0895      		ret
+ 1037               		.size	OS_Sched, .-OS_Sched
+ 1038               	.global	OSTimeDly
+ 1039               		.type	OSTimeDly, @function
+ 1040               	OSTimeDly:
+ 1041               	/* prologue: function */
+ 1042               	/* frame size = 0 */
+ 1043 0680 9C01      		movw r18,r24
+ 1044 0682 0097      		sbiw r24,0
+ 1045 0684 01F0      		breq .L102
+ 1046               	/* #APP */
+ 1047               	 ;  43 "c:/WinAVR-20100110/lab2/source/os_time.c" 1
+ 1048 0686 F894      		cli
+ 1049               	 ;  0 "" 2
+ 1050               	/* #NOAPP */
+ 1051 0688 A091 0000 		lds r26,OSTCBCur
+ 1052 068c B091 0000 		lds r27,(OSTCBCur)+1
+ 1053 0690 5096      		adiw r26,16
+ 1054 0692 EC91      		ld r30,X
+ 1055 0694 5097      		sbiw r26,16
+ 1056 0696 F0E0      		ldi r31,lo8(0)
+ 1057 0698 E050      		subi r30,lo8(-(OSRdyTbl))
+ 1058 069a F040      		sbci r31,hi8(-(OSRdyTbl))
+ 1059 069c 5196      		adiw r26,17
+ 1060 069e 8C91      		ld r24,X
+ 1061 06a0 5197      		sbiw r26,17
+ 1062 06a2 8095      		com r24
+ 1063 06a4 9081      		ld r25,Z
+ 1064 06a6 8923      		and r24,r25
+ 1065 06a8 8083      		st Z,r24
+ 1066 06aa 8823      		tst r24
+ 1067 06ac 01F4      		brne .L101
+ 1068 06ae 5296      		adiw r26,18
+ 1069 06b0 9C91      		ld r25,X
+ 1070 06b2 5297      		sbiw r26,18
+ 1071 06b4 9095      		com r25
+ 1072 06b6 8091 0000 		lds r24,OSRdyGrp
+ 1073 06ba 8923      		and r24,r25
+ 1074 06bc 8093 0000 		sts OSRdyGrp,r24
+ 1075               	.L101:
+ 1076 06c0 1C96      		adiw r26,11+1
+ 1077 06c2 3C93      		st X,r19
+ 1078 06c4 2E93      		st -X,r18
+ 1079 06c6 1B97      		sbiw r26,11
+ 1080               	/* #APP */
+ 1081               	 ;  48 "c:/WinAVR-20100110/lab2/source/os_time.c" 1
+ 1082 06c8 7894      		sei
+ 1083               	 ;  0 "" 2
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 20
+
+
+ 1084               	/* #NOAPP */
+ 1085 06ca 0E94 0000 		call OS_Sched
+ 1086               	.L102:
+ 1087 06ce 0895      		ret
+ 1088               		.size	OSTimeDly, .-OSTimeDly
+ 1089               	.global	OSTimeDlyHMSM
+ 1090               		.type	OSTimeDlyHMSM, @function
+ 1091               	OSTimeDlyHMSM:
+ 1092 06d0 8F92      		push r8
+ 1093 06d2 9F92      		push r9
+ 1094 06d4 AF92      		push r10
+ 1095 06d6 BF92      		push r11
+ 1096 06d8 CF92      		push r12
+ 1097 06da DF92      		push r13
+ 1098 06dc EF92      		push r14
+ 1099 06de FF92      		push r15
+ 1100 06e0 0F93      		push r16
+ 1101 06e2 1F93      		push r17
+ 1102 06e4 CF93      		push r28
+ 1103 06e6 DF93      		push r29
+ 1104               	/* prologue: function */
+ 1105               	/* frame size = 0 */
+ 1106 06e8 882E      		mov r8,r24
+ 1107 06ea 162F      		mov r17,r22
+ 1108 06ec 942E      		mov r9,r20
+ 1109 06ee 8823      		tst r24
+ 1110 06f0 01F0      		breq .L114
+ 1111               	.L104:
+ 1112 06f2 1C33      		cpi r17,lo8(60)
+ 1113 06f4 00F4      		brsh .L115
+ 1114               	.L105:
+ 1115 06f6 8BE3      		ldi r24,lo8(59)
+ 1116 06f8 8915      		cp r24,r9
+ 1117 06fa 00F0      		brlo .L116
+ 1118               	.L106:
+ 1119 06fc 93E0      		ldi r25,hi8(1000)
+ 1120 06fe 283E      		cpi r18,lo8(1000)
+ 1121 0700 3907      		cpc r19,r25
+ 1122 0702 00F0      		brlo .L108
+ 1123 0704 83E5      		ldi r24,lo8(83)
+ 1124               	.L107:
+ 1125               	/* epilogue start */
+ 1126 0706 DF91      		pop r29
+ 1127 0708 CF91      		pop r28
+ 1128 070a 1F91      		pop r17
+ 1129 070c 0F91      		pop r16
+ 1130 070e FF90      		pop r15
+ 1131 0710 EF90      		pop r14
+ 1132 0712 DF90      		pop r13
+ 1133 0714 CF90      		pop r12
+ 1134 0716 BF90      		pop r11
+ 1135 0718 AF90      		pop r10
+ 1136 071a 9F90      		pop r9
+ 1137 071c 8F90      		pop r8
+ 1138 071e 0895      		ret
+ 1139               	.L116:
+ 1140 0720 82E5      		ldi r24,lo8(82)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 21
+
+
+ 1141 0722 00C0      		rjmp .L107
+ 1142               	.L114:
+ 1143 0724 6623      		tst r22
+ 1144 0726 01F4      		brne .L104
+ 1145 0728 4423      		tst r20
+ 1146 072a 01F4      		brne .L105
+ 1147 072c 2115      		cp r18,__zero_reg__
+ 1148 072e 3105      		cpc r19,__zero_reg__
+ 1149 0730 01F4      		brne .L106
+ 1150 0732 84E5      		ldi r24,lo8(84)
+ 1151 0734 00C0      		rjmp .L107
+ 1152               	.L115:
+ 1153 0736 81E5      		ldi r24,lo8(81)
+ 1154 0738 00C0      		rjmp .L107
+ 1155               	.L108:
+ 1156 073a B901      		movw r22,r18
+ 1157 073c 80E0      		ldi r24,lo8(0)
+ 1158 073e 90E0      		ldi r25,hi8(0)
+ 1159 0740 24E6      		ldi r18,lo8(100)
+ 1160 0742 30E0      		ldi r19,hi8(100)
+ 1161 0744 40E0      		ldi r20,hlo8(100)
+ 1162 0746 50E0      		ldi r21,hhi8(100)
+ 1163 0748 0E94 0000 		call __mulsi3
+ 1164 074c 6C50      		subi r22,lo8(-(500))
+ 1165 074e 7E4F      		sbci r23,hi8(-(500))
+ 1166 0750 8F4F      		sbci r24,hlo8(-(500))
+ 1167 0752 9F4F      		sbci r25,hhi8(-(500))
+ 1168 0754 28EE      		ldi r18,lo8(1000)
+ 1169 0756 33E0      		ldi r19,hi8(1000)
+ 1170 0758 40E0      		ldi r20,hlo8(1000)
+ 1171 075a 50E0      		ldi r21,hhi8(1000)
+ 1172 075c 0E94 0000 		call __udivmodsi4
+ 1173 0760 5901      		movw r10,r18
+ 1174 0762 6A01      		movw r12,r20
+ 1175 0764 612F      		mov r22,r17
+ 1176 0766 70E0      		ldi r23,lo8(0)
+ 1177 0768 80E0      		ldi r24,lo8(0)
+ 1178 076a 90E0      		ldi r25,hi8(0)
+ 1179 076c 2CE3      		ldi r18,lo8(60)
+ 1180 076e 30E0      		ldi r19,hi8(60)
+ 1181 0770 40E0      		ldi r20,hlo8(60)
+ 1182 0772 50E0      		ldi r21,hhi8(60)
+ 1183 0774 0E94 0000 		call __mulsi3
+ 1184 0778 7B01      		movw r14,r22
+ 1185 077a 8C01      		movw r16,r24
+ 1186 077c E90C      		add r14,r9
+ 1187 077e F11C      		adc r15,__zero_reg__
+ 1188 0780 011D      		adc r16,__zero_reg__
+ 1189 0782 111D      		adc r17,__zero_reg__
+ 1190 0784 682D      		mov r22,r8
+ 1191 0786 70E0      		ldi r23,lo8(0)
+ 1192 0788 80E0      		ldi r24,lo8(0)
+ 1193 078a 90E0      		ldi r25,hi8(0)
+ 1194 078c 20E1      		ldi r18,lo8(3600)
+ 1195 078e 3EE0      		ldi r19,hi8(3600)
+ 1196 0790 40E0      		ldi r20,hlo8(3600)
+ 1197 0792 50E0      		ldi r21,hhi8(3600)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 22
+
+
+ 1198 0794 0E94 0000 		call __mulsi3
+ 1199 0798 E60E      		add r14,r22
+ 1200 079a F71E      		adc r15,r23
+ 1201 079c 081F      		adc r16,r24
+ 1202 079e 191F      		adc r17,r25
+ 1203 07a0 C801      		movw r24,r16
+ 1204 07a2 B701      		movw r22,r14
+ 1205 07a4 24E6      		ldi r18,lo8(100)
+ 1206 07a6 30E0      		ldi r19,hi8(100)
+ 1207 07a8 40E0      		ldi r20,hlo8(100)
+ 1208 07aa 50E0      		ldi r21,hhi8(100)
+ 1209 07ac 0E94 0000 		call __mulsi3
+ 1210 07b0 A60E      		add r10,r22
+ 1211 07b2 B71E      		adc r11,r23
+ 1212 07b4 C81E      		adc r12,r24
+ 1213 07b6 D91E      		adc r13,r25
+ 1214 07b8 7601      		movw r14,r12
+ 1215 07ba 0027      		clr r16
+ 1216 07bc 1127      		clr r17
+ 1217 07be E701      		movw r28,r14
+ 1218 07c0 8FEF      		ldi r24,lo8(65535)
+ 1219 07c2 9FEF      		ldi r25,hi8(65535)
+ 1220 07c4 A0E0      		ldi r26,hlo8(65535)
+ 1221 07c6 B0E0      		ldi r27,hhi8(65535)
+ 1222 07c8 A822      		and r10,r24
+ 1223 07ca B922      		and r11,r25
+ 1224 07cc CA22      		and r12,r26
+ 1225 07ce DB22      		and r13,r27
+ 1226 07d0 C501      		movw r24,r10
+ 1227 07d2 0E94 0000 		call OSTimeDly
+ 1228 07d6 EF28      		or r14,r15
+ 1229 07d8 01F0      		breq .L109
+ 1230               	.L112:
+ 1231 07da 80E0      		ldi r24,lo8(-32768)
+ 1232 07dc 90E8      		ldi r25,hi8(-32768)
+ 1233 07de 0E94 0000 		call OSTimeDly
+ 1234 07e2 80E0      		ldi r24,lo8(-32768)
+ 1235 07e4 90E8      		ldi r25,hi8(-32768)
+ 1236 07e6 0E94 0000 		call OSTimeDly
+ 1237 07ea 2197      		sbiw r28,1
+ 1238 07ec 01F4      		brne .L112
+ 1239               	.L109:
+ 1240 07ee 80E0      		ldi r24,lo8(0)
+ 1241 07f0 00C0      		rjmp .L107
+ 1242               		.size	OSTimeDlyHMSM, .-OSTimeDlyHMSM
+ 1243               	.global	OS_TaskStat
+ 1244               		.type	OS_TaskStat, @function
+ 1245               	OS_TaskStat:
+ 1246 07f2 DF92      		push r13
+ 1247 07f4 EF92      		push r14
+ 1248 07f6 FF92      		push r15
+ 1249 07f8 0F93      		push r16
+ 1250 07fa 1F93      		push r17
+ 1251               	/* prologue: function */
+ 1252               	/* frame size = 0 */
+ 1253 07fc 8091 0000 		lds r24,OSStatRdy
+ 1254 0800 8823      		tst r24
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 23
+
+
+ 1255 0802 01F4      		brne .L118
+ 1256               	.L125:
+ 1257 0804 88EC      		ldi r24,lo8(200)
+ 1258 0806 90E0      		ldi r25,hi8(200)
+ 1259 0808 0E94 0000 		call OSTimeDly
+ 1260 080c 8091 0000 		lds r24,OSStatRdy
+ 1261 0810 8823      		tst r24
+ 1262 0812 01F0      		breq .L125
+ 1263               	.L118:
+ 1264 0814 6091 0000 		lds r22,OSIdleCtrMax
+ 1265 0818 7091 0000 		lds r23,(OSIdleCtrMax)+1
+ 1266 081c 8091 0000 		lds r24,(OSIdleCtrMax)+2
+ 1267 0820 9091 0000 		lds r25,(OSIdleCtrMax)+3
+ 1268 0824 24E6      		ldi r18,lo8(100)
+ 1269 0826 30E0      		ldi r19,hi8(100)
+ 1270 0828 40E0      		ldi r20,hlo8(100)
+ 1271 082a 50E0      		ldi r21,hhi8(100)
+ 1272 082c 0E94 0000 		call __udivmodsi4
+ 1273 0830 C901      		movw r24,r18
+ 1274 0832 DA01      		movw r26,r20
+ 1275 0834 7C01      		movw r14,r24
+ 1276 0836 8D01      		movw r16,r26
+ 1277 0838 44E6      		ldi r20,lo8(100)
+ 1278 083a D42E      		mov r13,r20
+ 1279 083c 00C0      		rjmp .L123
+ 1280               	.L127:
+ 1281 083e A801      		movw r20,r16
+ 1282 0840 9701      		movw r18,r14
+ 1283 0842 0E94 0000 		call __udivmodsi4
+ 1284 0846 8D2D      		mov r24,r13
+ 1285 0848 821B      		sub r24,r18
+ 1286 084a 87FD      		sbrc r24,7
+ 1287 084c 00C0      		rjmp .L121
+ 1288 084e 8093 0000 		sts OSCPUUsage,r24
+ 1289               	.L122:
+ 1290 0852 0E94 0000 		call OSTaskStatHook
+ 1291 0856 84E6      		ldi r24,lo8(100)
+ 1292 0858 90E0      		ldi r25,hi8(100)
+ 1293 085a 0E94 0000 		call OSTimeDly
+ 1294               	.L123:
+ 1295               	/* #APP */
+ 1296               	 ;  970 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 1297 085e F894      		cli
+ 1298               	 ;  0 "" 2
+ 1299               	/* #NOAPP */
+ 1300 0860 8091 0000 		lds r24,OSIdleCtr
+ 1301 0864 9091 0000 		lds r25,(OSIdleCtr)+1
+ 1302 0868 A091 0000 		lds r26,(OSIdleCtr)+2
+ 1303 086c B091 0000 		lds r27,(OSIdleCtr)+3
+ 1304 0870 8093 0000 		sts OSIdleCtrRun,r24
+ 1305 0874 9093 0000 		sts (OSIdleCtrRun)+1,r25
+ 1306 0878 A093 0000 		sts (OSIdleCtrRun)+2,r26
+ 1307 087c B093 0000 		sts (OSIdleCtrRun)+3,r27
+ 1308 0880 6091 0000 		lds r22,OSIdleCtr
+ 1309 0884 7091 0000 		lds r23,(OSIdleCtr)+1
+ 1310 0888 8091 0000 		lds r24,(OSIdleCtr)+2
+ 1311 088c 9091 0000 		lds r25,(OSIdleCtr)+3
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 24
+
+
+ 1312 0890 1092 0000 		sts OSIdleCtr,__zero_reg__
+ 1313 0894 1092 0000 		sts (OSIdleCtr)+1,__zero_reg__
+ 1314 0898 1092 0000 		sts (OSIdleCtr)+2,__zero_reg__
+ 1315 089c 1092 0000 		sts (OSIdleCtr)+3,__zero_reg__
+ 1316               	/* #APP */
+ 1317               	 ;  974 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 1318 08a0 7894      		sei
+ 1319               	 ;  0 "" 2
+ 1320               	/* #NOAPP */
+ 1321 08a2 E114      		cp r14,__zero_reg__
+ 1322 08a4 F104      		cpc r15,__zero_reg__
+ 1323 08a6 0105      		cpc r16,__zero_reg__
+ 1324 08a8 1105      		cpc r17,__zero_reg__
+ 1325 08aa 01F4      		brne .L127
+ 1326 08ac 1092 0000 		sts OSCPUUsage,__zero_reg__
+ 1327 08b0 6091 0000 		lds r22,OSIdleCtrMax
+ 1328 08b4 7091 0000 		lds r23,(OSIdleCtrMax)+1
+ 1329 08b8 8091 0000 		lds r24,(OSIdleCtrMax)+2
+ 1330 08bc 9091 0000 		lds r25,(OSIdleCtrMax)+3
+ 1331 08c0 24E6      		ldi r18,lo8(100)
+ 1332 08c2 30E0      		ldi r19,hi8(100)
+ 1333 08c4 40E0      		ldi r20,hlo8(100)
+ 1334 08c6 50E0      		ldi r21,hhi8(100)
+ 1335 08c8 0E94 0000 		call __udivmodsi4
+ 1336 08cc C901      		movw r24,r18
+ 1337 08ce DA01      		movw r26,r20
+ 1338 08d0 7C01      		movw r14,r24
+ 1339 08d2 8D01      		movw r16,r26
+ 1340 08d4 00C0      		rjmp .L122
+ 1341               	.L121:
+ 1342 08d6 1092 0000 		sts OSCPUUsage,__zero_reg__
+ 1343 08da 00C0      		rjmp .L122
+ 1344               		.size	OS_TaskStat, .-OS_TaskStat
+ 1345               	.global	OSStatInit
+ 1346               		.type	OSStatInit, @function
+ 1347               	OSStatInit:
+ 1348               	/* prologue: function */
+ 1349               	/* frame size = 0 */
+ 1350 08dc 82E0      		ldi r24,lo8(2)
+ 1351 08de 90E0      		ldi r25,hi8(2)
+ 1352 08e0 0E94 0000 		call OSTimeDly
+ 1353               	/* #APP */
+ 1354               	 ;  339 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 1355 08e4 F894      		cli
+ 1356               	 ;  0 "" 2
+ 1357               	/* #NOAPP */
+ 1358 08e6 1092 0000 		sts OSIdleCtr,__zero_reg__
+ 1359 08ea 1092 0000 		sts (OSIdleCtr)+1,__zero_reg__
+ 1360 08ee 1092 0000 		sts (OSIdleCtr)+2,__zero_reg__
+ 1361 08f2 1092 0000 		sts (OSIdleCtr)+3,__zero_reg__
+ 1362               	/* #APP */
+ 1363               	 ;  341 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 1364 08f6 7894      		sei
+ 1365               	 ;  0 "" 2
+ 1366               	/* #NOAPP */
+ 1367 08f8 84E6      		ldi r24,lo8(100)
+ 1368 08fa 90E0      		ldi r25,hi8(100)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 25
+
+
+ 1369 08fc 0E94 0000 		call OSTimeDly
+ 1370               	/* #APP */
+ 1371               	 ;  343 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 1372 0900 F894      		cli
+ 1373               	 ;  0 "" 2
+ 1374               	/* #NOAPP */
+ 1375 0902 8091 0000 		lds r24,OSIdleCtr
+ 1376 0906 9091 0000 		lds r25,(OSIdleCtr)+1
+ 1377 090a A091 0000 		lds r26,(OSIdleCtr)+2
+ 1378 090e B091 0000 		lds r27,(OSIdleCtr)+3
+ 1379 0912 8093 0000 		sts OSIdleCtrMax,r24
+ 1380 0916 9093 0000 		sts (OSIdleCtrMax)+1,r25
+ 1381 091a A093 0000 		sts (OSIdleCtrMax)+2,r26
+ 1382 091e B093 0000 		sts (OSIdleCtrMax)+3,r27
+ 1383 0922 81E0      		ldi r24,lo8(1)
+ 1384 0924 8093 0000 		sts OSStatRdy,r24
+ 1385               	/* #APP */
+ 1386               	 ;  346 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 1387 0928 7894      		sei
+ 1388               	 ;  0 "" 2
+ 1389               	/* epilogue start */
+ 1390               	/* #NOAPP */
+ 1391 092a 0895      		ret
+ 1392               		.size	OSStatInit, .-OSStatInit
+ 1393               	.global	OSTaskCreate
+ 1394               		.type	OSTaskCreate, @function
+ 1395               	OSTaskCreate:
+ 1396 092c AF92      		push r10
+ 1397 092e BF92      		push r11
+ 1398 0930 CF92      		push r12
+ 1399 0932 DF92      		push r13
+ 1400 0934 EF92      		push r14
+ 1401 0936 FF92      		push r15
+ 1402 0938 0F93      		push r16
+ 1403 093a 1F93      		push r17
+ 1404 093c CF93      		push r28
+ 1405 093e DF93      		push r29
+ 1406               	/* prologue: function */
+ 1407               	/* frame size = 0 */
+ 1408 0940 FC01      		movw r30,r24
+ 1409 0942 122F      		mov r17,r18
+ 1410               	/* #APP */
+ 1411               	 ;  172 "c:/WinAVR-20100110/lab2/source/os_task.c" 1
+ 1412 0944 F894      		cli
+ 1413               	 ;  0 "" 2
+ 1414               	/* #NOAPP */
+ 1415 0946 C22F      		mov r28,r18
+ 1416 0948 D0E0      		ldi r29,lo8(0)
+ 1417 094a CC0F      		lsl r28
+ 1418 094c DD1F      		rol r29
+ 1419 094e C050      		subi r28,lo8(-(OSTCBPrioTbl))
+ 1420 0950 D040      		sbci r29,hi8(-(OSTCBPrioTbl))
+ 1421 0952 8881      		ld r24,Y
+ 1422 0954 9981      		ldd r25,Y+1
+ 1423 0956 892B      		or r24,r25
+ 1424 0958 01F0      		breq .L135
+ 1425               	/* #APP */
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 26
+
+
+ 1426               	 ;  193 "c:/WinAVR-20100110/lab2/source/os_task.c" 1
+ 1427 095a 7894      		sei
+ 1428               	 ;  0 "" 2
+ 1429               	/* #NOAPP */
+ 1430 095c 18E2      		ldi r17,lo8(40)
+ 1431               	.L133:
+ 1432 095e 812F      		mov r24,r17
+ 1433               	/* epilogue start */
+ 1434 0960 DF91      		pop r29
+ 1435 0962 CF91      		pop r28
+ 1436 0964 1F91      		pop r17
+ 1437 0966 0F91      		pop r16
+ 1438 0968 FF90      		pop r15
+ 1439 096a EF90      		pop r14
+ 1440 096c DF90      		pop r13
+ 1441 096e CF90      		pop r12
+ 1442 0970 BF90      		pop r11
+ 1443 0972 AF90      		pop r10
+ 1444 0974 0895      		ret
+ 1445               	.L135:
+ 1446 0976 81E0      		ldi r24,lo8(1)
+ 1447 0978 90E0      		ldi r25,hi8(1)
+ 1448 097a 9983      		std Y+1,r25
+ 1449 097c 8883      		st Y,r24
+ 1450               	/* #APP */
+ 1451               	 ;  176 "c:/WinAVR-20100110/lab2/source/os_task.c" 1
+ 1452 097e 7894      		sei
+ 1453               	 ;  0 "" 2
+ 1454               	/* #NOAPP */
+ 1455 0980 CF01      		movw r24,r30
+ 1456 0982 20E0      		ldi r18,lo8(0)
+ 1457 0984 30E0      		ldi r19,hi8(0)
+ 1458 0986 0E94 0000 		call OSTaskStkInit
+ 1459 098a BC01      		movw r22,r24
+ 1460 098c 812F      		mov r24,r17
+ 1461 098e 40E0      		ldi r20,lo8(0)
+ 1462 0990 50E0      		ldi r21,hi8(0)
+ 1463 0992 20E0      		ldi r18,lo8(0)
+ 1464 0994 30E0      		ldi r19,hi8(0)
+ 1465 0996 EE24      		clr r14
+ 1466 0998 FF24      		clr r15
+ 1467 099a 8701      		movw r16,r14
+ 1468 099c CC24      		clr r12
+ 1469 099e DD24      		clr r13
+ 1470 09a0 AA24      		clr r10
+ 1471 09a2 BB24      		clr r11
+ 1472 09a4 0E94 0000 		call OS_TCBInit
+ 1473 09a8 182F      		mov r17,r24
+ 1474 09aa 8823      		tst r24
+ 1475 09ac 01F4      		brne .L132
+ 1476               	/* #APP */
+ 1477               	 ;  180 "c:/WinAVR-20100110/lab2/source/os_task.c" 1
+ 1478 09ae F894      		cli
+ 1479               	 ;  0 "" 2
+ 1480               	/* #NOAPP */
+ 1481 09b0 8091 0000 		lds r24,OSTaskCtr
+ 1482 09b4 8F5F      		subi r24,lo8(-(1))
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 27
+
+
+ 1483 09b6 8093 0000 		sts OSTaskCtr,r24
+ 1484               	/* #APP */
+ 1485               	 ;  182 "c:/WinAVR-20100110/lab2/source/os_task.c" 1
+ 1486 09ba 7894      		sei
+ 1487               	 ;  0 "" 2
+ 1488               	/* #NOAPP */
+ 1489 09bc 8091 0000 		lds r24,OSRunning
+ 1490 09c0 8130      		cpi r24,lo8(1)
+ 1491 09c2 01F4      		brne .L133
+ 1492 09c4 0E94 0000 		call OS_Sched
+ 1493 09c8 00C0      		rjmp .L133
+ 1494               	.L132:
+ 1495               	/* #APP */
+ 1496               	 ;  187 "c:/WinAVR-20100110/lab2/source/os_task.c" 1
+ 1497 09ca F894      		cli
+ 1498               	 ;  0 "" 2
+ 1499               	/* #NOAPP */
+ 1500 09cc 1982      		std Y+1,__zero_reg__
+ 1501 09ce 1882      		st Y,__zero_reg__
+ 1502               	/* #APP */
+ 1503               	 ;  189 "c:/WinAVR-20100110/lab2/source/os_task.c" 1
+ 1504 09d0 7894      		sei
+ 1505               	 ;  0 "" 2
+ 1506               	/* #NOAPP */
+ 1507 09d2 00C0      		rjmp .L133
+ 1508               		.size	OSTaskCreate, .-OSTaskCreate
+ 1509               	.global	OSSemPost
+ 1510               		.type	OSSemPost, @function
+ 1511               	OSSemPost:
+ 1512               	/* prologue: function */
+ 1513               	/* frame size = 0 */
+ 1514 09d4 FC01      		movw r30,r24
+ 1515               	/* #APP */
+ 1516               	 ;  323 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1517 09d6 F894      		cli
+ 1518               	 ;  0 "" 2
+ 1519               	/* #NOAPP */
+ 1520 09d8 8181      		ldd r24,Z+1
+ 1521 09da 8823      		tst r24
+ 1522 09dc 01F4      		brne .L141
+ 1523 09de 8281      		ldd r24,Z+2
+ 1524 09e0 9381      		ldd r25,Z+3
+ 1525 09e2 2FEF      		ldi r18,hi8(-1)
+ 1526 09e4 8F3F      		cpi r24,lo8(-1)
+ 1527 09e6 9207      		cpc r25,r18
+ 1528 09e8 01F0      		breq .L139
+ 1529 09ea 0196      		adiw r24,1
+ 1530 09ec 9383      		std Z+3,r25
+ 1531 09ee 8283      		std Z+2,r24
+ 1532               	/* #APP */
+ 1533               	 ;  332 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1534 09f0 7894      		sei
+ 1535               	 ;  0 "" 2
+ 1536               	/* #NOAPP */
+ 1537 09f2 80E0      		ldi r24,lo8(0)
+ 1538 09f4 0895      		ret
+ 1539               	.L139:
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 28
+
+
+ 1540               	/* #APP */
+ 1541               	 ;  335 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1542 09f6 7894      		sei
+ 1543               	 ;  0 "" 2
+ 1544               	/* #NOAPP */
+ 1545 09f8 82E3      		ldi r24,lo8(50)
+ 1546 09fa 0895      		ret
+ 1547               	.L141:
+ 1548 09fc CF01      		movw r24,r30
+ 1549 09fe 60E0      		ldi r22,lo8(0)
+ 1550 0a00 70E0      		ldi r23,hi8(0)
+ 1551 0a02 41E0      		ldi r20,lo8(1)
+ 1552 0a04 0E94 0000 		call OS_EventTaskRdy
+ 1553               	/* #APP */
+ 1554               	 ;  326 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1555 0a08 7894      		sei
+ 1556               	 ;  0 "" 2
+ 1557               	/* #NOAPP */
+ 1558 0a0a 0E94 0000 		call OS_Sched
+ 1559 0a0e 80E0      		ldi r24,lo8(0)
+ 1560 0a10 0895      		ret
+ 1561               		.size	OSSemPost, .-OSSemPost
+ 1562               	.global	OSSemPend
+ 1563               		.type	OSSemPend, @function
+ 1564               	OSSemPend:
+ 1565 0a12 0F93      		push r16
+ 1566 0a14 1F93      		push r17
+ 1567 0a16 CF93      		push r28
+ 1568 0a18 DF93      		push r29
+ 1569               	/* prologue: function */
+ 1570               	/* frame size = 0 */
+ 1571 0a1a EC01      		movw r28,r24
+ 1572 0a1c 8A01      		movw r16,r20
+ 1573 0a1e 8091 0000 		lds r24,OSIntNesting
+ 1574 0a22 8823      		tst r24
+ 1575 0a24 01F4      		brne .L148
+ 1576               	/* #APP */
+ 1577               	 ;  265 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1578 0a26 F894      		cli
+ 1579               	 ;  0 "" 2
+ 1580               	/* #NOAPP */
+ 1581 0a28 8A81      		ldd r24,Y+2
+ 1582 0a2a 9B81      		ldd r25,Y+3
+ 1583 0a2c 0097      		sbiw r24,0
+ 1584 0a2e 01F0      		breq .L145
+ 1585 0a30 0197      		sbiw r24,1
+ 1586 0a32 9B83      		std Y+3,r25
+ 1587 0a34 8A83      		std Y+2,r24
+ 1588               	/* #APP */
+ 1589               	 ;  268 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1590 0a36 7894      		sei
+ 1591               	 ;  0 "" 2
+ 1592               	/* #NOAPP */
+ 1593 0a38 FA01      		movw r30,r20
+ 1594 0a3a 1082      		st Z,__zero_reg__
+ 1595               	.L147:
+ 1596               	/* epilogue start */
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 29
+
+
+ 1597 0a3c DF91      		pop r29
+ 1598 0a3e CF91      		pop r28
+ 1599 0a40 1F91      		pop r17
+ 1600 0a42 0F91      		pop r16
+ 1601 0a44 0895      		ret
+ 1602               	.L148:
+ 1603 0a46 82E0      		ldi r24,lo8(2)
+ 1604 0a48 FA01      		movw r30,r20
+ 1605 0a4a 8083      		st Z,r24
+ 1606 0a4c DF91      		pop r29
+ 1607 0a4e CF91      		pop r28
+ 1608 0a50 1F91      		pop r17
+ 1609 0a52 0F91      		pop r16
+ 1610 0a54 0895      		ret
+ 1611               	.L145:
+ 1612 0a56 E091 0000 		lds r30,OSTCBCur
+ 1613 0a5a F091 0000 		lds r31,(OSTCBCur)+1
+ 1614 0a5e 8585      		ldd r24,Z+13
+ 1615 0a60 8160      		ori r24,lo8(1)
+ 1616 0a62 8587      		std Z+13,r24
+ 1617 0a64 7487      		std Z+12,r23
+ 1618 0a66 6387      		std Z+11,r22
+ 1619 0a68 CE01      		movw r24,r28
+ 1620 0a6a 0E94 0000 		call OS_EventTaskWait
+ 1621               	/* #APP */
+ 1622               	 ;  276 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1623 0a6e 7894      		sei
+ 1624               	 ;  0 "" 2
+ 1625               	/* #NOAPP */
+ 1626 0a70 0E94 0000 		call OS_Sched
+ 1627               	/* #APP */
+ 1628               	 ;  278 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1629 0a74 F894      		cli
+ 1630               	 ;  0 "" 2
+ 1631               	/* #NOAPP */
+ 1632 0a76 E091 0000 		lds r30,OSTCBCur
+ 1633 0a7a F091 0000 		lds r31,(OSTCBCur)+1
+ 1634 0a7e 8585      		ldd r24,Z+13
+ 1635 0a80 80FD      		sbrc r24,0
+ 1636 0a82 00C0      		rjmp .L149
+ 1637 0a84 1782      		std Z+7,__zero_reg__
+ 1638 0a86 1682      		std Z+6,__zero_reg__
+ 1639               	/* #APP */
+ 1640               	 ;  286 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1641 0a88 7894      		sei
+ 1642               	 ;  0 "" 2
+ 1643               	/* #NOAPP */
+ 1644 0a8a F801      		movw r30,r16
+ 1645 0a8c 1082      		st Z,__zero_reg__
+ 1646 0a8e DF91      		pop r29
+ 1647 0a90 CF91      		pop r28
+ 1648 0a92 1F91      		pop r17
+ 1649 0a94 0F91      		pop r16
+ 1650 0a96 0895      		ret
+ 1651               	.L149:
+ 1652 0a98 CE01      		movw r24,r28
+ 1653 0a9a 0E94 0000 		call OS_EventTO
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 30
+
+
+ 1654               	/* #APP */
+ 1655               	 ;  281 "c:/WinAVR-20100110/lab2/source/os_sem.c" 1
+ 1656 0a9e 7894      		sei
+ 1657               	 ;  0 "" 2
+ 1658               	/* #NOAPP */
+ 1659 0aa0 8AE0      		ldi r24,lo8(10)
+ 1660 0aa2 F801      		movw r30,r16
+ 1661 0aa4 8083      		st Z,r24
+ 1662 0aa6 00C0      		rjmp .L147
+ 1663               		.size	OSSemPend, .-OSSemPend
+ 1664               	.global	OSMboxPost
+ 1665               		.type	OSMboxPost, @function
+ 1666               	OSMboxPost:
+ 1667               	/* prologue: function */
+ 1668               	/* frame size = 0 */
+ 1669 0aa8 FC01      		movw r30,r24
+ 1670               	/* #APP */
+ 1671               	 ;  328 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1672 0aaa F894      		cli
+ 1673               	 ;  0 "" 2
+ 1674               	/* #NOAPP */
+ 1675 0aac 8181      		ldd r24,Z+1
+ 1676 0aae 8823      		tst r24
+ 1677 0ab0 01F4      		brne .L155
+ 1678 0ab2 8481      		ldd r24,Z+4
+ 1679 0ab4 9581      		ldd r25,Z+5
+ 1680 0ab6 892B      		or r24,r25
+ 1681 0ab8 01F0      		breq .L153
+ 1682               	/* #APP */
+ 1683               	 ;  336 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1684 0aba 7894      		sei
+ 1685               	 ;  0 "" 2
+ 1686               	/* #NOAPP */
+ 1687 0abc 84E1      		ldi r24,lo8(20)
+ 1688 0abe 0895      		ret
+ 1689               	.L155:
+ 1690 0ac0 CF01      		movw r24,r30
+ 1691 0ac2 42E0      		ldi r20,lo8(2)
+ 1692 0ac4 0E94 0000 		call OS_EventTaskRdy
+ 1693               	/* #APP */
+ 1694               	 ;  331 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1695 0ac8 7894      		sei
+ 1696               	 ;  0 "" 2
+ 1697               	/* #NOAPP */
+ 1698 0aca 0E94 0000 		call OS_Sched
+ 1699 0ace 80E0      		ldi r24,lo8(0)
+ 1700 0ad0 0895      		ret
+ 1701               	.L153:
+ 1702 0ad2 7583      		std Z+5,r23
+ 1703 0ad4 6483      		std Z+4,r22
+ 1704               	/* #APP */
+ 1705               	 ;  340 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1706 0ad6 7894      		sei
+ 1707               	 ;  0 "" 2
+ 1708               	/* #NOAPP */
+ 1709 0ad8 80E0      		ldi r24,lo8(0)
+ 1710 0ada 0895      		ret
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 31
+
+
+ 1711               		.size	OSMboxPost, .-OSMboxPost
+ 1712               	.global	OSMboxPend
+ 1713               		.type	OSMboxPend, @function
+ 1714               	OSMboxPend:
+ 1715 0adc EF92      		push r14
+ 1716 0ade FF92      		push r15
+ 1717 0ae0 0F93      		push r16
+ 1718 0ae2 1F93      		push r17
+ 1719 0ae4 CF93      		push r28
+ 1720 0ae6 DF93      		push r29
+ 1721               	/* prologue: function */
+ 1722               	/* frame size = 0 */
+ 1723 0ae8 8C01      		movw r16,r24
+ 1724 0aea 7A01      		movw r14,r20
+ 1725 0aec 8091 0000 		lds r24,OSIntNesting
+ 1726 0af0 8823      		tst r24
+ 1727 0af2 01F4      		brne .L162
+ 1728               	/* #APP */
+ 1729               	 ;  260 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1730 0af4 F894      		cli
+ 1731               	 ;  0 "" 2
+ 1732               	/* #NOAPP */
+ 1733 0af6 F801      		movw r30,r16
+ 1734 0af8 C481      		ldd r28,Z+4
+ 1735 0afa D581      		ldd r29,Z+5
+ 1736 0afc 2097      		sbiw r28,0
+ 1737 0afe 01F0      		breq .L159
+ 1738 0b00 1582      		std Z+5,__zero_reg__
+ 1739 0b02 1482      		std Z+4,__zero_reg__
+ 1740               	/* #APP */
+ 1741               	 ;  264 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1742 0b04 7894      		sei
+ 1743               	 ;  0 "" 2
+ 1744               	/* #NOAPP */
+ 1745 0b06 FA01      		movw r30,r20
+ 1746 0b08 1082      		st Z,__zero_reg__
+ 1747               	.L158:
+ 1748 0b0a CE01      		movw r24,r28
+ 1749               	/* epilogue start */
+ 1750 0b0c DF91      		pop r29
+ 1751 0b0e CF91      		pop r28
+ 1752 0b10 1F91      		pop r17
+ 1753 0b12 0F91      		pop r16
+ 1754 0b14 FF90      		pop r15
+ 1755 0b16 EF90      		pop r14
+ 1756 0b18 0895      		ret
+ 1757               	.L159:
+ 1758 0b1a E091 0000 		lds r30,OSTCBCur
+ 1759 0b1e F091 0000 		lds r31,(OSTCBCur)+1
+ 1760 0b22 8585      		ldd r24,Z+13
+ 1761 0b24 8260      		ori r24,lo8(2)
+ 1762 0b26 8587      		std Z+13,r24
+ 1763 0b28 7487      		std Z+12,r23
+ 1764 0b2a 6387      		std Z+11,r22
+ 1765 0b2c C801      		movw r24,r16
+ 1766 0b2e 0E94 0000 		call OS_EventTaskWait
+ 1767               	/* #APP */
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 32
+
+
+ 1768               	 ;  271 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1769 0b32 7894      		sei
+ 1770               	 ;  0 "" 2
+ 1771               	/* #NOAPP */
+ 1772 0b34 0E94 0000 		call OS_Sched
+ 1773               	/* #APP */
+ 1774               	 ;  273 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1775 0b38 F894      		cli
+ 1776               	 ;  0 "" 2
+ 1777               	/* #NOAPP */
+ 1778 0b3a E091 0000 		lds r30,OSTCBCur
+ 1779 0b3e F091 0000 		lds r31,(OSTCBCur)+1
+ 1780 0b42 C085      		ldd r28,Z+8
+ 1781 0b44 D185      		ldd r29,Z+9
+ 1782 0b46 2097      		sbiw r28,0
+ 1783 0b48 01F0      		breq .L160
+ 1784 0b4a 1186      		std Z+9,__zero_reg__
+ 1785 0b4c 1086      		std Z+8,__zero_reg__
+ 1786 0b4e 1586      		std Z+13,__zero_reg__
+ 1787 0b50 1782      		std Z+7,__zero_reg__
+ 1788 0b52 1682      		std Z+6,__zero_reg__
+ 1789               	/* #APP */
+ 1790               	 ;  279 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1791 0b54 7894      		sei
+ 1792               	 ;  0 "" 2
+ 1793               	/* #NOAPP */
+ 1794 0b56 F701      		movw r30,r14
+ 1795 0b58 1082      		st Z,__zero_reg__
+ 1796 0b5a 00C0      		rjmp .L158
+ 1797               	.L162:
+ 1798 0b5c 82E0      		ldi r24,lo8(2)
+ 1799 0b5e FA01      		movw r30,r20
+ 1800 0b60 8083      		st Z,r24
+ 1801 0b62 C0E0      		ldi r28,lo8(0)
+ 1802 0b64 D0E0      		ldi r29,hi8(0)
+ 1803 0b66 00C0      		rjmp .L158
+ 1804               	.L160:
+ 1805 0b68 C801      		movw r24,r16
+ 1806 0b6a 0E94 0000 		call OS_EventTO
+ 1807               	/* #APP */
+ 1808               	 ;  284 "c:/WinAVR-20100110/lab2/source/os_mbox.c" 1
+ 1809 0b6e 7894      		sei
+ 1810               	 ;  0 "" 2
+ 1811               	/* #NOAPP */
+ 1812 0b70 8AE0      		ldi r24,lo8(10)
+ 1813 0b72 F701      		movw r30,r14
+ 1814 0b74 8083      		st Z,r24
+ 1815 0b76 00C0      		rjmp .L158
+ 1816               		.size	OSMboxPend, .-OSMboxPend
+ 1817               	.global	OSFlagPost
+ 1818               		.type	OSFlagPost, @function
+ 1819               	OSFlagPost:
+ 1820 0b78 CF92      		push r12
+ 1821 0b7a DF92      		push r13
+ 1822 0b7c EF92      		push r14
+ 1823 0b7e FF92      		push r15
+ 1824 0b80 0F93      		push r16
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 33
+
+
+ 1825 0b82 1F93      		push r17
+ 1826 0b84 DF93      		push r29
+ 1827 0b86 CF93      		push r28
+ 1828 0b88 0F92      		push __tmp_reg__
+ 1829 0b8a CDB7      		in r28,__SP_L__
+ 1830 0b8c DEB7      		in r29,__SP_H__
+ 1831               	/* prologue: function */
+ 1832               	/* frame size = 1 */
+ 1833 0b8e 8C01      		movw r16,r24
+ 1834 0b90 7901      		movw r14,r18
+ 1835               	/* #APP */
+ 1836               	 ;  577 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 1837 0b92 F894      		cli
+ 1838               	 ;  0 "" 2
+ 1839               	/* #NOAPP */
+ 1840 0b94 4423      		tst r20
+ 1841 0b96 01F0      		breq .+2
+ 1842 0b98 00C0      		rjmp .L186
+ 1843 0b9a 6095      		com r22
+ 1844 0b9c FC01      		movw r30,r24
+ 1845 0b9e 8381      		ldd r24,Z+3
+ 1846 0ba0 8623      		and r24,r22
+ 1847 0ba2 8383      		std Z+3,r24
+ 1848               	.L167:
+ 1849 0ba4 F801      		movw r30,r16
+ 1850 0ba6 C180      		ldd r12,Z+1
+ 1851 0ba8 D280      		ldd r13,Z+2
+ 1852 0baa C114      		cp r12,__zero_reg__
+ 1853 0bac D104      		cpc r13,__zero_reg__
+ 1854 0bae 01F4      		brne .+2
+ 1855 0bb0 00C0      		rjmp .L187
+ 1856 0bb2 1982      		std Y+1,__zero_reg__
+ 1857 0bb4 00C0      		rjmp .L177
+ 1858               	.L172:
+ 1859 0bb6 F601      		movw r30,r12
+ 1860 0bb8 6085      		ldd r22,Z+8
+ 1861 0bba F801      		movw r30,r16
+ 1862 0bbc 8381      		ldd r24,Z+3
+ 1863 0bbe 8095      		com r24
+ 1864 0bc0 8623      		and r24,r22
+ 1865 0bc2 6817      		cp r22,r24
+ 1866 0bc4 01F0      		breq .L183
+ 1867               	.L171:
+ 1868 0bc6 F601      		movw r30,r12
+ 1869 0bc8 8081      		ld r24,Z
+ 1870 0bca 9181      		ldd r25,Z+1
+ 1871 0bcc 9C01      		movw r18,r24
+ 1872 0bce 6901      		movw r12,r18
+ 1873 0bd0 2115      		cp r18,__zero_reg__
+ 1874 0bd2 3105      		cpc r19,__zero_reg__
+ 1875 0bd4 01F0      		breq .L170
+ 1876               	.L177:
+ 1877 0bd6 F601      		movw r30,r12
+ 1878 0bd8 8185      		ldd r24,Z+9
+ 1879 0bda 8130      		cpi r24,lo8(1)
+ 1880 0bdc 01F0      		breq .L173
+ 1881 0bde 8130      		cpi r24,lo8(1)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 34
+
+
+ 1882 0be0 00F0      		brlo .L172
+ 1883 0be2 8230      		cpi r24,lo8(2)
+ 1884 0be4 01F4      		brne .+2
+ 1885 0be6 00C0      		rjmp .L174
+ 1886 0be8 8330      		cpi r24,lo8(3)
+ 1887 0bea 01F4      		brne .L171
+ 1888 0bec F601      		movw r30,r12
+ 1889 0bee 6085      		ldd r22,Z+8
+ 1890 0bf0 F801      		movw r30,r16
+ 1891 0bf2 8381      		ldd r24,Z+3
+ 1892 0bf4 6823      		and r22,r24
+ 1893 0bf6 01F0      		breq .L171
+ 1894               	.L183:
+ 1895 0bf8 C601      		movw r24,r12
+ 1896 0bfa 0E94 0000 		call OS_FlagTaskRdy
+ 1897 0bfe 8130      		cpi r24,lo8(1)
+ 1898 0c00 01F4      		brne .L171
+ 1899               	.L189:
+ 1900 0c02 F1E0      		ldi r31,lo8(1)
+ 1901 0c04 F983      		std Y+1,r31
+ 1902 0c06 F601      		movw r30,r12
+ 1903 0c08 8081      		ld r24,Z
+ 1904 0c0a 9181      		ldd r25,Z+1
+ 1905 0c0c 9C01      		movw r18,r24
+ 1906 0c0e 6901      		movw r12,r18
+ 1907 0c10 2115      		cp r18,__zero_reg__
+ 1908 0c12 3105      		cpc r19,__zero_reg__
+ 1909 0c14 01F4      		brne .L177
+ 1910               	.L170:
+ 1911               	/* #APP */
+ 1912               	 ;  636 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 1913 0c16 7894      		sei
+ 1914               	 ;  0 "" 2
+ 1915               	/* #NOAPP */
+ 1916 0c18 F981      		ldd r31,Y+1
+ 1917 0c1a F130      		cpi r31,lo8(1)
+ 1918 0c1c 01F4      		brne .+2
+ 1919 0c1e 00C0      		rjmp .L188
+ 1920               	.L178:
+ 1921               	/* #APP */
+ 1922               	 ;  640 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 1923 0c20 F894      		cli
+ 1924               	 ;  0 "" 2
+ 1925               	/* #NOAPP */
+ 1926 0c22 F801      		movw r30,r16
+ 1927 0c24 8381      		ldd r24,Z+3
+ 1928               	/* #APP */
+ 1929               	 ;  642 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 1930 0c26 7894      		sei
+ 1931               	 ;  0 "" 2
+ 1932               	/* #NOAPP */
+ 1933 0c28 F701      		movw r30,r14
+ 1934 0c2a 1082      		st Z,__zero_reg__
+ 1935               	.L168:
+ 1936               	/* epilogue start */
+ 1937 0c2c 0F90      		pop __tmp_reg__
+ 1938 0c2e CF91      		pop r28
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 35
+
+
+ 1939 0c30 DF91      		pop r29
+ 1940 0c32 1F91      		pop r17
+ 1941 0c34 0F91      		pop r16
+ 1942 0c36 FF90      		pop r15
+ 1943 0c38 EF90      		pop r14
+ 1944 0c3a DF90      		pop r13
+ 1945 0c3c CF90      		pop r12
+ 1946 0c3e 0895      		ret
+ 1947               	.L173:
+ 1948 0c40 F801      		movw r30,r16
+ 1949 0c42 6381      		ldd r22,Z+3
+ 1950 0c44 6095      		com r22
+ 1951 0c46 F601      		movw r30,r12
+ 1952 0c48 8085      		ldd r24,Z+8
+ 1953 0c4a 6823      		and r22,r24
+ 1954 0c4c 01F4      		brne .+2
+ 1955 0c4e 00C0      		rjmp .L171
+ 1956 0c50 C601      		movw r24,r12
+ 1957 0c52 0E94 0000 		call OS_FlagTaskRdy
+ 1958 0c56 8130      		cpi r24,lo8(1)
+ 1959 0c58 01F0      		breq .+2
+ 1960 0c5a 00C0      		rjmp .L171
+ 1961 0c5c 00C0      		rjmp .L189
+ 1962               	.L174:
+ 1963 0c5e F601      		movw r30,r12
+ 1964 0c60 6085      		ldd r22,Z+8
+ 1965 0c62 F801      		movw r30,r16
+ 1966 0c64 8381      		ldd r24,Z+3
+ 1967 0c66 8623      		and r24,r22
+ 1968 0c68 6817      		cp r22,r24
+ 1969 0c6a 01F0      		breq .+2
+ 1970 0c6c 00C0      		rjmp .L171
+ 1971 0c6e C601      		movw r24,r12
+ 1972 0c70 0E94 0000 		call OS_FlagTaskRdy
+ 1973 0c74 8130      		cpi r24,lo8(1)
+ 1974 0c76 01F0      		breq .+2
+ 1975 0c78 00C0      		rjmp .L171
+ 1976 0c7a 00C0      		rjmp .L189
+ 1977               	.L186:
+ 1978 0c7c 4130      		cpi r20,lo8(1)
+ 1979 0c7e 01F0      		breq .L190
+ 1980               	/* #APP */
+ 1981               	 ;  588 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 1982 0c80 7894      		sei
+ 1983               	 ;  0 "" 2
+ 1984               	/* #NOAPP */
+ 1985 0c82 89E9      		ldi r24,lo8(-103)
+ 1986 0c84 F901      		movw r30,r18
+ 1987 0c86 8083      		st Z,r24
+ 1988 0c88 80E0      		ldi r24,lo8(0)
+ 1989 0c8a 00C0      		rjmp .L168
+ 1990               	.L190:
+ 1991 0c8c FC01      		movw r30,r24
+ 1992 0c8e 8381      		ldd r24,Z+3
+ 1993 0c90 862B      		or r24,r22
+ 1994 0c92 8383      		std Z+3,r24
+ 1995 0c94 00C0      		rjmp .L167
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 36
+
+
+ 1996               	.L188:
+ 1997 0c96 0E94 0000 		call OS_Sched
+ 1998 0c9a 00C0      		rjmp .L178
+ 1999               	.L187:
+ 2000 0c9c 1982      		std Y+1,__zero_reg__
+ 2001 0c9e 00C0      		rjmp .L170
+ 2002               		.size	OSFlagPost, .-OSFlagPost
+ 2003               	.global	OSFlagPend
+ 2004               		.type	OSFlagPend, @function
+ 2005               	OSFlagPend:
+ 2006 0ca0 8F92      		push r8
+ 2007 0ca2 9F92      		push r9
+ 2008 0ca4 AF92      		push r10
+ 2009 0ca6 BF92      		push r11
+ 2010 0ca8 DF92      		push r13
+ 2011 0caa EF92      		push r14
+ 2012 0cac FF92      		push r15
+ 2013 0cae 0F93      		push r16
+ 2014 0cb0 1F93      		push r17
+ 2015 0cb2 DF93      		push r29
+ 2016 0cb4 CF93      		push r28
+ 2017 0cb6 CDB7      		in r28,__SP_L__
+ 2018 0cb8 DEB7      		in r29,__SP_H__
+ 2019 0cba 2B97      		sbiw r28,11
+ 2020 0cbc 0FB6      		in __tmp_reg__,__SREG__
+ 2021 0cbe F894      		cli
+ 2022 0cc0 DEBF      		out __SP_H__,r29
+ 2023 0cc2 0FBE      		out __SREG__,__tmp_reg__
+ 2024 0cc4 CDBF      		out __SP_L__,r28
+ 2025               	/* prologue: function */
+ 2026               	/* frame size = 11 */
+ 2027 0cc6 7C01      		movw r14,r24
+ 2028 0cc8 562F      		mov r21,r22
+ 2029 0cca D42E      		mov r13,r20
+ 2030 0ccc F901      		movw r30,r18
+ 2031 0cce 5801      		movw r10,r16
+ 2032 0cd0 8091 0000 		lds r24,OSIntNesting
+ 2033 0cd4 8823      		tst r24
+ 2034 0cd6 01F4      		brne .L220
+ 2035 0cd8 47FD      		sbrc r20,7
+ 2036 0cda 00C0      		rjmp .L194
+ 2037 0cdc 1B86      		std Y+11,__zero_reg__
+ 2038               	/* #APP */
+ 2039               	 ;  409 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2040 0cde F894      		cli
+ 2041               	 ;  0 "" 2
+ 2042               	/* #NOAPP */
+ 2043 0ce0 91E0      		ldi r25,lo8(1)
+ 2044 0ce2 D916      		cp r13,r25
+ 2045 0ce4 01F4      		brne .+2
+ 2046 0ce6 00C0      		rjmp .L198
+ 2047               	.L223:
+ 2048 0ce8 D916      		cp r13,r25
+ 2049 0cea 00F0      		brlo .L197
+ 2050 0cec A2E0      		ldi r26,lo8(2)
+ 2051 0cee DA16      		cp r13,r26
+ 2052 0cf0 01F4      		brne .+2
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 37
+
+
+ 2053 0cf2 00C0      		rjmp .L199
+ 2054 0cf4 B3E0      		ldi r27,lo8(3)
+ 2055 0cf6 DB16      		cp r13,r27
+ 2056 0cf8 01F4      		brne .+2
+ 2057 0cfa 00C0      		rjmp .L221
+ 2058               	/* #APP */
+ 2059               	 ;  478 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2060 0cfc 7894      		sei
+ 2061               	 ;  0 "" 2
+ 2062               	/* #NOAPP */
+ 2063 0cfe 87E9      		ldi r24,lo8(-105)
+ 2064 0d00 F501      		movw r30,r10
+ 2065 0d02 8083      		st Z,r24
+ 2066 0d04 80E0      		ldi r24,lo8(0)
+ 2067 0d06 00C0      		rjmp .L193
+ 2068               	.L220:
+ 2069 0d08 82E0      		ldi r24,lo8(2)
+ 2070 0d0a D801      		movw r26,r16
+ 2071 0d0c 8C93      		st X,r24
+ 2072 0d0e 80E0      		ldi r24,lo8(0)
+ 2073               	.L193:
+ 2074               	/* epilogue start */
+ 2075 0d10 2B96      		adiw r28,11
+ 2076 0d12 0FB6      		in __tmp_reg__,__SREG__
+ 2077 0d14 F894      		cli
+ 2078 0d16 DEBF      		out __SP_H__,r29
+ 2079 0d18 0FBE      		out __SREG__,__tmp_reg__
+ 2080 0d1a CDBF      		out __SP_L__,r28
+ 2081 0d1c CF91      		pop r28
+ 2082 0d1e DF91      		pop r29
+ 2083 0d20 1F91      		pop r17
+ 2084 0d22 0F91      		pop r16
+ 2085 0d24 FF90      		pop r15
+ 2086 0d26 EF90      		pop r14
+ 2087 0d28 DF90      		pop r13
+ 2088 0d2a BF90      		pop r11
+ 2089 0d2c AF90      		pop r10
+ 2090 0d2e 9F90      		pop r9
+ 2091 0d30 8F90      		pop r8
+ 2092 0d32 0895      		ret
+ 2093               	.L197:
+ 2094 0d34 D701      		movw r26,r14
+ 2095 0d36 1396      		adiw r26,3
+ 2096 0d38 4C91      		ld r20,X
+ 2097 0d3a 842F      		mov r24,r20
+ 2098 0d3c 8095      		com r24
+ 2099 0d3e 8523      		and r24,r21
+ 2100 0d40 8517      		cp r24,r21
+ 2101 0d42 01F0      		breq .+2
+ 2102 0d44 00C0      		rjmp .L206
+ 2103 0d46 BB85      		ldd r27,Y+11
+ 2104 0d48 B130      		cpi r27,lo8(1)
+ 2105 0d4a 01F4      		brne .+2
+ 2106 0d4c 00C0      		rjmp .L222
+ 2107               	.L207:
+ 2108 0d4e 842F      		mov r24,r20
+ 2109               	/* #APP */
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 38
+
+
+ 2110               	 ;  451 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2111 0d50 7894      		sei
+ 2112               	 ;  0 "" 2
+ 2113               	/* #NOAPP */
+ 2114 0d52 D501      		movw r26,r10
+ 2115 0d54 1C92      		st X,__zero_reg__
+ 2116 0d56 00C0      		rjmp .L193
+ 2117               	.L194:
+ 2118 0d58 BFE7      		ldi r27,lo8(127)
+ 2119 0d5a DB22      		and r13,r27
+ 2120 0d5c 81E0      		ldi r24,lo8(1)
+ 2121 0d5e 8B87      		std Y+11,r24
+ 2122               	/* #APP */
+ 2123               	 ;  409 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2124 0d60 F894      		cli
+ 2125               	 ;  0 "" 2
+ 2126               	/* #NOAPP */
+ 2127 0d62 91E0      		ldi r25,lo8(1)
+ 2128 0d64 D916      		cp r13,r25
+ 2129 0d66 01F0      		breq .+2
+ 2130 0d68 00C0      		rjmp .L223
+ 2131               	.L198:
+ 2132 0d6a D701      		movw r26,r14
+ 2133 0d6c 1396      		adiw r26,3
+ 2134 0d6e 4C91      		ld r20,X
+ 2135 0d70 642F      		mov r22,r20
+ 2136 0d72 6095      		com r22
+ 2137 0d74 6523      		and r22,r21
+ 2138 0d76 01F4      		brne .+2
+ 2139 0d78 00C0      		rjmp .L208
+ 2140 0d7a BB85      		ldd r27,Y+11
+ 2141 0d7c B130      		cpi r27,lo8(1)
+ 2142 0d7e 01F4      		brne .+2
+ 2143 0d80 00C0      		rjmp .L224
+ 2144               	.L209:
+ 2145 0d82 842F      		mov r24,r20
+ 2146               	/* #APP */
+ 2147               	 ;  467 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2148 0d84 7894      		sei
+ 2149               	 ;  0 "" 2
+ 2150               	/* #NOAPP */
+ 2151 0d86 D501      		movw r26,r10
+ 2152 0d88 1C92      		st X,__zero_reg__
+ 2153 0d8a 00C0      		rjmp .L193
+ 2154               	.L221:
+ 2155 0d8c D701      		movw r26,r14
+ 2156 0d8e 1396      		adiw r26,3
+ 2157 0d90 4C91      		ld r20,X
+ 2158 0d92 852F      		mov r24,r21
+ 2159 0d94 8423      		and r24,r20
+ 2160 0d96 01F4      		brne .+2
+ 2161 0d98 00C0      		rjmp .L204
+ 2162 0d9a BB85      		ldd r27,Y+11
+ 2163 0d9c B130      		cpi r27,lo8(1)
+ 2164 0d9e 01F4      		brne .+2
+ 2165 0da0 00C0      		rjmp .L225
+ 2166               	.L205:
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 39
+
+
+ 2167 0da2 842F      		mov r24,r20
+ 2168               	/* #APP */
+ 2169               	 ;  434 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2170 0da4 7894      		sei
+ 2171               	 ;  0 "" 2
+ 2172               	/* #NOAPP */
+ 2173 0da6 D501      		movw r26,r10
+ 2174 0da8 1C92      		st X,__zero_reg__
+ 2175 0daa 00C0      		rjmp .L193
+ 2176               	.L199:
+ 2177 0dac D701      		movw r26,r14
+ 2178 0dae 1396      		adiw r26,3
+ 2179 0db0 4C91      		ld r20,X
+ 2180 0db2 852F      		mov r24,r21
+ 2181 0db4 8423      		and r24,r20
+ 2182 0db6 8517      		cp r24,r21
+ 2183 0db8 01F4      		brne .L201
+ 2184 0dba BB85      		ldd r27,Y+11
+ 2185 0dbc B130      		cpi r27,lo8(1)
+ 2186 0dbe 01F4      		brne .+2
+ 2187 0dc0 00C0      		rjmp .L226
+ 2188               	.L202:
+ 2189 0dc2 842F      		mov r24,r20
+ 2190               	/* #APP */
+ 2191               	 ;  418 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2192 0dc4 7894      		sei
+ 2193               	 ;  0 "" 2
+ 2194               	/* #NOAPP */
+ 2195 0dc6 D501      		movw r26,r10
+ 2196 0dc8 1C92      		st X,__zero_reg__
+ 2197 0dca 00C0      		rjmp .L193
+ 2198               	.L201:
+ 2199 0dcc C701      		movw r24,r14
+ 2200 0dce 4E01      		movw r8,r28
+ 2201 0dd0 0894      		sec
+ 2202 0dd2 811C      		adc r8,__zero_reg__
+ 2203 0dd4 911C      		adc r9,__zero_reg__
+ 2204 0dd6 B401      		movw r22,r8
+ 2205 0dd8 452F      		mov r20,r21
+ 2206 0dda 22E0      		ldi r18,lo8(2)
+ 2207 0ddc 8F01      		movw r16,r30
+ 2208 0dde 0E94 0000 		call OS_FlagBlock
+ 2209               	/* #APP */
+ 2210               	 ;  423 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2211 0de2 7894      		sei
+ 2212               	 ;  0 "" 2
+ 2213               	/* #NOAPP */
+ 2214               	.L203:
+ 2215 0de4 0E94 0000 		call OS_Sched
+ 2216               	/* #APP */
+ 2217               	 ;  484 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2218 0de8 F894      		cli
+ 2219               	 ;  0 "" 2
+ 2220               	/* #NOAPP */
+ 2221 0dea E091 0000 		lds r30,OSTCBCur
+ 2222 0dee F091 0000 		lds r31,(OSTCBCur)+1
+ 2223 0df2 8585      		ldd r24,Z+13
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 40
+
+
+ 2224 0df4 85FD      		sbrc r24,5
+ 2225 0df6 00C0      		rjmp .L227
+ 2226 0df8 BB85      		ldd r27,Y+11
+ 2227 0dfa B130      		cpi r27,lo8(1)
+ 2228 0dfc 01F0      		breq .L218
+ 2229 0dfe F701      		movw r30,r14
+ 2230 0e00 4381      		ldd r20,Z+3
+ 2231               	.L211:
+ 2232 0e02 842F      		mov r24,r20
+ 2233               	/* #APP */
+ 2234               	 ;  508 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2235 0e04 7894      		sei
+ 2236               	 ;  0 "" 2
+ 2237               	/* #NOAPP */
+ 2238 0e06 F501      		movw r30,r10
+ 2239 0e08 1082      		st Z,__zero_reg__
+ 2240 0e0a 00C0      		rjmp .L193
+ 2241               	.L227:
+ 2242 0e0c C401      		movw r24,r8
+ 2243 0e0e 0E94 0000 		call OS_FlagUnlink
+ 2244 0e12 E091 0000 		lds r30,OSTCBCur
+ 2245 0e16 F091 0000 		lds r31,(OSTCBCur)+1
+ 2246 0e1a 1586      		std Z+13,__zero_reg__
+ 2247               	/* #APP */
+ 2248               	 ;  488 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2249 0e1c 7894      		sei
+ 2250               	 ;  0 "" 2
+ 2251               	/* #NOAPP */
+ 2252 0e1e 8AE0      		ldi r24,lo8(10)
+ 2253 0e20 D501      		movw r26,r10
+ 2254 0e22 8C93      		st X,r24
+ 2255 0e24 80E0      		ldi r24,lo8(0)
+ 2256 0e26 00C0      		rjmp .L193
+ 2257               	.L206:
+ 2258 0e28 C701      		movw r24,r14
+ 2259 0e2a 4E01      		movw r8,r28
+ 2260 0e2c 0894      		sec
+ 2261 0e2e 811C      		adc r8,__zero_reg__
+ 2262 0e30 911C      		adc r9,__zero_reg__
+ 2263 0e32 B401      		movw r22,r8
+ 2264 0e34 452F      		mov r20,r21
+ 2265 0e36 20E0      		ldi r18,lo8(0)
+ 2266 0e38 8F01      		movw r16,r30
+ 2267 0e3a 0E94 0000 		call OS_FlagBlock
+ 2268               	/* #APP */
+ 2269               	 ;  456 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2270 0e3e 7894      		sei
+ 2271               	 ;  0 "" 2
+ 2272               	/* #NOAPP */
+ 2273 0e40 00C0      		rjmp .L203
+ 2274               	.L225:
+ 2275 0e42 8095      		com r24
+ 2276 0e44 8423      		and r24,r20
+ 2277 0e46 F701      		movw r30,r14
+ 2278 0e48 8383      		std Z+3,r24
+ 2279 0e4a 482F      		mov r20,r24
+ 2280 0e4c 00C0      		rjmp .L205
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 41
+
+
+ 2281               	.L224:
+ 2282 0e4e 862F      		mov r24,r22
+ 2283 0e50 842B      		or r24,r20
+ 2284 0e52 F701      		movw r30,r14
+ 2285 0e54 8383      		std Z+3,r24
+ 2286 0e56 482F      		mov r20,r24
+ 2287 0e58 00C0      		rjmp .L209
+ 2288               	.L222:
+ 2289 0e5a 842F      		mov r24,r20
+ 2290 0e5c 852B      		or r24,r21
+ 2291 0e5e F701      		movw r30,r14
+ 2292 0e60 8383      		std Z+3,r24
+ 2293 0e62 482F      		mov r20,r24
+ 2294 0e64 00C0      		rjmp .L207
+ 2295               	.L226:
+ 2296 0e66 852F      		mov r24,r21
+ 2297 0e68 8095      		com r24
+ 2298 0e6a 8423      		and r24,r20
+ 2299 0e6c F701      		movw r30,r14
+ 2300 0e6e 8383      		std Z+3,r24
+ 2301 0e70 482F      		mov r20,r24
+ 2302 0e72 00C0      		rjmp .L202
+ 2303               	.L218:
+ 2304 0e74 81E0      		ldi r24,lo8(1)
+ 2305 0e76 8D15      		cp r24,r13
+ 2306 0e78 00F0      		brlo .L228
+ 2307 0e7a D701      		movw r26,r14
+ 2308 0e7c 1396      		adiw r26,3
+ 2309 0e7e 4C91      		ld r20,X
+ 2310 0e80 1397      		sbiw r26,3
+ 2311 0e82 8285      		ldd r24,Z+10
+ 2312 0e84 482B      		or r20,r24
+ 2313 0e86 1396      		adiw r26,3
+ 2314 0e88 4C93      		st X,r20
+ 2315 0e8a 00C0      		rjmp .L211
+ 2316               	.L204:
+ 2317 0e8c C701      		movw r24,r14
+ 2318 0e8e 4E01      		movw r8,r28
+ 2319 0e90 0894      		sec
+ 2320 0e92 811C      		adc r8,__zero_reg__
+ 2321 0e94 911C      		adc r9,__zero_reg__
+ 2322 0e96 B401      		movw r22,r8
+ 2323 0e98 452F      		mov r20,r21
+ 2324 0e9a 23E0      		ldi r18,lo8(3)
+ 2325 0e9c 8F01      		movw r16,r30
+ 2326 0e9e 0E94 0000 		call OS_FlagBlock
+ 2327               	/* #APP */
+ 2328               	 ;  439 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2329 0ea2 7894      		sei
+ 2330               	 ;  0 "" 2
+ 2331               	/* #NOAPP */
+ 2332 0ea4 00C0      		rjmp .L203
+ 2333               	.L208:
+ 2334 0ea6 C701      		movw r24,r14
+ 2335 0ea8 4E01      		movw r8,r28
+ 2336 0eaa 0894      		sec
+ 2337 0eac 811C      		adc r8,__zero_reg__
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 42
+
+
+ 2338 0eae 911C      		adc r9,__zero_reg__
+ 2339 0eb0 B401      		movw r22,r8
+ 2340 0eb2 452F      		mov r20,r21
+ 2341 0eb4 21E0      		ldi r18,lo8(1)
+ 2342 0eb6 8F01      		movw r16,r30
+ 2343 0eb8 0E94 0000 		call OS_FlagBlock
+ 2344               	/* #APP */
+ 2345               	 ;  472 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2346 0ebc 7894      		sei
+ 2347               	 ;  0 "" 2
+ 2348               	/* #NOAPP */
+ 2349 0ebe 00C0      		rjmp .L203
+ 2350               	.L228:
+ 2351 0ec0 93E0      		ldi r25,lo8(3)
+ 2352 0ec2 9D15      		cp r25,r13
+ 2353 0ec4 00F4      		brsh .L219
+ 2354 0ec6 D701      		movw r26,r14
+ 2355 0ec8 1396      		adiw r26,3
+ 2356 0eca 4C91      		ld r20,X
+ 2357 0ecc 00C0      		rjmp .L211
+ 2358               	.L219:
+ 2359 0ece 8285      		ldd r24,Z+10
+ 2360 0ed0 8095      		com r24
+ 2361 0ed2 F701      		movw r30,r14
+ 2362 0ed4 4381      		ldd r20,Z+3
+ 2363 0ed6 4823      		and r20,r24
+ 2364 0ed8 4383      		std Z+3,r20
+ 2365 0eda 00C0      		rjmp .L211
+ 2366               		.size	OSFlagPend, .-OSFlagPend
+ 2367               	.global	OSFlagDel
+ 2368               		.type	OSFlagDel, @function
+ 2369               	OSFlagDel:
+ 2370 0edc DF92      		push r13
+ 2371 0ede EF92      		push r14
+ 2372 0ee0 FF92      		push r15
+ 2373 0ee2 0F93      		push r16
+ 2374 0ee4 1F93      		push r17
+ 2375 0ee6 CF93      		push r28
+ 2376 0ee8 DF93      		push r29
+ 2377               	/* prologue: function */
+ 2378               	/* frame size = 0 */
+ 2379 0eea 8C01      		movw r16,r24
+ 2380 0eec 7A01      		movw r14,r20
+ 2381 0eee 8091 0000 		lds r24,OSIntNesting
+ 2382 0ef2 8823      		tst r24
+ 2383 0ef4 01F4      		brne .L245
+ 2384               	/* #APP */
+ 2385               	 ;  283 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2386 0ef6 F894      		cli
+ 2387               	 ;  0 "" 2
+ 2388               	/* #NOAPP */
+ 2389 0ef8 F801      		movw r30,r16
+ 2390 0efa 2181      		ldd r18,Z+1
+ 2391 0efc 3281      		ldd r19,Z+2
+ 2392 0efe DD24      		clr r13
+ 2393 0f00 2115      		cp r18,__zero_reg__
+ 2394 0f02 3105      		cpc r19,__zero_reg__
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 43
+
+
+ 2395 0f04 01F0      		breq .L232
+ 2396 0f06 DD24      		clr r13
+ 2397 0f08 D394      		inc r13
+ 2398               	.L232:
+ 2399 0f0a 6623      		tst r22
+ 2400 0f0c 01F4      		brne .L246
+ 2401 0f0e DD20      		tst r13
+ 2402 0f10 01F0      		breq .L247
+ 2403               	/* #APP */
+ 2404               	 ;  299 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2405 0f12 7894      		sei
+ 2406               	 ;  0 "" 2
+ 2407               	/* #NOAPP */
+ 2408 0f14 88E0      		ldi r24,lo8(8)
+ 2409 0f16 F701      		movw r30,r14
+ 2410 0f18 8083      		st Z,r24
+ 2411 0f1a 00C0      		rjmp .L231
+ 2412               	.L246:
+ 2413 0f1c 6130      		cpi r22,lo8(1)
+ 2414 0f1e 01F0      		breq .L244
+ 2415               	/* #APP */
+ 2416               	 ;  321 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2417 0f20 7894      		sei
+ 2418               	 ;  0 "" 2
+ 2419               	/* #NOAPP */
+ 2420 0f22 87E0      		ldi r24,lo8(7)
+ 2421 0f24 F701      		movw r30,r14
+ 2422 0f26 8083      		st Z,r24
+ 2423 0f28 00C0      		rjmp .L231
+ 2424               	.L241:
+ 2425 0f2a CE01      		movw r24,r28
+ 2426 0f2c 60E0      		ldi r22,lo8(0)
+ 2427 0f2e 0E94 0000 		call OS_FlagTaskRdy
+ 2428 0f32 8881      		ld r24,Y
+ 2429 0f34 9981      		ldd r25,Y+1
+ 2430 0f36 9C01      		movw r18,r24
+ 2431               	.L244:
+ 2432 0f38 E901      		movw r28,r18
+ 2433 0f3a 2115      		cp r18,__zero_reg__
+ 2434 0f3c 3105      		cpc r19,__zero_reg__
+ 2435 0f3e 01F4      		brne .L241
+ 2436 0f40 F801      		movw r30,r16
+ 2437 0f42 1082      		st Z,__zero_reg__
+ 2438 0f44 8091 0000 		lds r24,OSFlagFreeList
+ 2439 0f48 9091 0000 		lds r25,(OSFlagFreeList)+1
+ 2440 0f4c 9283      		std Z+2,r25
+ 2441 0f4e 8183      		std Z+1,r24
+ 2442 0f50 1093 0000 		sts (OSFlagFreeList)+1,r17
+ 2443 0f54 0093 0000 		sts OSFlagFreeList,r16
+ 2444               	/* #APP */
+ 2445               	 ;  313 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2446 0f58 7894      		sei
+ 2447               	 ;  0 "" 2
+ 2448               	/* #NOAPP */
+ 2449 0f5a F1E0      		ldi r31,lo8(1)
+ 2450 0f5c DF16      		cp r13,r31
+ 2451 0f5e 01F0      		breq .L248
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 44
+
+
+ 2452               	.L239:
+ 2453 0f60 F701      		movw r30,r14
+ 2454 0f62 1082      		st Z,__zero_reg__
+ 2455 0f64 00E0      		ldi r16,lo8(0)
+ 2456 0f66 10E0      		ldi r17,hi8(0)
+ 2457 0f68 00C0      		rjmp .L231
+ 2458               	.L245:
+ 2459 0f6a 8CE8      		ldi r24,lo8(-116)
+ 2460 0f6c FA01      		movw r30,r20
+ 2461 0f6e 8083      		st Z,r24
+ 2462               	.L231:
+ 2463 0f70 C801      		movw r24,r16
+ 2464               	/* epilogue start */
+ 2465 0f72 DF91      		pop r29
+ 2466 0f74 CF91      		pop r28
+ 2467 0f76 1F91      		pop r17
+ 2468 0f78 0F91      		pop r16
+ 2469 0f7a FF90      		pop r15
+ 2470 0f7c EF90      		pop r14
+ 2471 0f7e DF90      		pop r13
+ 2472 0f80 0895      		ret
+ 2473               	.L248:
+ 2474 0f82 0E94 0000 		call OS_Sched
+ 2475 0f86 00C0      		rjmp .L239
+ 2476               	.L247:
+ 2477 0f88 F801      		movw r30,r16
+ 2478 0f8a 1082      		st Z,__zero_reg__
+ 2479 0f8c 8091 0000 		lds r24,OSFlagFreeList
+ 2480 0f90 9091 0000 		lds r25,(OSFlagFreeList)+1
+ 2481 0f94 9283      		std Z+2,r25
+ 2482 0f96 8183      		std Z+1,r24
+ 2483 0f98 1093 0000 		sts (OSFlagFreeList)+1,r17
+ 2484 0f9c 0093 0000 		sts OSFlagFreeList,r16
+ 2485               	/* #APP */
+ 2486               	 ;  295 "c:/WinAVR-20100110/lab2/source/os_flag.c" 1
+ 2487 0fa0 7894      		sei
+ 2488               	 ;  0 "" 2
+ 2489               	/* #NOAPP */
+ 2490 0fa2 F701      		movw r30,r14
+ 2491 0fa4 1082      		st Z,__zero_reg__
+ 2492 0fa6 00E0      		ldi r16,lo8(0)
+ 2493 0fa8 10E0      		ldi r17,hi8(0)
+ 2494 0faa 00C0      		rjmp .L231
+ 2495               		.size	OSFlagDel, .-OSFlagDel
+ 2496               	.global	OSSchedUnlock
+ 2497               		.type	OSSchedUnlock, @function
+ 2498               	OSSchedUnlock:
+ 2499               	/* prologue: function */
+ 2500               	/* frame size = 0 */
+ 2501 0fac 8091 0000 		lds r24,OSRunning
+ 2502 0fb0 8130      		cpi r24,lo8(1)
+ 2503 0fb2 01F0      		breq .L254
+ 2504 0fb4 0895      		ret
+ 2505               	.L254:
+ 2506               	/* #APP */
+ 2507               	 ;  256 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 2508 0fb6 F894      		cli
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 45
+
+
+ 2509               	 ;  0 "" 2
+ 2510               	/* #NOAPP */
+ 2511 0fb8 8091 0000 		lds r24,OSLockNesting
+ 2512 0fbc 8823      		tst r24
+ 2513 0fbe 01F0      		breq .L251
+ 2514 0fc0 8150      		subi r24,lo8(-(-1))
+ 2515 0fc2 8093 0000 		sts OSLockNesting,r24
+ 2516 0fc6 8823      		tst r24
+ 2517 0fc8 01F4      		brne .L252
+ 2518 0fca 8091 0000 		lds r24,OSIntNesting
+ 2519 0fce 8823      		tst r24
+ 2520 0fd0 01F0      		breq .L255
+ 2521               	.L252:
+ 2522               	/* #APP */
+ 2523               	 ;  263 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 2524 0fd2 7894      		sei
+ 2525               	 ;  0 "" 2
+ 2526               	/* #NOAPP */
+ 2527 0fd4 0895      		ret
+ 2528               	.L251:
+ 2529               	/* #APP */
+ 2530               	 ;  266 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 2531 0fd6 7894      		sei
+ 2532               	 ;  0 "" 2
+ 2533               	/* #NOAPP */
+ 2534 0fd8 0895      		ret
+ 2535               	.L255:
+ 2536               	/* #APP */
+ 2537               	 ;  260 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 2538 0fda 7894      		sei
+ 2539               	 ;  0 "" 2
+ 2540               	/* #NOAPP */
+ 2541 0fdc 0E94 0000 		call OS_Sched
+ 2542 0fe0 0895      		ret
+ 2543               		.size	OSSchedUnlock, .-OSSchedUnlock
+ 2544               	.global	OSTimeTick
+ 2545               		.type	OSTimeTick, @function
+ 2546               	OSTimeTick:
+ 2547               	/* prologue: function */
+ 2548               	/* frame size = 0 */
+ 2549 0fe2 0E94 0000 		call OSTimeTickHook
+ 2550 0fe6 8091 0000 		lds r24,OSRunning
+ 2551 0fea 8130      		cpi r24,lo8(1)
+ 2552 0fec 01F0      		breq .L263
+ 2553               	.L261:
+ 2554 0fee 0895      		ret
+ 2555               	.L263:
+ 2556 0ff0 A091 0000 		lds r26,OSTCBList
+ 2557 0ff4 B091 0000 		lds r27,(OSTCBList)+1
+ 2558 0ff8 1E96      		adiw r26,14
+ 2559 0ffa 8C91      		ld r24,X
+ 2560 0ffc 1E97      		sbiw r26,14
+ 2561 0ffe 8C30      		cpi r24,lo8(12)
+ 2562 1000 01F0      		breq .L261
+ 2563 1002 2091 0000 		lds r18,OSRdyGrp
+ 2564 1006 41E0      		ldi r20,lo8(1)
+ 2565 1008 50E0      		ldi r21,hi8(1)
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 46
+
+
+ 2566 100a 00C0      		rjmp .L260
+ 2567               	.L265:
+ 2568 100c 5296      		adiw r26,18
+ 2569 100e 8C91      		ld r24,X
+ 2570 1010 5297      		sbiw r26,18
+ 2571 1012 282B      		or r18,r24
+ 2572 1014 5096      		adiw r26,16
+ 2573 1016 EC91      		ld r30,X
+ 2574 1018 5097      		sbiw r26,16
+ 2575 101a F0E0      		ldi r31,lo8(0)
+ 2576 101c E050      		subi r30,lo8(-(OSRdyTbl))
+ 2577 101e F040      		sbci r31,hi8(-(OSRdyTbl))
+ 2578 1020 8081      		ld r24,Z
+ 2579 1022 5196      		adiw r26,17
+ 2580 1024 9C91      		ld r25,X
+ 2581 1026 5197      		sbiw r26,17
+ 2582 1028 892B      		or r24,r25
+ 2583 102a 8083      		st Z,r24
+ 2584               	.L258:
+ 2585 102c 1296      		adiw r26,2
+ 2586 102e 0D90      		ld __tmp_reg__,X+
+ 2587 1030 BC91      		ld r27,X
+ 2588 1032 A02D      		mov r26,__tmp_reg__
+ 2589               	/* #APP */
+ 2590               	 ;  393 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 2591 1034 7894      		sei
+ 2592               	 ;  0 "" 2
+ 2593               	/* #NOAPP */
+ 2594 1036 1E96      		adiw r26,14
+ 2595 1038 8C91      		ld r24,X
+ 2596 103a 1E97      		sbiw r26,14
+ 2597 103c 8C30      		cpi r24,lo8(12)
+ 2598 103e 01F0      		breq .L264
+ 2599               	.L260:
+ 2600               	/* #APP */
+ 2601               	 ;  381 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 2602 1040 F894      		cli
+ 2603               	 ;  0 "" 2
+ 2604               	/* #NOAPP */
+ 2605 1042 1B96      		adiw r26,11
+ 2606 1044 8D91      		ld r24,X+
+ 2607 1046 9C91      		ld r25,X
+ 2608 1048 1C97      		sbiw r26,11+1
+ 2609 104a 0097      		sbiw r24,0
+ 2610 104c 01F0      		breq .L258
+ 2611 104e 0197      		sbiw r24,1
+ 2612 1050 1C96      		adiw r26,11+1
+ 2613 1052 9C93      		st X,r25
+ 2614 1054 8E93      		st -X,r24
+ 2615 1056 1B97      		sbiw r26,11
+ 2616 1058 892B      		or r24,r25
+ 2617 105a 01F4      		brne .L258
+ 2618 105c 1D96      		adiw r26,13
+ 2619 105e 8C91      		ld r24,X
+ 2620 1060 1D97      		sbiw r26,13
+ 2621 1062 83FF      		sbrs r24,3
+ 2622 1064 00C0      		rjmp .L265
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 47
+
+
+ 2623 1066 1C96      		adiw r26,11+1
+ 2624 1068 5C93      		st X,r21
+ 2625 106a 4E93      		st -X,r20
+ 2626 106c 1B97      		sbiw r26,11
+ 2627 106e 00C0      		rjmp .L258
+ 2628               	.L264:
+ 2629 1070 2093 0000 		sts OSRdyGrp,r18
+ 2630 1074 0895      		ret
+ 2631               		.size	OSTimeTick, .-OSTimeTick
+ 2632               	.global	OSStart
+ 2633               		.type	OSStart, @function
+ 2634               	OSStart:
+ 2635               	/* prologue: function */
+ 2636               	/* frame size = 0 */
+ 2637 1076 8091 0000 		lds r24,OSRunning
+ 2638 107a 8111      		cpse r24,__zero_reg__
+ 2639 107c 0895      		ret
+ 2640               	.L269:
+ 2641 107e E091 0000 		lds r30,OSRdyGrp
+ 2642 1082 F0E0      		ldi r31,lo8(0)
+ 2643 1084 E050      		subi r30,lo8(-(OSUnMapTbl))
+ 2644 1086 F040      		sbci r31,hi8(-(OSUnMapTbl))
+ 2645 1088 A081      		ld r26,Z
+ 2646 108a EA2F      		mov r30,r26
+ 2647 108c F0E0      		ldi r31,lo8(0)
+ 2648 108e E050      		subi r30,lo8(-(OSRdyTbl))
+ 2649 1090 F040      		sbci r31,hi8(-(OSRdyTbl))
+ 2650 1092 E081      		ld r30,Z
+ 2651 1094 F0E0      		ldi r31,lo8(0)
+ 2652 1096 E050      		subi r30,lo8(-(OSUnMapTbl))
+ 2653 1098 F040      		sbci r31,hi8(-(OSUnMapTbl))
+ 2654 109a AA0F      		lsl r26
+ 2655 109c AA0F      		lsl r26
+ 2656 109e AA0F      		lsl r26
+ 2657 10a0 8081      		ld r24,Z
+ 2658 10a2 A80F      		add r26,r24
+ 2659 10a4 A093 0000 		sts OSPrioHighRdy,r26
+ 2660 10a8 A093 0000 		sts OSPrioCur,r26
+ 2661 10ac B0E0      		ldi r27,lo8(0)
+ 2662 10ae AA0F      		lsl r26
+ 2663 10b0 BB1F      		rol r27
+ 2664 10b2 A050      		subi r26,lo8(-(OSTCBPrioTbl))
+ 2665 10b4 B040      		sbci r27,hi8(-(OSTCBPrioTbl))
+ 2666 10b6 8D91      		ld r24,X+
+ 2667 10b8 9C91      		ld r25,X
+ 2668 10ba 9093 0000 		sts (OSTCBHighRdy)+1,r25
+ 2669 10be 8093 0000 		sts OSTCBHighRdy,r24
+ 2670 10c2 9093 0000 		sts (OSTCBCur)+1,r25
+ 2671 10c6 8093 0000 		sts OSTCBCur,r24
+ 2672 10ca 0E94 0000 		call OSStartHighRdy
+ 2673 10ce 0895      		ret
+ 2674               		.size	OSStart, .-OSStart
+ 2675               	.global	OSIntExit
+ 2676               		.type	OSIntExit, @function
+ 2677               	OSIntExit:
+ 2678               	/* prologue: function */
+ 2679               	/* frame size = 0 */
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 48
+
+
+ 2680 10d0 8091 0000 		lds r24,OSRunning
+ 2681 10d4 8130      		cpi r24,lo8(1)
+ 2682 10d6 01F0      		breq .L275
+ 2683 10d8 0895      		ret
+ 2684               	.L275:
+ 2685               	/* #APP */
+ 2686               	 ;  180 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 2687 10da F894      		cli
+ 2688               	 ;  0 "" 2
+ 2689               	/* #NOAPP */
+ 2690 10dc 8091 0000 		lds r24,OSIntNesting
+ 2691 10e0 8823      		tst r24
+ 2692 10e2 01F0      		breq .L272
+ 2693 10e4 8150      		subi r24,lo8(-(-1))
+ 2694 10e6 8093 0000 		sts OSIntNesting,r24
+ 2695 10ea 8823      		tst r24
+ 2696 10ec 01F0      		breq .L272
+ 2697               	.L273:
+ 2698               	/* #APP */
+ 2699               	 ;  193 "c:/WinAVR-20100110/lab2/source/os_core.c" 1
+ 2700 10ee 7894      		sei
+ 2701               	 ;  0 "" 2
+ 2702               	/* #NOAPP */
+ 2703 10f0 0895      		ret
+ 2704               	.L272:
+ 2705 10f2 8091 0000 		lds r24,OSLockNesting
+ 2706 10f6 8823      		tst r24
+ 2707 10f8 01F4      		brne .L273
+ 2708 10fa E091 0000 		lds r30,OSRdyGrp
+ 2709 10fe F0E0      		ldi r31,lo8(0)
+ 2710 1100 E050      		subi r30,lo8(-(OSUnMapTbl))
+ 2711 1102 F040      		sbci r31,hi8(-(OSUnMapTbl))
+ 2712 1104 8081      		ld r24,Z
+ 2713 1106 8093 0000 		sts OSIntExitY,r24
+ 2714 110a E82F      		mov r30,r24
+ 2715 110c F0E0      		ldi r31,lo8(0)
+ 2716 110e E050      		subi r30,lo8(-(OSRdyTbl))
+ 2717 1110 F040      		sbci r31,hi8(-(OSRdyTbl))
+ 2718 1112 E081      		ld r30,Z
+ 2719 1114 F0E0      		ldi r31,lo8(0)
+ 2720 1116 E050      		subi r30,lo8(-(OSUnMapTbl))
+ 2721 1118 F040      		sbci r31,hi8(-(OSUnMapTbl))
+ 2722 111a 982F      		mov r25,r24
+ 2723 111c 990F      		lsl r25
+ 2724 111e 990F      		lsl r25
+ 2725 1120 990F      		lsl r25
+ 2726 1122 8081      		ld r24,Z
+ 2727 1124 980F      		add r25,r24
+ 2728 1126 9093 0000 		sts OSPrioHighRdy,r25
+ 2729 112a 8091 0000 		lds r24,OSPrioCur
+ 2730 112e 9817      		cp r25,r24
+ 2731 1130 01F0      		breq .L273
+ 2732 1132 E92F      		mov r30,r25
+ 2733 1134 F0E0      		ldi r31,lo8(0)
+ 2734 1136 EE0F      		lsl r30
+ 2735 1138 FF1F      		rol r31
+ 2736 113a E050      		subi r30,lo8(-(OSTCBPrioTbl))
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 49
+
+
+ 2737 113c F040      		sbci r31,hi8(-(OSTCBPrioTbl))
+ 2738 113e 8081      		ld r24,Z
+ 2739 1140 9181      		ldd r25,Z+1
+ 2740 1142 9093 0000 		sts (OSTCBHighRdy)+1,r25
+ 2741 1146 8093 0000 		sts OSTCBHighRdy,r24
+ 2742 114a 8091 0000 		lds r24,OSCtxSwCtr
+ 2743 114e 9091 0000 		lds r25,(OSCtxSwCtr)+1
+ 2744 1152 A091 0000 		lds r26,(OSCtxSwCtr)+2
+ 2745 1156 B091 0000 		lds r27,(OSCtxSwCtr)+3
+ 2746 115a 0196      		adiw r24,1
+ 2747 115c A11D      		adc r26,__zero_reg__
+ 2748 115e B11D      		adc r27,__zero_reg__
+ 2749 1160 8093 0000 		sts OSCtxSwCtr,r24
+ 2750 1164 9093 0000 		sts (OSCtxSwCtr)+1,r25
+ 2751 1168 A093 0000 		sts (OSCtxSwCtr)+2,r26
+ 2752 116c B093 0000 		sts (OSCtxSwCtr)+3,r27
+ 2753 1170 0E94 0000 		call OSIntCtxSw
+ 2754 1174 00C0      		rjmp .L273
+ 2755               		.size	OSIntExit, .-OSIntExit
+ 2756               	.global	OSInit
+ 2757               		.type	OSInit, @function
+ 2758               	OSInit:
+ 2759               	/* prologue: function */
+ 2760               	/* frame size = 0 */
+ 2761 1176 0E94 0000 		call OSInitHookBegin
+ 2762 117a 1092 0000 		sts OSIntNesting,__zero_reg__
+ 2763 117e 1092 0000 		sts OSLockNesting,__zero_reg__
+ 2764 1182 1092 0000 		sts OSTaskCtr,__zero_reg__
+ 2765 1186 1092 0000 		sts OSRunning,__zero_reg__
+ 2766 118a 1092 0000 		sts OSCtxSwCtr,__zero_reg__
+ 2767 118e 1092 0000 		sts (OSCtxSwCtr)+1,__zero_reg__
+ 2768 1192 1092 0000 		sts (OSCtxSwCtr)+2,__zero_reg__
+ 2769 1196 1092 0000 		sts (OSCtxSwCtr)+3,__zero_reg__
+ 2770 119a 1092 0000 		sts OSIdleCtr,__zero_reg__
+ 2771 119e 1092 0000 		sts (OSIdleCtr)+1,__zero_reg__
+ 2772 11a2 1092 0000 		sts (OSIdleCtr)+2,__zero_reg__
+ 2773 11a6 1092 0000 		sts (OSIdleCtr)+3,__zero_reg__
+ 2774 11aa 1092 0000 		sts OSRdyGrp,__zero_reg__
+ 2775 11ae 1092 0000 		sts OSRdyTbl,__zero_reg__
+ 2776 11b2 1092 0000 		sts OSRdyTbl+1,__zero_reg__
+ 2777 11b6 1092 0000 		sts OSPrioCur,__zero_reg__
+ 2778 11ba 1092 0000 		sts OSPrioHighRdy,__zero_reg__
+ 2779 11be 1092 0000 		sts (OSTCBHighRdy)+1,__zero_reg__
+ 2780 11c2 1092 0000 		sts OSTCBHighRdy,__zero_reg__
+ 2781 11c6 1092 0000 		sts (OSTCBCur)+1,__zero_reg__
+ 2782 11ca 1092 0000 		sts OSTCBCur,__zero_reg__
+ 2783 11ce 1092 0000 		sts (OSTCBList)+1,__zero_reg__
+ 2784 11d2 1092 0000 		sts OSTCBList,__zero_reg__
+ 2785 11d6 E0E0      		ldi r30,lo8(OSTCBPrioTbl)
+ 2786 11d8 F0E0      		ldi r31,hi8(OSTCBPrioTbl)
+ 2787               	.L277:
+ 2788 11da 1192      		st Z+,__zero_reg__
+ 2789 11dc 1192      		st Z+,__zero_reg__
+ 2790 11de 20E0      		ldi r18,hi8(OSTCBPrioTbl+26)
+ 2791 11e0 E030      		cpi r30,lo8(OSTCBPrioTbl+26)
+ 2792 11e2 F207      		cpc r31,r18
+ 2793 11e4 01F4      		brne .L277
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 50
+
+
+ 2794 11e6 80E0      		ldi r24,lo8(OSTCBTbl+19)
+ 2795 11e8 90E0      		ldi r25,hi8(OSTCBTbl+19)
+ 2796               	.L278:
+ 2797 11ea FC01      		movw r30,r24
+ 2798 11ec 7197      		sbiw r30,17
+ 2799 11ee 9183      		std Z+1,r25
+ 2800 11f0 8083      		st Z,r24
+ 2801 11f2 4396      		adiw r24,19
+ 2802 11f4 20E0      		ldi r18,hi8(OSTCBTbl+247)
+ 2803 11f6 8030      		cpi r24,lo8(OSTCBTbl+247)
+ 2804 11f8 9207      		cpc r25,r18
+ 2805 11fa 01F4      		brne .L278
+ 2806 11fc 1092 0000 		sts (OSTCBTbl+230)+1,__zero_reg__
+ 2807 1200 1092 0000 		sts OSTCBTbl+230,__zero_reg__
+ 2808 1204 80E0      		ldi r24,lo8(OSTCBTbl)
+ 2809 1206 90E0      		ldi r25,hi8(OSTCBTbl)
+ 2810 1208 9093 0000 		sts (OSTCBFreeList)+1,r25
+ 2811 120c 8093 0000 		sts OSTCBFreeList,r24
+ 2812 1210 1092 0000 		sts OSEventTbl,__zero_reg__
+ 2813 1214 80E0      		ldi r24,lo8(OSEventTbl+8)
+ 2814 1216 90E0      		ldi r25,hi8(OSEventTbl+8)
+ 2815 1218 9093 0000 		sts (OSEventTbl+4)+1,r25
+ 2816 121c 8093 0000 		sts OSEventTbl+4,r24
+ 2817 1220 1092 0000 		sts OSEventTbl+8,__zero_reg__
+ 2818 1224 0896      		adiw r24,8
+ 2819 1226 9093 0000 		sts (OSEventTbl+12)+1,r25
+ 2820 122a 8093 0000 		sts OSEventTbl+12,r24
+ 2821 122e 4097      		sbiw r24,16
+ 2822 1230 1092 0000 		sts OSEventTbl+16,__zero_reg__
+ 2823 1234 1092 0000 		sts (OSEventTbl+20)+1,__zero_reg__
+ 2824 1238 1092 0000 		sts OSEventTbl+20,__zero_reg__
+ 2825 123c 9093 0000 		sts (OSEventFreeList)+1,r25
+ 2826 1240 8093 0000 		sts OSEventFreeList,r24
+ 2827 1244 80E0      		ldi r24,lo8(OSFlagTbl)
+ 2828 1246 90E0      		ldi r25,hi8(OSFlagTbl)
+ 2829 1248 9093 0000 		sts (OSFlagFreeList)+1,r25
+ 2830 124c 8093 0000 		sts OSFlagFreeList,r24
+ 2831 1250 1092 0000 		sts OSFlagTbl,__zero_reg__
+ 2832 1254 1092 0000 		sts (OSFlagTbl+1)+1,__zero_reg__
+ 2833 1258 1092 0000 		sts OSFlagTbl+1,__zero_reg__
+ 2834 125c 80E0      		ldi r24,lo8(gs(OS_TaskIdle))
+ 2835 125e 90E0      		ldi r25,hi8(gs(OS_TaskIdle))
+ 2836 1260 60E0      		ldi r22,lo8(0)
+ 2837 1262 70E0      		ldi r23,hi8(0)
+ 2838 1264 40E0      		ldi r20,lo8(OSTaskIdleStk+127)
+ 2839 1266 50E0      		ldi r21,hi8(OSTaskIdleStk+127)
+ 2840 1268 2CE0      		ldi r18,lo8(12)
+ 2841 126a 0E94 0000 		call OSTaskCreate
+ 2842 126e 80E0      		ldi r24,lo8(gs(OS_TaskStat))
+ 2843 1270 90E0      		ldi r25,hi8(gs(OS_TaskStat))
+ 2844 1272 60E0      		ldi r22,lo8(0)
+ 2845 1274 70E0      		ldi r23,hi8(0)
+ 2846 1276 40E0      		ldi r20,lo8(OSTaskStatStk+127)
+ 2847 1278 50E0      		ldi r21,hi8(OSTaskStatStk+127)
+ 2848 127a 2BE0      		ldi r18,lo8(11)
+ 2849 127c 0E94 0000 		call OSTaskCreate
+ 2850 1280 0E94 0000 		call OSInitHookEnd
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 51
+
+
+ 2851               	/* epilogue start */
+ 2852 1284 0895      		ret
+ 2853               		.size	OSInit, .-OSInit
+ 2854               	.global	OSMapTbl
+ 2855               		.data
+ 2856               		.type	OSMapTbl, @object
+ 2857               		.size	OSMapTbl, 8
+ 2858               	OSMapTbl:
+ 2859 0000 01        		.byte	1
+ 2860 0001 02        		.byte	2
+ 2861 0002 04        		.byte	4
+ 2862 0003 08        		.byte	8
+ 2863 0004 10        		.byte	16
+ 2864 0005 20        		.byte	32
+ 2865 0006 40        		.byte	64
+ 2866 0007 80        		.byte	-128
+ 2867               	.global	OSUnMapTbl
+ 2868               		.type	OSUnMapTbl, @object
+ 2869               		.size	OSUnMapTbl, 256
+ 2870               	OSUnMapTbl:
+ 2871 0008 00        		.byte	0
+ 2872 0009 00        		.byte	0
+ 2873 000a 01        		.byte	1
+ 2874 000b 00        		.byte	0
+ 2875 000c 02        		.byte	2
+ 2876 000d 00        		.byte	0
+ 2877 000e 01        		.byte	1
+ 2878 000f 00        		.byte	0
+ 2879 0010 03        		.byte	3
+ 2880 0011 00        		.byte	0
+ 2881 0012 01        		.byte	1
+ 2882 0013 00        		.byte	0
+ 2883 0014 02        		.byte	2
+ 2884 0015 00        		.byte	0
+ 2885 0016 01        		.byte	1
+ 2886 0017 00        		.byte	0
+ 2887 0018 04        		.byte	4
+ 2888 0019 00        		.byte	0
+ 2889 001a 01        		.byte	1
+ 2890 001b 00        		.byte	0
+ 2891 001c 02        		.byte	2
+ 2892 001d 00        		.byte	0
+ 2893 001e 01        		.byte	1
+ 2894 001f 00        		.byte	0
+ 2895 0020 03        		.byte	3
+ 2896 0021 00        		.byte	0
+ 2897 0022 01        		.byte	1
+ 2898 0023 00        		.byte	0
+ 2899 0024 02        		.byte	2
+ 2900 0025 00        		.byte	0
+ 2901 0026 01        		.byte	1
+ 2902 0027 00        		.byte	0
+ 2903 0028 05        		.byte	5
+ 2904 0029 00        		.byte	0
+ 2905 002a 01        		.byte	1
+ 2906 002b 00        		.byte	0
+ 2907 002c 02        		.byte	2
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 52
+
+
+ 2908 002d 00        		.byte	0
+ 2909 002e 01        		.byte	1
+ 2910 002f 00        		.byte	0
+ 2911 0030 03        		.byte	3
+ 2912 0031 00        		.byte	0
+ 2913 0032 01        		.byte	1
+ 2914 0033 00        		.byte	0
+ 2915 0034 02        		.byte	2
+ 2916 0035 00        		.byte	0
+ 2917 0036 01        		.byte	1
+ 2918 0037 00        		.byte	0
+ 2919 0038 04        		.byte	4
+ 2920 0039 00        		.byte	0
+ 2921 003a 01        		.byte	1
+ 2922 003b 00        		.byte	0
+ 2923 003c 02        		.byte	2
+ 2924 003d 00        		.byte	0
+ 2925 003e 01        		.byte	1
+ 2926 003f 00        		.byte	0
+ 2927 0040 03        		.byte	3
+ 2928 0041 00        		.byte	0
+ 2929 0042 01        		.byte	1
+ 2930 0043 00        		.byte	0
+ 2931 0044 02        		.byte	2
+ 2932 0045 00        		.byte	0
+ 2933 0046 01        		.byte	1
+ 2934 0047 00        		.byte	0
+ 2935 0048 06        		.byte	6
+ 2936 0049 00        		.byte	0
+ 2937 004a 01        		.byte	1
+ 2938 004b 00        		.byte	0
+ 2939 004c 02        		.byte	2
+ 2940 004d 00        		.byte	0
+ 2941 004e 01        		.byte	1
+ 2942 004f 00        		.byte	0
+ 2943 0050 03        		.byte	3
+ 2944 0051 00        		.byte	0
+ 2945 0052 01        		.byte	1
+ 2946 0053 00        		.byte	0
+ 2947 0054 02        		.byte	2
+ 2948 0055 00        		.byte	0
+ 2949 0056 01        		.byte	1
+ 2950 0057 00        		.byte	0
+ 2951 0058 04        		.byte	4
+ 2952 0059 00        		.byte	0
+ 2953 005a 01        		.byte	1
+ 2954 005b 00        		.byte	0
+ 2955 005c 02        		.byte	2
+ 2956 005d 00        		.byte	0
+ 2957 005e 01        		.byte	1
+ 2958 005f 00        		.byte	0
+ 2959 0060 03        		.byte	3
+ 2960 0061 00        		.byte	0
+ 2961 0062 01        		.byte	1
+ 2962 0063 00        		.byte	0
+ 2963 0064 02        		.byte	2
+ 2964 0065 00        		.byte	0
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 53
+
+
+ 2965 0066 01        		.byte	1
+ 2966 0067 00        		.byte	0
+ 2967 0068 05        		.byte	5
+ 2968 0069 00        		.byte	0
+ 2969 006a 01        		.byte	1
+ 2970 006b 00        		.byte	0
+ 2971 006c 02        		.byte	2
+ 2972 006d 00        		.byte	0
+ 2973 006e 01        		.byte	1
+ 2974 006f 00        		.byte	0
+ 2975 0070 03        		.byte	3
+ 2976 0071 00        		.byte	0
+ 2977 0072 01        		.byte	1
+ 2978 0073 00        		.byte	0
+ 2979 0074 02        		.byte	2
+ 2980 0075 00        		.byte	0
+ 2981 0076 01        		.byte	1
+ 2982 0077 00        		.byte	0
+ 2983 0078 04        		.byte	4
+ 2984 0079 00        		.byte	0
+ 2985 007a 01        		.byte	1
+ 2986 007b 00        		.byte	0
+ 2987 007c 02        		.byte	2
+ 2988 007d 00        		.byte	0
+ 2989 007e 01        		.byte	1
+ 2990 007f 00        		.byte	0
+ 2991 0080 03        		.byte	3
+ 2992 0081 00        		.byte	0
+ 2993 0082 01        		.byte	1
+ 2994 0083 00        		.byte	0
+ 2995 0084 02        		.byte	2
+ 2996 0085 00        		.byte	0
+ 2997 0086 01        		.byte	1
+ 2998 0087 00        		.byte	0
+ 2999 0088 07        		.byte	7
+ 3000 0089 00        		.byte	0
+ 3001 008a 01        		.byte	1
+ 3002 008b 00        		.byte	0
+ 3003 008c 02        		.byte	2
+ 3004 008d 00        		.byte	0
+ 3005 008e 01        		.byte	1
+ 3006 008f 00        		.byte	0
+ 3007 0090 03        		.byte	3
+ 3008 0091 00        		.byte	0
+ 3009 0092 01        		.byte	1
+ 3010 0093 00        		.byte	0
+ 3011 0094 02        		.byte	2
+ 3012 0095 00        		.byte	0
+ 3013 0096 01        		.byte	1
+ 3014 0097 00        		.byte	0
+ 3015 0098 04        		.byte	4
+ 3016 0099 00        		.byte	0
+ 3017 009a 01        		.byte	1
+ 3018 009b 00        		.byte	0
+ 3019 009c 02        		.byte	2
+ 3020 009d 00        		.byte	0
+ 3021 009e 01        		.byte	1
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 54
+
+
+ 3022 009f 00        		.byte	0
+ 3023 00a0 03        		.byte	3
+ 3024 00a1 00        		.byte	0
+ 3025 00a2 01        		.byte	1
+ 3026 00a3 00        		.byte	0
+ 3027 00a4 02        		.byte	2
+ 3028 00a5 00        		.byte	0
+ 3029 00a6 01        		.byte	1
+ 3030 00a7 00        		.byte	0
+ 3031 00a8 05        		.byte	5
+ 3032 00a9 00        		.byte	0
+ 3033 00aa 01        		.byte	1
+ 3034 00ab 00        		.byte	0
+ 3035 00ac 02        		.byte	2
+ 3036 00ad 00        		.byte	0
+ 3037 00ae 01        		.byte	1
+ 3038 00af 00        		.byte	0
+ 3039 00b0 03        		.byte	3
+ 3040 00b1 00        		.byte	0
+ 3041 00b2 01        		.byte	1
+ 3042 00b3 00        		.byte	0
+ 3043 00b4 02        		.byte	2
+ 3044 00b5 00        		.byte	0
+ 3045 00b6 01        		.byte	1
+ 3046 00b7 00        		.byte	0
+ 3047 00b8 04        		.byte	4
+ 3048 00b9 00        		.byte	0
+ 3049 00ba 01        		.byte	1
+ 3050 00bb 00        		.byte	0
+ 3051 00bc 02        		.byte	2
+ 3052 00bd 00        		.byte	0
+ 3053 00be 01        		.byte	1
+ 3054 00bf 00        		.byte	0
+ 3055 00c0 03        		.byte	3
+ 3056 00c1 00        		.byte	0
+ 3057 00c2 01        		.byte	1
+ 3058 00c3 00        		.byte	0
+ 3059 00c4 02        		.byte	2
+ 3060 00c5 00        		.byte	0
+ 3061 00c6 01        		.byte	1
+ 3062 00c7 00        		.byte	0
+ 3063 00c8 06        		.byte	6
+ 3064 00c9 00        		.byte	0
+ 3065 00ca 01        		.byte	1
+ 3066 00cb 00        		.byte	0
+ 3067 00cc 02        		.byte	2
+ 3068 00cd 00        		.byte	0
+ 3069 00ce 01        		.byte	1
+ 3070 00cf 00        		.byte	0
+ 3071 00d0 03        		.byte	3
+ 3072 00d1 00        		.byte	0
+ 3073 00d2 01        		.byte	1
+ 3074 00d3 00        		.byte	0
+ 3075 00d4 02        		.byte	2
+ 3076 00d5 00        		.byte	0
+ 3077 00d6 01        		.byte	1
+ 3078 00d7 00        		.byte	0
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 55
+
+
+ 3079 00d8 04        		.byte	4
+ 3080 00d9 00        		.byte	0
+ 3081 00da 01        		.byte	1
+ 3082 00db 00        		.byte	0
+ 3083 00dc 02        		.byte	2
+ 3084 00dd 00        		.byte	0
+ 3085 00de 01        		.byte	1
+ 3086 00df 00        		.byte	0
+ 3087 00e0 03        		.byte	3
+ 3088 00e1 00        		.byte	0
+ 3089 00e2 01        		.byte	1
+ 3090 00e3 00        		.byte	0
+ 3091 00e4 02        		.byte	2
+ 3092 00e5 00        		.byte	0
+ 3093 00e6 01        		.byte	1
+ 3094 00e7 00        		.byte	0
+ 3095 00e8 05        		.byte	5
+ 3096 00e9 00        		.byte	0
+ 3097 00ea 01        		.byte	1
+ 3098 00eb 00        		.byte	0
+ 3099 00ec 02        		.byte	2
+ 3100 00ed 00        		.byte	0
+ 3101 00ee 01        		.byte	1
+ 3102 00ef 00        		.byte	0
+ 3103 00f0 03        		.byte	3
+ 3104 00f1 00        		.byte	0
+ 3105 00f2 01        		.byte	1
+ 3106 00f3 00        		.byte	0
+ 3107 00f4 02        		.byte	2
+ 3108 00f5 00        		.byte	0
+ 3109 00f6 01        		.byte	1
+ 3110 00f7 00        		.byte	0
+ 3111 00f8 04        		.byte	4
+ 3112 00f9 00        		.byte	0
+ 3113 00fa 01        		.byte	1
+ 3114 00fb 00        		.byte	0
+ 3115 00fc 02        		.byte	2
+ 3116 00fd 00        		.byte	0
+ 3117 00fe 01        		.byte	1
+ 3118 00ff 00        		.byte	0
+ 3119 0100 03        		.byte	3
+ 3120 0101 00        		.byte	0
+ 3121 0102 01        		.byte	1
+ 3122 0103 00        		.byte	0
+ 3123 0104 02        		.byte	2
+ 3124 0105 00        		.byte	0
+ 3125 0106 01        		.byte	1
+ 3126 0107 00        		.byte	0
+ 3127               		.comm OSCtxSwCtr,4,1
+ 3128               		.comm OSEventFreeList,2,1
+ 3129               		.comm OSEventTbl,24,1
+ 3130               		.comm OSFlagTbl,4,1
+ 3131               		.comm OSFlagFreeList,2,1
+ 3132               		.comm OSCPUUsage,1,1
+ 3133               		.comm OSIdleCtrMax,4,1
+ 3134               		.comm OSIdleCtrRun,4,1
+ 3135               		.comm OSStatRdy,1,1
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 56
+
+
+ 3136               		.comm OSTaskStatStk,128,1
+ 3137               		.comm OSIntNesting,1,1
+ 3138               		.comm OSIntExitY,1,1
+ 3139               		.comm OSLockNesting,1,1
+ 3140               		.comm OSPrioCur,1,1
+ 3141               		.comm OSPrioHighRdy,1,1
+ 3142               		.comm OSRdyGrp,1,1
+ 3143               		.comm OSRdyTbl,2,1
+ 3144               		.comm OSRunning,1,1
+ 3145               		.comm OSTaskCtr,1,1
+ 3146               		.comm OSIdleCtr,4,1
+ 3147               		.comm OSTaskIdleStk,128,1
+ 3148               		.comm OSTCBCur,2,1
+ 3149               		.comm OSTCBFreeList,2,1
+ 3150               		.comm OSTCBHighRdy,2,1
+ 3151               		.comm OSTCBList,2,1
+ 3152               		.comm OSTCBPrioTbl,26,1
+ 3153               		.comm OSTCBTbl,247,1
+ 3154               	.global __do_copy_data
+ 3155               	.global __do_clear_bss
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 57
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ucos_ii.c
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2      *ABS*:0000003f __SREG__
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:3      *ABS*:0000003e __SP_H__
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:4      *ABS*:0000003d __SP_L__
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:5      *ABS*:00000034 __CCP__
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:6      *ABS*:00000000 __tmp_reg__
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:7      *ABS*:00000001 __zero_reg__
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:11     .text:00000000 OSIntEnter
+                            *COM*:00000001 OSRunning
+                            *COM*:00000001 OSIntNesting
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:29     .text:0000001a OSSchedLock
+                            *COM*:00000001 OSLockNesting
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:57     .text:00000038 OSVersion
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:67     .text:0000003e OS_EventTaskRdy
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2870   .data:00000008 OSUnMapTbl
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2858   .data:00000000 OSMapTbl
+                            *COM*:0000001a OSTCBPrioTbl
+                            *COM*:00000001 OSRdyGrp
+                            *COM*:00000002 OSRdyTbl
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:165    .text:000000f4 OS_EventTaskWait
+                            *COM*:00000002 OSTCBCur
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:223    .text:0000015e OS_EventTO
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:268    .text:000001ac OS_EventWaitListInit
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:280    .text:000001b6 OSFlagAccept
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:446    .text:000002a2 OSFlagCreate
+                            *COM*:00000002 OSFlagFreeList
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:501    .text:000002ee OSFlagQuery
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:522    .text:000002fc OS_FlagBlock
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:603    .text:00000394 OS_FlagInit
+                            *COM*:00000004 OSFlagTbl
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:618    .text:000003ae OS_FlagUnlink
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:657    .text:000003ec OS_FlagTaskRdy
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:720    .text:00000462 OSMboxCreate
+                            *COM*:00000002 OSEventFreeList
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:769    .text:000004aa OSSemCreate
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:818    .text:000004f2 OS_TCBInit
+                            *COM*:00000002 OSTCBFreeList
+                            *COM*:00000002 OSTCBList
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:939    .text:000005c2 OS_TaskIdle
+                            *COM*:00000004 OSIdleCtr
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:969    .text:000005f2 OS_Sched
+                            *COM*:00000001 OSPrioHighRdy
+                            *COM*:00000001 OSPrioCur
+                            *COM*:00000002 OSTCBHighRdy
+                            *COM*:00000004 OSCtxSwCtr
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1040   .text:00000680 OSTimeDly
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1091   .text:000006d0 OSTimeDlyHMSM
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1245   .text:000007f2 OS_TaskStat
+                            *COM*:00000001 OSStatRdy
+                            *COM*:00000004 OSIdleCtrMax
+                            *COM*:00000001 OSCPUUsage
+                            *COM*:00000004 OSIdleCtrRun
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1347   .text:000008dc OSStatInit
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1395   .text:0000092c OSTaskCreate
+                            *COM*:00000001 OSTaskCtr
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1511   .text:000009d4 OSSemPost
+GAS LISTING C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s 			page 58
+
+
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1564   .text:00000a12 OSSemPend
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1666   .text:00000aa8 OSMboxPost
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1714   .text:00000adc OSMboxPend
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:1819   .text:00000b78 OSFlagPost
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2005   .text:00000ca0 OSFlagPend
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2369   .text:00000edc OSFlagDel
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2498   .text:00000fac OSSchedUnlock
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2546   .text:00000fe2 OSTimeTick
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2634   .text:00001076 OSStart
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2677   .text:000010d0 OSIntExit
+                            *COM*:00000001 OSIntExitY
+C:\Users\jong1\AppData\Local\Temp/cc1QNGQE.s:2758   .text:00001176 OSInit
+                            *COM*:000000f7 OSTCBTbl
+                            *COM*:00000018 OSEventTbl
+                            *COM*:00000080 OSTaskIdleStk
+                            *COM*:00000080 OSTaskStatStk
+
+UNDEFINED SYMBOLS
+OSTCBInitHook
+OSTaskCreateHook
+OSTaskIdleHook
+OSCtxSw
+__mulsi3
+__udivmodsi4
+OSTaskStatHook
+OSTaskStkInit
+OSTimeTickHook
+OSStartHighRdy
+OSIntCtxSw
+OSInitHookBegin
+OSInitHookEnd
+__do_copy_data
+__do_clear_bss
