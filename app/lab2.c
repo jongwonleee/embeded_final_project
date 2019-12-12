@@ -7,7 +7,7 @@
 //#include <avr/interrupt.h>
 
 #define  TASK_STK_SIZE  OS_TASK_DEF_STK_SIZE
-#define CDS_VALUE 871 // 10 LUXÀÇ ¹à±â °ª
+#define CDS_VALUE 871 // 10 LUXì˜ ë°ê¸° ê°’
 #define ON 1
 #define OFF 0
 
@@ -36,7 +36,7 @@ unsigned char SEL[4] = { 0x08, 0x04, 0x02, 0x01 };
 unsigned char Plant[4] = { 0x4f, 0x63,0x5c, 0x46 };
 unsigned char WIN[4] = { 0x3e, 0x3e, 0x06, 0x37 };
 unsigned char LOSE[4] = { 0x38, 0x3f, 0x6d, 0x79 };
-unsigned int Sound[] = { 17,97,17,66,97,137,114,105,97,87}; // default & µµ & ¼Ö
+unsigned int Sound[] = { 17,97,17,66,97,137,114,105,97,87}; // default & ë„ & ì†”
 
 volatile int time = 1;
 volatile int state = OFF;
@@ -58,38 +58,38 @@ ISR(TIMER2_OVF_vect) {
 	TCNT2 = Sound[soundMode];
 }
 
-// INT4¹ø º¤ÅÍ »ç¿ë(½ºÀ§Ä¡)
-// ½ºÀ§Ä¡°¡ ´­¸®¸é LED¸¦ ÇÑ Ä­ ¿Ã¸®µµ·Ï ½ÅÈ£¸¦ º¸³¿(0x08)
+// INT4ë²ˆ ë²¡í„° ì‚¬ìš©(ìŠ¤ìœ„ì¹˜)
+// ìŠ¤ìœ„ì¹˜ê°€ ëˆŒë¦¬ë©´ LEDë¥¼ í•œ ì¹¸ ì˜¬ë¦¬ë„ë¡ ì‹ í˜¸ë¥¼ ë³´ëƒ„(0x08)
 ISR(INT4_vect) {
 	int err;
 	OSFlagPost(flag, 0x08, OS_FLAG_SET, &err);
 }
 
-// ---------------------------- ADC »ç¿ë ----------------------------
+// ---------------------------- ADC ì‚¬ìš© ----------------------------
 void init_adc() {
 	ADMUX = 0x00;
-	// REFS(1:0) AREF (+5V ±âÁØÀü¾Ğ »ç¿ë),
-	// ADLAR = 0 (°ª ¿À¸¥ÂÊÀ¸·Î Á¤·Ä) ,
-	// MUX(4:0) = 00000 (ADC0 »ç¿ë, ´Ü±Ø ÀÔ·Â)
+	// REFS(1:0) AREF (+5V ê¸°ì¤€ì „ì•• ì‚¬ìš©),
+	// ADLAR = 0 (ê°’ ì˜¤ë¥¸ìª½ìœ¼ë¡œ ì •ë ¬) ,
+	// MUX(4:0) = 00000 (ADC0 ì‚¬ìš©, ë‹¨ê·¹ ì…ë ¥)
 	ADCSRA = 0x87;
-	// ADEN =1 (ADC »ç¿ë),
-	// ADFR = 0 (single conversion ¸ğµå),
-	// ADPS(2:0) = 111 ÇÁ¸®½ºÄÉÀÏ·¯ 128ºĞÁÖ
+	// ADEN =1 (ADC ì‚¬ìš©),
+	// ADFR = 0 (single conversion ëª¨ë“œ),
+	// ADPS(2:0) = 111 í”„ë¦¬ìŠ¤ì¼€ì¼ëŸ¬ 128ë¶„ì£¼
 }
 
 unsigned short read_adc() {
 	unsigned char adc_low, adc_high;
 	unsigned short value;
-	ADCSRA |= 0x40; // ADC start conversion Setting ½ÅÈ£ º¸³¿
-	while ((ADCSRA & 0x10) != 0x10); // ADC º¯È¯ ¿Ï·á °Ë»ç
-	adc_low = ADCL; // º¯È¯µÈ °ª ÀĞ¾î¿À±â
-	adc_high = ADCH; // º¯È¯µÈ °ª ÀĞ¾î¿À±â
-	value = (adc_high << 8) | adc_low; // high °ªÀº <<8ÇÏ¿© ¿ø·¡ °ªÀ¸·Î º¯È¯
+	ADCSRA |= 0x40; // ADC start conversion Setting ì‹ í˜¸ ë³´ëƒ„
+	while ((ADCSRA & 0x10) != 0x10); // ADC ë³€í™˜ ì™„ë£Œ ê²€ì‚¬
+	adc_low = ADCL; // ë³€í™˜ëœ ê°’ ì½ì–´ì˜¤ê¸°
+	adc_high = ADCH; // ë³€í™˜ëœ ê°’ ì½ì–´ì˜¤ê¸°
+	value = (adc_high << 8) | adc_low; // high ê°’ì€ <<8í•˜ì—¬ ì›ë˜ ê°’ìœ¼ë¡œ ë³€í™˜
 	return value;
 }
 // ------------------------------------------------------------------
 
-// ------------------------ RESET ÇÔ¼ö -------------------------------
+// ------------------------ RESET í•¨ìˆ˜ -------------------------------
 void Reset() {
 	int err;
 	// Timer reset
@@ -119,19 +119,19 @@ int main(void)
 
 	Reset();
 
-	// ¹öÀú
-	DDRB = 0x10; // ¹öÀú Ãâ·Â ¼³Á¤ PB4
-	TCCR2 = 0x03; // 32ºĞÁÖ
- //    TIMSK = 0x01; // timer 0  overflow interrupt ¼³Á¤
-	TCNT2 = 17; // µµ
+	// ë²„ì €
+	DDRB = 0x10; // ë²„ì € ì¶œë ¥ ì„¤ì • PB4
+	TCCR2 = 0x03; // 32ë¶„ì£¼
+ //    TIMSK = 0x01; // timer 0  overflow interrupt ì„¤ì •
+	TCNT2 = 17; // ë„
 
-	// ½ºÀ§Ä¡
-	DDRE = 0xef; //0b11101111 4,5¹ø ÀÎÅÍ·´Æ® ÇÏ°­¿§Áö Æ®¸®°Å ¼³Á¤
-	EICRB = 0x02;  // INT 4 ÇÏ°­ ¿§Áö »ç¿ë.
-	EIMSK = 0x10;  // 4¹ø ÀÎÅÍ·´Æ® »ç¿ë
-	SREG |= 1 << 7; //Àü¿ª ÀÎÅÍ·´Æ® ¼³Á¤
+	// ìŠ¤ìœ„ì¹˜
+	DDRE = 0xef; //0b11101111 4,5ë²ˆ ì¸í„°ëŸ½íŠ¸ í•˜ê°•ì—£ì§€ íŠ¸ë¦¬ê±° ì„¤ì •
+	EICRB = 0x02;  // INT 4 í•˜ê°• ì—£ì§€ ì‚¬ìš©.
+	EIMSK = 0x10;  // 4ë²ˆ ì¸í„°ëŸ½íŠ¸ ì‚¬ìš©
+	SREG |= 1 << 7; //ì „ì—­ ì¸í„°ëŸ½íŠ¸ ì„¤ì •
 
-	// ±¤¼¾¼­
+	// ê´‘ì„¼ì„œ
 	init_adc();
 	OS_EXIT_CRITICAL();
 
@@ -148,7 +148,7 @@ int main(void)
 	OSTaskCreate(ControlTask, (void*)0, (void*)& ControlTaskStk[TASK_STK_SIZE - 1], 4);
 	OSTaskCreate(ShowFndTask, (void*)0, (void*)& ShowFndTaskStk[TASK_STK_SIZE - 1], 6);
 
-	// ÇÃ·¡±× ÃÊ±âÈ­
+	// í”Œë˜ê·¸ ì´ˆê¸°í™”
 	flag = OSFlagCreate(0x00, &err);
 
 	OSStart();
@@ -158,37 +158,37 @@ int main(void)
 	return 0;
 }
 
-// Å¸ÀÌ¸Ó¸¦ Á¦¾î(1ÃÊ)
-// ÀÏÁ¤ ½Ã°£ÀÌ µÉ¶§¸¶´Ù LED¿Í FND¿¡°Ô ÇÃ·¡±×·Î Àü´Ş
-// 0x01 FLAG : ½Ä¹° ÇÑÄ­ Áõ°¡
-// 0x02 FLAG : LED ÇÑÄ­ Áõ°¡
-// 0x04 FLAG : ½Ä¹° ÇÑÄ­ °¨¼Ò
+// íƒ€ì´ë¨¸ë¥¼ ì œì–´(1ì´ˆ)
+// ì¼ì • ì‹œê°„ì´ ë ë•Œë§ˆë‹¤ LEDì™€ FNDì—ê²Œ í”Œë˜ê·¸ë¡œ ì „ë‹¬
+// 0x01 FLAG : ì‹ë¬¼ í•œì¹¸ ì¦ê°€
+// 0x02 FLAG : LED í•œì¹¸ ì¦ê°€
+// 0x04 FLAG : ì‹ë¬¼ í•œì¹¸ ê°ì†Œ
 void ControlTask(void* data) {
 	int err, i, light, cnt;
 
 	while (1) {
-		// 1ÃÊ Å¸ÀÌ¸Ó
+		// 1ì´ˆ íƒ€ì´ë¨¸
 		OSTimeDlyHMSM(0, 0, 1, 0);
 
-		// ¾îµÎ¿ì¸é light°ª Áõ°¡
-		 // ¾îµÎ¿ì¸é fnd°¡ ±ôºı°Å¸²
+		// ì–´ë‘ìš°ë©´ lightê°’ ì¦ê°€
+		 // ì–´ë‘ìš°ë©´ fndê°€ ê¹œë¹¡ê±°ë¦¼
 		if (read_adc() < CDS_VALUE)
 			light = 5;
 		else
 			light = 0;
 
-		// 10ÃÊ¸¶´Ù ½Ä¹°ÀÌ ÀÚ¶ó´Â ½ÅÈ£ º¸³¿(0x01)
-		// ¾îµÎ¿ì¸é 20ÃÊ¸¶´Ù ÇÑ ¹ø¾¿ ½ÅÈ£¸¦ º¸³¿
+		// 10ì´ˆë§ˆë‹¤ ì‹ë¬¼ì´ ìë¼ëŠ” ì‹ í˜¸ ë³´ëƒ„(0x01)
+		// ì–´ë‘ìš°ë©´ 20ì´ˆë§ˆë‹¤ í•œ ë²ˆì”© ì‹ í˜¸ë¥¼ ë³´ëƒ„
 
 		if (time % (5 + light) == 0) {
-			// ¹°ÀÌ ´Ù ¶³¾îÁø »óÅÂ¿¡¼­´Â ¾Èº¸³¿
-			if (PORTA != 0x00 || PORTA != 0xFF)
+			// ë¬¼ì´ ë‹¤ ë–¨ì–´ì§„ ìƒíƒœì—ì„œëŠ” ì•ˆë³´ëƒ„
+			if (PORTA != 0x00 && PORTA != 0xFF)
 				OSFlagPost(flag, 0x01, OS_FLAG_SET, &err);
 		}
 
-		// 5ÃÊ¸¶´Ù
-		// ¹°ÀÇ ¾çÀ» °¨¼Ò½ÃÅ°´Â ½ÅÈ£¸¦ º¸³¿(0x02)
-		// ¹°ÀÌ ´Ù ¶³¾îÁö°Å³ª ²ËÂ÷¸é µÇ¸é ½Ä¹°ÀÌ ÁÙ¾îµë(0x04)
+		// 5ì´ˆë§ˆë‹¤
+		// ë¬¼ì˜ ì–‘ì„ ê°ì†Œì‹œí‚¤ëŠ” ì‹ í˜¸ë¥¼ ë³´ëƒ„(0x02)
+		// ë¬¼ì´ ë‹¤ ë–¨ì–´ì§€ê±°ë‚˜ ê½‰ì°¨ë©´ ë˜ë©´ ì‹ë¬¼ì´ ì¤„ì–´ë“¬(0x04)
 		OSSemPend(sem_plant, 0, &err);
 		cnt = plant_cnt;
 		OSSemPost(sem_plant);
@@ -204,8 +204,8 @@ void ControlTask(void* data) {
 			}
 		}
 
-		// ½Ä¹°ÀÌ ¸ğµÎ ÀÚ¶ó°Å³ª
-		// ½Ä¹°°ú ¹°ÀÌ ¸ğµÎ ¶³¾îÁö°Ô µÇ¸é
+		// ì‹ë¬¼ì´ ëª¨ë‘ ìë¼ê±°ë‚˜
+		// ì‹ë¬¼ê³¼ ë¬¼ì´ ëª¨ë‘ ë–¨ì–´ì§€ê²Œ ë˜ë©´
 		// Game End
 		if (cnt >= 4 || (cnt <= 0 && PORTA == 0x00) || (cnt <= 0 && PORTA == 0xFF)) {
 			OSFlagPost(flag, 0x10, OS_FLAG_SET, &err);
@@ -233,10 +233,10 @@ void ControlTask(void* data) {
 				OSSemPost(sem_buz);
 			}
 			OSTimeDlyHMSM(0, 0, 3, 0);
-			// 3ÃÊ°£ ¹®±¸ Ç¥½ÃÈÄ flag clear
+			// 3ì´ˆê°„ ë¬¸êµ¬ í‘œì‹œí›„ flag clear
 			OSFlagPost(flag, 0xff, OS_FLAG_CLR, &err);
 
-			// ¼³Á¤À» ¸®¼Â
+			// ì„¤ì •ì„ ë¦¬ì…‹
 			Reset();
 		}
 
@@ -248,10 +248,10 @@ void LedPlusTask(void* data) {
 	int err,i,max;
 
 	while (1) {
-		// ½ºÀ§Ä¡¸¦ ´©¸£¸é
+		// ìŠ¤ìœ„ì¹˜ë¥¼ ëˆ„ë¥´ë©´
 		OSFlagPend(flag, 0x08, OS_FLAG_WAIT_SET_ANY + OS_FLAG_CONSUME, 0, &err);
 		max = rand();
-		// LED¸¦ ¿ŞÂÊÀ¸·Î ÇÑ ºñÆ®¾¿ Áõ°¡
+		// LEDë¥¼ ì™¼ìª½ìœ¼ë¡œ í•œ ë¹„íŠ¸ì”© ì¦ê°€
 		if (read_adc() < CDS_VALUE)
 		{
 			for (i = 0; i < max % 7 + 1; i++)
@@ -269,10 +269,10 @@ void LedMinusTask(void* data) {
 	int err;
 
 	while (1) {
-		// ControlTask°¡ ÇÃ·¡±×¸¦ ¼³Á¤ÇØ ÁÖ¸é
+		// ControlTaskê°€ í”Œë˜ê·¸ë¥¼ ì„¤ì •í•´ ì£¼ë©´
 		OSFlagPend(flag, 0x02, OS_FLAG_WAIT_SET_ANY + OS_FLAG_CONSUME, 0, &err);
 
-		// LED°¡ ÇÑ Ä­¾¿ ÁÙ¾îµë
+		// LEDê°€ í•œ ì¹¸ì”© ì¤„ì–´ë“¬
 		PORTA = PORTA >> 1;
 	}
 }
@@ -282,16 +282,16 @@ void FndPlusTask(void* data) {
 	int err, i;
 
 	while (1) {
-		// ControlTask°¡ ÇÃ·¡±×¸¦ ¼³Á¤ÇØ ÁÖ¸é
+		// ControlTaskê°€ í”Œë˜ê·¸ë¥¼ ì„¤ì •í•´ ì£¼ë©´
 		OSFlagPend(flag, 0x01, OS_FLAG_WAIT_SET_ANY + OS_FLAG_CONSUME, 0, &err);
 
 		OSSemPend(sem_plant, 0, &err);
 		if (plant_cnt < 4)
 			plant_cnt = plant_cnt + 1;
 		OSSemPost(sem_plant);
-		// ½Ä¹°ÀÌ ÇÑ Ä­ ¼ºÀå
+		// ì‹ë¬¼ì´ í•œ ì¹¸ ì„±ì¥
 
-		// ½Ä¹°ÀÌ ¸ğµÎ ¼ºÀåÇÏ¸é ³ôÀº À½ÀÇ ¼Ò¸® (¼Ö)
+		// ì‹ë¬¼ì´ ëª¨ë‘ ì„±ì¥í•˜ë©´ ë†’ì€ ìŒì˜ ì†Œë¦¬ (ì†”)
 		OSSemPend(sem_buz, 0, &err);
 		soundMode = 1;
 		OSTimeDlyHMSM(0, 0, 0, 100);
@@ -300,7 +300,7 @@ void FndPlusTask(void* data) {
 	}
 }
 
-// Led°¡ ²Ë Ã¡À»¶§ ÀÏÁ¤ ½Ã°£ÀÌ Áö³¯ ¶§ ¸¶´Ù ½Ä¹°ÀÌ ÇÑ Ä­¾¿ ÁÙ¾îµë
+// Ledê°€ ê½‰ ì°¼ì„ë•Œ ì¼ì • ì‹œê°„ì´ ì§€ë‚  ë•Œ ë§ˆë‹¤ ì‹ë¬¼ì´ í•œ ì¹¸ì”© ì¤„ì–´ë“¬
 void FndMinusTask(void* data) {
 	int err, i;
 
@@ -310,7 +310,7 @@ void FndMinusTask(void* data) {
 		if (plant_cnt > 0)
 			plant_cnt = plant_cnt - 1;
 		OSSemPost(sem_plant);
-		// ½Ä¹°ÀÌ ÇÑ Ä­ ÁÙ¾îµé¸é ³·Àº À½ÀÇ ¼Ò¸® (µµ)
+		// ì‹ë¬¼ì´ í•œ ì¹¸ ì¤„ì–´ë“¤ë©´ ë‚®ì€ ìŒì˜ ì†Œë¦¬ (ë„)
 		OSSemPend(sem_buz, 0, &err);
 		soundMode = 0;
 		OSTimeDlyHMSM(0, 0, 0, 100);
@@ -324,12 +324,12 @@ void ShowFndTask(void* data) {
 	int i, err, cnt;
 
 	while (1) {
-		// cnt´Â ºóÄ­ÀÇ °³¼ö
+		// cntëŠ” ë¹ˆì¹¸ì˜ ê°œìˆ˜
 		OSSemPend(sem_plant, 0, &err);
 		cnt = 4 - plant_cnt;
 		OSSemPost(sem_plant);
 
-		// Game End ÇÃ·¡±×¸¦ ¹ŞÀº °æ¿ì
+		// Game End í”Œë˜ê·¸ë¥¼ ë°›ì€ ê²½ìš°
 		if (OSFlagAccept(flag, 0x10, OS_FLAG_WAIT_SET_ANY, &err) > 0) {
 			// fnd Max
 			// WIN
@@ -351,7 +351,7 @@ void ShowFndTask(void* data) {
 			}
 		}
 		else {
-			// ½Ä¹°ÀÌ ÀÖÀ» °æ¿ì
+			// ì‹ë¬¼ì´ ìˆì„ ê²½ìš°
 			for (i = 0; i < 4; i++) {
 				if (cnt > 0)
 					PORTC = 0x00;
@@ -360,9 +360,9 @@ void ShowFndTask(void* data) {
 				PORTG = SEL[i];
 				cnt = cnt - 1;
 
-				// ¾îµÎ¿ì¸é ±ôºı°Å¸²
+				// ì–´ë‘ìš°ë©´ ê¹œë¹¡ê±°ë¦¼
 				if (read_adc() < CDS_VALUE)
-					OSTimeDlyHMSM(0, 0, 0, 200);
+					OSTimeDlyHMSM(0, 0, 0, 100);
 				else
 					OSTimeDlyHMSM(0, 0, 0, 3);
 			}
