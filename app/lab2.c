@@ -36,7 +36,7 @@ unsigned char SEL[4] = { 0x08, 0x04, 0x02, 0x01 };
 unsigned char Plant[4] = { 0x4f, 0x63,0x5c, 0x46 };
 unsigned char WIN[4] = { 0x3e, 0x3e, 0x06, 0x37 };
 unsigned char LOSE[4] = { 0x38, 0x3f, 0x6d, 0x79 };
-unsigned int Sound[] = { 17,97,17,66,97,137,114,105,97,87}; // default & 도 & 솔
+unsigned int Sound[] = { 17,97,17,66,97,137,114,105,97,87 }; // default & 도 & 솔
 
 volatile int time = 1;
 volatile int state = OFF;
@@ -141,12 +141,12 @@ int main(void)
 
 	srand(0);
 
-	OSTaskCreate(LedPlusTask, (void*)0, (void*)& LedPlusTaskStk[TASK_STK_SIZE - 1], 0);
-	OSTaskCreate(LedMinusTask, (void*)0, (void*)& LedMinusTaskStk[TASK_STK_SIZE - 1], 1);
-	OSTaskCreate(FndPlusTask, (void*)0, (void*)& FndPlusTaskStk[TASK_STK_SIZE - 1], 2);
-	OSTaskCreate(FndMinusTask, (void*)0, (void*)& FndMinusTaskStk[TASK_STK_SIZE - 1], 3);
-	OSTaskCreate(ControlTask, (void*)0, (void*)& ControlTaskStk[TASK_STK_SIZE - 1], 4);
-	OSTaskCreate(ShowFndTask, (void*)0, (void*)& ShowFndTaskStk[TASK_STK_SIZE - 1], 6);
+	OSTaskCreate(LedPlusTask, (void*)0, (void*)&LedPlusTaskStk[TASK_STK_SIZE - 1], 0);
+	OSTaskCreate(LedMinusTask, (void*)0, (void*)&LedMinusTaskStk[TASK_STK_SIZE - 1], 1);
+	OSTaskCreate(FndPlusTask, (void*)0, (void*)&FndPlusTaskStk[TASK_STK_SIZE - 1], 2);
+	OSTaskCreate(FndMinusTask, (void*)0, (void*)&FndMinusTaskStk[TASK_STK_SIZE - 1], 3);
+	OSTaskCreate(ControlTask, (void*)0, (void*)&ControlTaskStk[TASK_STK_SIZE - 1], 4);
+	OSTaskCreate(ShowFndTask, (void*)0, (void*)&ShowFndTaskStk[TASK_STK_SIZE - 1], 6);
 
 	// 플래그 초기화
 	flag = OSFlagCreate(0x00, &err);
@@ -207,7 +207,7 @@ void ControlTask(void* data) {
 		// 식물이 모두 자라거나
 		// 식물과 물이 모두 떨어지게 되면
 		// Game End
-		if (cnt >= 4 || (cnt <= 0 && PORTA == 0x00) || (cnt <= 0 && PORTA == 0xFF)) {
+		if (cnt >= 5 || (cnt <= 0 && PORTA == 0x00) || (cnt <= 0 && PORTA == 0xFF)) {
 			OSFlagPost(flag, 0x10, OS_FLAG_SET, &err);
 			if (cnt <= 0) {
 				for (i = 6; i <= 9; i++) {
@@ -220,7 +220,7 @@ void ControlTask(void* data) {
 				soundMode = -1;
 				OSSemPost(sem_buz);
 			}
-			else if(cnt >= 4)
+			else if (cnt >= 5)
 			{
 				for (i = 2; i <= 5; i++) {
 					OSSemPend(sem_buz, 0, &err);
@@ -245,7 +245,7 @@ void ControlTask(void* data) {
 }
 
 void LedPlusTask(void* data) {
-	int err,i,max;
+	int err, i, max;
 
 	while (1) {
 		// 스위치를 누르면
@@ -255,11 +255,11 @@ void LedPlusTask(void* data) {
 		if (read_adc() < CDS_VALUE)
 		{
 			for (i = 0; i < max % 7 + 1; i++)
-				if(PORTA!=0xFF) PORTA = (PORTA << 1) + 1;
+				if (PORTA != 0xFF) PORTA = (PORTA << 1) + 1;
 		}
 		else
 		{
-			for (i = 0; i < max %5 + 1; i++)
+			for (i = 0; i < max % 5 + 1; i++)
 				if (PORTA != 0xFF) PORTA = (PORTA << 1) + 1;
 		}
 	}
@@ -286,7 +286,7 @@ void FndPlusTask(void* data) {
 		OSFlagPend(flag, 0x01, OS_FLAG_WAIT_SET_ANY + OS_FLAG_CONSUME, 0, &err);
 
 		OSSemPend(sem_plant, 0, &err);
-		if (plant_cnt < 4)
+		if (plant_cnt < 5)
 			plant_cnt = plant_cnt + 1;
 		OSSemPost(sem_plant);
 		// 식물이 한 칸 성장
@@ -326,7 +326,7 @@ void ShowFndTask(void* data) {
 	while (1) {
 		// cnt는 빈칸의 개수
 		OSSemPend(sem_plant, 0, &err);
-		cnt = 4 - plant_cnt;
+		cnt = 5 - plant_cnt;
 		OSSemPost(sem_plant);
 
 		// Game End 플래그를 받은 경우
@@ -342,7 +342,7 @@ void ShowFndTask(void* data) {
 			}
 			// fnd Min
 			// LOSE
-			else if (cnt == 4) {
+			else if (cnt == 5) {
 				for (i = 0; i < 4; i++) {
 					PORTC = LOSE[i];
 					PORTG = SEL[i];
@@ -351,6 +351,7 @@ void ShowFndTask(void* data) {
 			}
 		}
 		else {
+			cnt = cnt - 1;
 			// 식물이 있을 경우
 			for (i = 0; i < 4; i++) {
 				if (cnt > 0)
