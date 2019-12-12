@@ -29,8 +29,7 @@ OS_FLAG_GRP* flag;
 
 OS_EVENT* sem_buz;
 OS_EVENT* sem_plant;
-OS_EVENT* sem_random;
-
+OS_EVENT* mbox_random;
 
 unsigned char SEL[4] = { 0x08, 0x04, 0x02, 0x01 };
 unsigned char Plant[4] = { 0x4f, 0x63,0x5c, 0x46 };
@@ -61,8 +60,10 @@ ISR(TIMER2_OVF_vect) {
 // INT4번 벡터 사용(스위치)
 // 스위치가 눌리면 LED를 한 칸 올리도록 신호를 보냄(0x08)
 ISR(INT4_vect) {
-	int err;
-	OSFlagPost(flag, 0x08, OS_FLAG_SET, &err);
+	int err,ran;
+	ran = rand();
+	err = OSMboxPost(mbox_random,ran);
+	//OSFlagPost(flag, 0x08, OS_FLAG_SET, &err);
 }
 
 // ---------------------------- ADC 사용 ----------------------------
@@ -87,6 +88,7 @@ unsigned short read_adc() {
 	value = (adc_high << 8) | adc_low; // high 값은 <<8하여 원래 값으로 변환
 	return value;
 }
+
 // ------------------------------------------------------------------
 
 // ------------------------ RESET 함수 -------------------------------
@@ -137,8 +139,7 @@ int main(void)
 
 	sem_buz = OSSemCreate(1);
 	sem_plant = OSSemCreate(1);
-	sem_random = OSSemCreate(1);
-
+	mbox_random = OSMboxCreate(0);
 	srand(0);
 
 	OSTaskCreate(LedPlusTask, (void*)0, (void*)&LedPlusTaskStk[TASK_STK_SIZE - 1], 0);
@@ -249,19 +250,22 @@ void LedPlusTask(void* data) {
 
 	while (1) {
 		// 스위치를 누르면
-		OSFlagPend(flag, 0x08, OS_FLAG_WAIT_SET_ANY + OS_FLAG_CONSUME, 0, &err);
-		max = rand();
+		//OSFlagPend(flag, 0x08, OS_FLAG_WAIT_SET_ANY + OS_FLAG_CONSUME, 0, &err);
+		//max = rand();
+		max = OSMboxPend(mbox_random, 0, err);
 		// LED를 왼쪽으로 한 비트씩 증가
 		if (read_adc() < CDS_VALUE)
 		{
-			for (i = 0; i < max % 7 + 1; i++)
+			for (i = 0; i < max%7+1; i++)
 				if (PORTA != 0xFF) PORTA = (PORTA << 1) + 1;
 		}
 		else
 		{
-			for (i = 0; i < max % 5 + 1; i++)
+			for (i = 0; i < max%5+1; i++)
 				if (PORTA != 0xFF) PORTA = (PORTA << 1) + 1;
 		}
+		
+
 	}
 }
 
