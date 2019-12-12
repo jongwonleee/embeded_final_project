@@ -35,7 +35,7 @@ unsigned char SEL[4] = { 0x08, 0x04, 0x02, 0x01 };
 unsigned char Plant[4] = { 0x4f, 0x63,0x5c, 0x46 };
 unsigned char WIN[4] = { 0x3e, 0x3e, 0x06, 0x37 };
 unsigned char LOSE[4] = { 0x38, 0x3f, 0x6d, 0x79 };
-unsigned int Sound[] = { 17,97,17,66,97,137,114,105,97,87 }; // default & 도 & 솔
+unsigned int Sound[] = { 17,97,17,66,97,137,114,105,97,87 }; //도, 솔, 도, 미, 솔, 높은 도, 라, 솔샵,솔, 파샵
 
 volatile int time = 1;
 volatile int state = OFF;
@@ -58,12 +58,11 @@ ISR(TIMER2_OVF_vect) {
 }
 
 // INT4번 벡터 사용(스위치)
-// 스위치가 눌리면 LED를 한 칸 올리도록 신호를 보냄(0x08)
+// 스위치가 눌리면 랜덤 값을 받아오고 FND_Plus 함수에 랜덤 값을 보내기 위해 mbox_random에 넣어 post 해준다
 ISR(INT4_vect) {
 	int err,ran;
 	ran = rand();
 	err = OSMboxPost(mbox_random,ran);
-	//OSFlagPost(flag, 0x08, OS_FLAG_SET, &err);
 }
 
 // ---------------------------- ADC 사용 ----------------------------
@@ -137,11 +136,18 @@ int main(void)
 	init_adc();
 	OS_EXIT_CRITICAL();
 
+	// 세마포어 및 메일 박스 초기화
 	sem_buz = OSSemCreate(1);
 	sem_plant = OSSemCreate(1);
 	mbox_random = OSMboxCreate(0);
+
+	// 플래그 초기화
+	flag = OSFlagCreate(0x00, &err);
+
+	//랜덤 시드
 	srand(0);
 
+	// 총 6개의 task create
 	OSTaskCreate(LedPlusTask, (void*)0, (void*)&LedPlusTaskStk[TASK_STK_SIZE - 1], 0);
 	OSTaskCreate(LedMinusTask, (void*)0, (void*)&LedMinusTaskStk[TASK_STK_SIZE - 1], 1);
 	OSTaskCreate(FndPlusTask, (void*)0, (void*)&FndPlusTaskStk[TASK_STK_SIZE - 1], 2);
@@ -149,8 +155,7 @@ int main(void)
 	OSTaskCreate(ControlTask, (void*)0, (void*)&ControlTaskStk[TASK_STK_SIZE - 1], 4);
 	OSTaskCreate(ShowFndTask, (void*)0, (void*)&ShowFndTaskStk[TASK_STK_SIZE - 1], 6);
 
-	// 플래그 초기화
-	flag = OSFlagCreate(0x00, &err);
+	
 
 	OSStart();
 
@@ -180,16 +185,15 @@ void ControlTask(void* data) {
 
 		// 10초마다 식물이 자라는 신호 보냄(0x01)
 		// 어두우면 20초마다 한 번씩 신호를 보냄
-
 		if (time % (5 + light) == 0) {
-			// 물이 다 떨어진 상태에서는 안보냄
+			// 물이 다 떨어진 상태 혹은 꽉 찬 상태에서는 안보냄
 			if (PORTA != 0x00 && PORTA != 0xFF)
 				OSFlagPost(flag, 0x01, OS_FLAG_SET, &err);
 		}
 
 		// 5초마다
 		// 물의 양을 감소시키는 신호를 보냄(0x02)
-		// 물이 다 떨어지거나 꽉차면 되면 식물이 줄어듬(0x04)
+		// 물이 다 떨어지거나 꽉차면 식물이 줄어듬(0x04)
 		OSSemPend(sem_plant, 0, &err);
 		cnt = plant_cnt;
 		OSSemPost(sem_plant);
@@ -207,28 +211,33 @@ void ControlTask(void* data) {
 
 		// 식물이 모두 자라거나
 		// 식물과 물이 모두 떨어지게 되면
+		// 또는 식물이 다 떨어지고 물은 꽉 차게 되면
 		// Game End
 		if (cnt >= 5 || (cnt <= 0 && PORTA == 0x00) || (cnt <= 0 && PORTA == 0xFF)) {
 			OSFlagPost(flag, 0x10, OS_FLAG_SET, &err);
+			//식물이 죽었을 때
 			if (cnt <= 0) {
-				for (i = 6; i <= 9; i++) {
+				for (i = 6; i <= 9; i++) { // 죽었을 때의 소리 index 세마포어로 감싸 전송
 					OSSemPend(sem_buz, 0, &err);
 					soundMode = i;
 					OSSemPost(sem_buz);
 					OSTimeDlyHMSM(0, 0, 0, 200);
 				}
+				//소리 끝났다고 전송
 				OSSemPend(sem_buz, 0, &err);
 				soundMode = -1;
 				OSSemPost(sem_buz);
 			}
+			//식물이 다 자랐을 때
 			else if (cnt >= 5)
 			{
-				for (i = 2; i <= 5; i++) {
+				for (i = 2; i <= 5; i++) { // 이겼을 때 소리 index 세마포어로 감싸 전송
 					OSSemPend(sem_buz, 0, &err);
 					soundMode = i;
 					OSSemPost(sem_buz);
 					OSTimeDlyHMSM(0, 0, 0, 200);
 				}
+				//소리 끝났다고 전송
 				OSSemPend(sem_buz, 0, &err);
 				soundMode = -1;
 				OSSemPost(sem_buz);
@@ -250,10 +259,11 @@ void LedPlusTask(void* data) {
 
 	while (1) {
 		// 스위치를 누르면
-		//OSFlagPend(flag, 0x08, OS_FLAG_WAIT_SET_ANY + OS_FLAG_CONSUME, 0, &err);
-		//max = rand();
+		// mbox_random을 통해 스위치 인터럽트가 랜덤한 값을 보내줌
 		max = OSMboxPend(mbox_random, 0, err);
-		// LED를 왼쪽으로 한 비트씩 증가
+		
+		// 일정 광량보다 적으면 물이 1~7까지 랜덤하게 증가
+		// 많으면 물이 1~5까지 랜덤하게 증가
 		if (read_adc() < CDS_VALUE)
 		{
 			for (i = 0; i < max%7+1; i++)
@@ -333,7 +343,7 @@ void ShowFndTask(void* data) {
 		cnt = 5 - plant_cnt;
 		OSSemPost(sem_plant);
 
-		// Game End 플래그를 받은 경우
+		// Game End 플래그를 확인해 있는 경우
 		if (OSFlagAccept(flag, 0x10, OS_FLAG_WAIT_SET_ANY, &err) > 0) {
 			// fnd Max
 			// WIN
@@ -353,7 +363,8 @@ void ShowFndTask(void* data) {
 					OSTimeDlyHMSM(0, 0, 0, 3);
 				}
 			}
-		}
+		} 
+		//Game End 플래그가 없는 경우
 		else {
 			cnt = cnt - 1;
 			// 식물이 있을 경우
