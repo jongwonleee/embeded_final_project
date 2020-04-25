@@ -1,4 +1,4 @@
-##### embeded_final_project
+# embeded_final_project
 ---------------------------
 
 ### 1. Project
@@ -9,13 +9,16 @@
 - Plant grows 5 times then the user wins the game
 - If plant dies then the user loses the game
 
+---------------------------
 ### 2. Stack
 - Language: C
 - OS: UCOS
 
+---------------------------
 ### 3. Framework
 - Atmega 128
 
+---------------------------
 ### 4. Demo
 - [Demo Video](https://drive.google.com/open?id=1HGJdbxeych8Z3P6WH3j1JSD3TEM43C_-)
 
